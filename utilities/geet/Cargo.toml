@@ -1,6 +1,5 @@
 [package]
-name = "sysfo"
-default-run = "sysfo"
+name = "geet"
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }
@@ -13,9 +12,3 @@ repository = { workspace = true }
 workspace = true
 
 [dependencies]
-once_cell = { workspace = true }
-chrono = { workspace = true }
-sysinfo = { workspace = true }
-crossterm = { workspace = true }
-battery = { workspace = true }
-uom = { workspace = true }

@@ -35,10 +35,10 @@ tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 #| Information
 chrono = "0.4.23"
 sysinfo = "0.31.4"
-starship-battery = "0.10.0"
 battery = "0.7.8"
 
 #| Utilities
 crossterm = "0.28.1"
+
+#| Types
 uom = "0.36.0"
-approx = "0.5.1"
