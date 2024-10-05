@@ -1,0 +1,15 @@
+[package]
+name = "ccutils-config"
+version = { workspace = true }
+edition = { workspace = true }
+
+[lints]
+workspace = true
+
+[dependencies]
+#| Local
+
+#| Information
+anyhow = { workspace = true }
+once_cell = { workspace = true }
+tracing = { workspace = true }

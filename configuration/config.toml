@@ -1,0 +1,30 @@
+#| Environment Variables
+[env]
+
+# -- Tracing filters
+RUST_LOG = "tword=trace,tword-conf=info,tword-util=info"
+BROWSER = "firefox"
+
+# -- Web
+SERVICE_WEB_HOST = "localhost"
+SERVICE_WEB_PORT = "876"
+SERVICE_WEB_ASSETS_PATH = "assets/web"
+SERVICE_WEB_TLS_CERT_NAME = "cert"
+SERVICE_WEB_TLS_PKEY_NAME = "key"
+SERVICE_WEB_TLS_NAME = "that_word"
+SERVICE_WEB_TLS_ORG = "Craole"
+SERVICE_WEB_TLS_UNIT = "English Language Development"
+SERVICE_WEB_TLS_CITY = "Mandeville"
+SERVICE_WEB_TLS_STATE = "Manchester"
+SERVICE_WEB_TLS_COUNTRY = "JA"
+SERVICE_WEB_REGENERATE_TLS = "true"
+
+
+# -- Database
+SERVICE_DB_URL = "postgres://app_user:dev_only_pwd@localhost/app_db"
+SERVICE_DB_PORT = "localhost"
+
+# -- Tokens
+SERVICE_PWD_KEY = "CKUGFOD9_2Qf6Pn3ZFRYgPYb8ht4vKqEG9PGMXTB7497bT0367DjoaD6ydFnEVaIRda0kKeBZVCT5Hb62m2sCA"
+SERVICE_TOKEN_KEY = "9FoHBmkyxbgu_xFoQK7e0jz3RMNVJWgfvbVn712FBNH9LLaAWS3CS6Zpcg6RveiObvCUb6a2z-uAiLjhLh2igw"
+SERVICE_TOKEN_DURATION = "1800"

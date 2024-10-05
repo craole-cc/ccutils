@@ -1,0 +1,44 @@
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Craig 'Craole' Cole <craole@tuta.io>"]
+license = "MIT OR Apache-2.0"
+description = "Various utilities for development."
+homepage = "https://craole.cc/utils"
+repository = "https://github.com/craole-cc/ccutils"
+
+[workspace]
+resolver = "2"
+members = [
+  #| Support
+  # "configuration",
+
+  #| Core
+  "utilities/embellish",
+  "utilities/pathof",
+  "utilities/slink",
+  "utilities/sysfo",
+]
+
+[workspace.lints.rust]
+unsafe_code = { level = "forbid", priority = -1 }
+unused = "allow"
+
+[workspace.dependencies]
+#| Handlers
+thiserror = "1.0.49"
+anyhow = "1.0.89"
+once_cell = "1.20.1"
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+
+#| Information
+chrono = "0.4.23"
+sysinfo = "0.31.4"
+starship-battery = "0.10.0"
+battery = "0.7.8"
+
+#| Utilities
+crossterm = "0.28.1"
+uom = "0.36.0"
+approx = "0.5.1"
