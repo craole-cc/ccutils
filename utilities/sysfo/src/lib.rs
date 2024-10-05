@@ -3,7 +3,7 @@ pub mod duration;
 mod error;
 mod general;
 mod hardware;
-mod power;
+mod battery;
 mod software;
 mod time;
 
@@ -11,7 +11,7 @@ pub use duration::Duration;
 pub use error::SystemInfoError;
 pub use general::General;
 pub use hardware::Hardware;
-pub use power::{Battery, PrettyBattery};
+pub use battery::{Battery, PrettyBattery, BatteryCommands};
 pub use software::Software;
 pub use time::Time;
 

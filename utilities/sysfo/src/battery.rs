@@ -25,20 +25,37 @@ pub struct Battery {
 	// voltage: 12.239 m^2 kg^1 s^-3 A^-1,
 }
 
+#[derive(clap::Parser)]
+pub enum BatteryCommands {
+	#[clap(external_subcommand)]
+	External(Vec<String>),
+}
+
 pub trait PrettyBattery {
 	fn pretty_level(&self) -> String;
 	fn pretty_status(&self) -> String;
 	fn pretty_time_remaining(&self) -> String;
 	fn pretty_technology(&self) -> String;
-	fn pretty_cycles(&self) -> (u32, String);
-	fn pretty_brand(&self) -> String;
+	fn pretty_cycles(&self) -> (u32, &str);
+	fn pretty_brand(&self) -> &str;
 	fn statement(&self) -> String;
+	fn all(&self) -> String;
 }
 
 impl Default for Battery {
 	fn default() -> Self {
+		pub fn get_battery_info() -> battery::Battery {
+			// TODO: Handle errors properly
+			BatteryManager::new()
+				.expect("Failed to create battery manager")
+				.batteries()
+				.expect("Failed to get batteries")
+				.next()
+				.expect("Failed to get battery information")
+				.expect("Failed to get battery information")
+		}
 		let battery = get_battery_info();
-		let level = battery.state_of_charge().value * 100.0;
+		let level = battery.state_of_charge().value;
 		let status = battery.state();
 		let time_to_empty = battery.time_to_empty();
 		let time_to_full = battery.time_to_full();
@@ -69,25 +86,49 @@ impl Default for Battery {
 }
 
 impl PrettyBattery for Battery {
+	fn all(&self) -> String {
+		format!("Level: {}\nStatus: {}\nTime: {}\nTechnology: {}\nCycles: {}\nBrand: {}",
+			self.pretty_level(),
+			self.pretty_status(),
+			self.pretty_time_remaining(),
+			self.pretty_technology(),
+			self.pretty_cycles().0,
+			self.pretty_brand()
+		)
+	}
 	fn statement(&self) -> String {
-		let status = match self.time_remaining.is_zero() {
-			true => format!("{:?}", self.status),
-			false => format!(
-				"The battery is currently at {} and {}, with {} remaining",
+		let has_cycles = self.pretty_cycles().0 > 0;
+		let status = match self.status {
+			State::Charging | State::Discharging => format!(
+				"The battery is currently at {} and {}, with {} remaining {}",
 				self.pretty_level(),
 				self.status,
-				self.time_remaining
+				self.pretty_time_remaining(),
+				if has_cycles {
+					format!(
+						"on this its {}{} charge cycle.",
+						self.pretty_cycles().0,
+						self.pretty_cycles().1
+					)
+				} else {
+					".".to_string()
+				}
 			),
-		};
-
-		let cycle = if self.pretty_cycles().0 > 0 {
-			format!(
-				"on this it's {:?}{:?} charge cycle.",
-				self.pretty_cycles().0,
-				self.pretty_cycles().1
-			)
-		} else {
-			".".to_string()
+			State::Full => {
+				format!(
+					"The battery is {}{}",
+					self.status,
+					if has_cycles {
+						format!(
+							", having being cycled {} times.",
+							self.pretty_cycles().0,
+						)
+					} else {
+						".".to_string()
+					}
+				)
+			}
+			_ => format!("The battery is {}", self.pretty_level()),
 		};
 
 		let make = format!(
@@ -96,15 +137,15 @@ impl PrettyBattery for Battery {
 			if self.pretty_brand() != "unknown" {
 				self.pretty_brand()
 			} else {
-				"an unknown manufacturer".to_string()
+				"an unknown manufacturer"
 			}
 		);
 
-		format!("{} {} {}", status, cycle, make)
+		format!("{} {}", status, make)
 	}
 
 	fn pretty_level(&self) -> String {
-		format!("{}%", self.level.round() as i32)
+		format!("{}%", (self.level * 100.0).round() as i32)
 	}
 
 	fn pretty_status(&self) -> String {
@@ -119,7 +160,7 @@ impl PrettyBattery for Battery {
 		format!("{:?}", self.technology)
 	}
 
-	fn pretty_cycles(&self) -> (u32, String) {
+	fn pretty_cycles(&self) -> (u32, &str) {
 		if self.cycles.is_some() {
 			let cycle_number = self.cycles.unwrap();
 			let ordinal_suffix = match cycle_number % 10 {
@@ -128,20 +169,17 @@ impl PrettyBattery for Battery {
 				3 if cycle_number % 100 != 13 => "rd",
 				_ => "th",
 			};
-			// format!("{}{}", cycle_number, ordinal_suffix)\
-			(cycle_number, ordinal_suffix.to_string())
+			(cycle_number, ordinal_suffix)
 		} else {
-			(0, "".to_string())
+			(0, "")
 		}
 	}
 
-	fn pretty_brand(&self) -> String {
-		let brand = match &self.brand {
+	fn pretty_brand(&self) -> &str {
+		match &self.brand {
 			Some(brand) => brand,
 			None => "unknown",
-		};
-
-		brand.to_string()
+		}
 	}
 }
 
@@ -172,12 +210,45 @@ impl Display for Battery {
 		)
 	}
 }
-pub fn get_battery_info() -> battery::Battery {
-	BatteryManager::new()
-		.expect("Failed to create battery manager")
-		.batteries()
-		.expect("Failed to get batteries")
-		.next()
-		.expect("Failed to get battery information")
-		.expect("Failed to get battery information")
+
+impl Battery {
+	pub fn handle_command(
+		&self,
+		command: Option<&BatteryCommands>,
+	) -> String {
+		match command {
+			None => self.statement(),
+			Some(BatteryCommands::External(args)) => {
+				match args.first().map(|s| s.as_str()) {
+					Some("statement") => self.statement(),
+					Some("all") => self.all(),
+					Some("level") => {
+						format!("Level: {}", self.pretty_level())
+					}
+					Some("status") => {
+						format!("Status: {}", self.pretty_status())
+					}
+					Some("timeremaining") => {
+						format!(
+							"Time remaining: {}",
+							self.pretty_time_remaining()
+						)
+					}
+					Some("technology") => {
+						format!(
+							"Technology: {}",
+							self.pretty_technology()
+						)
+					}
+					Some("cycle") => {
+						format!("Cycle: {}", self.pretty_cycles().0)
+					}
+					Some("brand") => {
+						format!("Brand: {}", self.pretty_brand())
+					}
+					_ => self.statement(), // Default to statement for unknown commands
+				}
+			}
+		}
+	}
 }

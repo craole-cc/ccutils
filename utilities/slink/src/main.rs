@@ -2,7 +2,6 @@ use clap::{arg, command, value_parser, ArgAction};
 use directories::BaseDirs;
 use glob::glob;
 use slink::{process_links, Config, SymlinkError};
-use tracing::{debug, error};
 use tracing_subscriber::{EnvFilter, FmtSubscriber};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -63,7 +62,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 			match entry {
 				Ok(path) => sources.push(path),
 				Err(e) => {
-					error!("Error processing {}: {}", pattern, e)
+					tracing::error!("Error processing {}: {}", pattern, e)
 				}
 			}
 		}
