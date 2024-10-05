@@ -4,3 +4,13 @@ version = "0.1.0"
 edition = { workspace = true }
 
 [dependencies]
+chrono = { workspace = true }             # We shouldn't need this, we can use sysfo
+clap = { workspace = true }
+directories = { workspace = true }
+glob = { workspace = true }
+thiserror = { workspace = true }          # We shouldn't need this, error should be in the main config
+tracing = { workspace = true }            # We shouldn't need this, tracing should be in the main config
+tracing-subscriber = { workspace = true } # We shouldn't need this, tracing should be in the main config
+
+[dev-dependencies]
+tempfile = { workspace = true }

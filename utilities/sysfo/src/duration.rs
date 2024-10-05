@@ -12,8 +12,32 @@ pub struct Duration {
 	hours: i64,
 	minutes: i64,
 	seconds: i64,
+	display_options: DisplayOptions,
 }
+
+#[derive(Debug, Default, Clone, PartialEq)]
+pub struct DisplayOptions {
+	pub hide_years: bool,
+	pub hide_months: bool,
+	pub hide_weeks: bool,
+	pub hide_days: bool,
+	pub hide_hours: bool,
+	pub hide_minutes: bool,
+	pub hide_seconds: bool,
+}
+
 impl Duration {
+	pub fn set_display_options(&mut self, options: DisplayOptions) {
+		self.display_options = options;
+	}
+
+	pub fn with_display_options(
+		mut self,
+		options: DisplayOptions,
+	) -> Self {
+		self.display_options = options;
+		self
+	}
 	pub fn from_battery_time(time: Option<BatTime>) -> Self {
 		match time {
 			Some(time) => {
@@ -57,6 +81,8 @@ impl Duration {
 		let minutes = total_minutes % 60;
 		let seconds = duration.num_seconds() % 60;
 
+		let display_options = DisplayOptions::default();
+
 		Self {
 			years,
 			months,
@@ -65,6 +91,7 @@ impl Duration {
 			hours,
 			minutes,
 			seconds,
+			display_options,
 		}
 	}
 
@@ -79,6 +106,60 @@ impl Duration {
 		let duration = end.signed_duration_since(start);
 		Self::from_delta(duration)
 	}
+
+	pub fn above_seconds(&mut self) -> &Self {
+		self.display_options.hide_seconds = true;
+		self
+	}
+
+	pub fn in_minutes(&mut self) -> &Self {
+		self.display_options = DisplayOptions {
+			hide_years: true,
+			hide_months: true,
+			hide_weeks: true,
+			hide_days: true,
+			hide_hours: true,
+			hide_seconds: true,
+			..Default::default()
+		};
+		self
+	}
+
+	pub fn in_hours(&mut self) -> &Self {
+		self.display_options = DisplayOptions {
+			hide_years: true,
+			hide_months: true,
+			hide_weeks: true,
+			hide_days: true,
+			hide_minutes: true,
+			hide_seconds: true,
+			..Default::default()
+		};
+		self
+	}
+
+	pub fn in_days(&mut self) -> &Self {
+		self.display_options = DisplayOptions {
+			hide_years: true,
+			hide_months: true,
+			hide_weeks: true,
+			hide_hours: true,
+			hide_minutes: true,
+			hide_seconds: true,
+			..Default::default()
+		};
+		self
+	}
+
+	pub fn is_zero(&self) -> bool {
+		self.years == 0
+			&& self.months == 0
+			&& self.weeks == 0
+			&& self.days == 0
+			&& self.hours == 0
+			&& self.minutes == 0
+			&& self.seconds == 0
+	}
 }
 
 impl Display for Duration {
@@ -86,17 +167,25 @@ impl Display for Duration {
 		let mut parts = Vec::new();
 
 		let units = [
-			("year", self.years),
-			("month", self.months),
-			("week", self.weeks),
-			("day", self.days),
-			("hour", self.hours),
-			("minute", self.minutes),
-			("second", self.seconds),
+			("year", self.years, self.display_options.hide_years),
+			("month", self.months, self.display_options.hide_months),
+			("week", self.weeks, self.display_options.hide_weeks),
+			("day", self.days, self.display_options.hide_days),
+			("hour", self.hours, self.display_options.hide_hours),
+			(
+				"minute",
+				self.minutes,
+				self.display_options.hide_minutes,
+			),
+			(
+				"second",
+				self.seconds,
+				self.display_options.hide_seconds,
+			),
 		];
 
-		for (unit, value) in units {
-			if value > 0 {
+		for (unit, value, hide) in units {
+			if !hide && value > 0 {
 				let plural = if value == 1 { "" } else { "s" };
 				let value_str = if unit == "second" {
 					format!("{:.3}", value)
@@ -111,7 +200,7 @@ impl Display for Duration {
 		}
 
 		match parts.len() {
-			0 => write!(f, "0 minutes"),
+			0 => write!(f, "{}", 0),
 			1 => write!(f, "{}", parts[0]),
 			2 => write!(f, "{} and {}", parts[0], parts[1]),
 			_ => {

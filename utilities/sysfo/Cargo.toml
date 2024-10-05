@@ -19,3 +19,4 @@ sysinfo = { workspace = true }
 crossterm = { workspace = true }
 battery = { workspace = true }
 uom = { workspace = true }
+clap = { workspace = true }

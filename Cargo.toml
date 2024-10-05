@@ -15,6 +15,7 @@ members = [
 
   #| Core
   "utilities/embellish",
+  "utilities/geet",
   "utilities/pathof",
   "utilities/slink",
   "utilities/sysfo",
@@ -39,6 +40,10 @@ battery = "0.7.8"
 
 #| Utilities
 crossterm = "0.28.1"
+clap = { version = "4.5.18", features = ["derive", "cargo"] }
+directories = "5.0.1"
+glob = "0.3.1"
+tempfile = "3.13.0"
 
 #| Types
 uom = "0.36.0"

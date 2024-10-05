@@ -11,7 +11,7 @@ pub use duration::Duration;
 pub use error::SystemInfoError;
 pub use general::General;
 pub use hardware::Hardware;
-pub use power::{get_battery_info, Battery};
+pub use power::{Battery, PrettyBattery};
 pub use software::Software;
 pub use time::Time;
 
