@@ -42,12 +42,12 @@ ccutils
 
 ### Utilities
 
-- [ ] **[embellish](utilities/embellish/)**: Formatting text in various ways.
-- [ ] **[geet](utilities/geet/)**: Simplifies common Git operations to enhance workflow.
-- [x] **[intime](./utilities/intime/)**: Displays time in natural language.
-- [ ] **[pathof](utilities/pathof/)**: Resolves and normalizes file paths, handling symbolic links, redundant paths, and more.
-- [ ] **[slink](utilities/slink/)**: Simplifies common tasks related to symlink creation.
-- [ ] **[sysfo](utilities/sysfo/)**: Displays system information, such as hardware, software, username, hostname, battery status, and more.
+- [ ] **[embellish](utilities/embellish)**: Formatting text in various ways.
+- [ ] **[geet](utilities/geet)**: Simplifies common Git operations to enhance workflow.
+- [x] **[intime](./utilities/intime)**: Displays time in natural language.
+- [ ] **[pathof](utilities/pathof)**: Resolves and normalizes file paths, handling symbolic links, redundant paths, and more.
+- [ ] **[slink](utilities/slink)**: Simplifies common tasks related to symlink creation.
+- [ ] **[sysfo](utilities/sysfo)**: Displays system information, such as hardware, software, username, hostname, battery status, and more.
 
 ### Configuration Management
 
