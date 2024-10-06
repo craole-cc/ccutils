@@ -64,26 +64,7 @@ impl Info {
 	}
 
 	pub fn statement(&self) -> String {
-		format!("Tis is the statement for time")
-	}
-
-	pub fn all(&self) -> String {
-		format!(
-			"Time {{\n\
-			{:>16}: {}\n\
-			{:>16}: {}\n\
-			{:>16}: {}\n\
-			{:>16}: {}\n\
-			}}",
-			"Active",
-			self.uptime_fmt(),
-			"Boot",
-			self.boot_fmt(),
-			"Current",
-			self.current_fmt(),
-			"Timezone",
-			self.timezone
-		)
+		"Tis is the statement for time".to_string()
 	}
 
 	pub fn fetch(&self) -> String {
@@ -101,7 +82,29 @@ impl Info {
 			"Now",
 			self.current,
 			"Timezone",
-			self.timezone
+			self.timezone,
+		)
+	}
+
+	pub fn all(&self) -> String {
+		format!(
+			"Time {{\n\
+			{:>16}: {}\n\
+			{:>16}: {}\n\
+			{:>16}: {}\n\
+			{:>16}: {}\n\
+			{:>16}: {}\n\
+			}}",
+			"Active",
+			self.uptime_fmt(),
+			"Boot",
+			self.boot_fmt(),
+			"Current",
+			self.current_fmt(),
+			"Timezone",
+			self.timezone,
+			"Statement",
+			self.statement()
 		)
 	}
 }
