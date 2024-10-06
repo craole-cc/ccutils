@@ -40,21 +40,11 @@ ccutils
 └─ utilities              # Individual utilities as separate crates
 ```
 
-## Project Status
-
-- [x] Design
-- [x] Mockups
-- [x] Development
-- [ ] Unit Testing
-- [ ] QA
-- [ ] Stage
-- [ ] Beta Testing
-- [ ] Production
-
 ### Utilities
 
 - [ ] **[embellish](utilities/embellish/)**: Formatting text in various ways.
 - [ ] **[geet](utilities/geet/)**: Simplifies common Git operations to enhance workflow.
+- [ ] **[intime](utilities/intime/)**: Simplifies common Git operations to enhance workflow.
 - [ ] **[pathof](utilities/pathof/)**: Resolves and normalizes file paths, handling symbolic links, redundant paths, and more.
 - [ ] **[slink](utilities/slink/)**: Simplifies common tasks related to symlink creation.
 - [ ] **[sysfo](utilities/sysfo/)**: Displays system information, such as hardware, software, username, hostname, battery status, and more.
