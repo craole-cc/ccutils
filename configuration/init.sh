@@ -408,5 +408,5 @@ main() {
 	helpers_init
 	project_info || return "$?"
 	project_init || return "$?"
-	prompt_init fish
+	# prompt_init fish
 } && main "$@"
