@@ -40,6 +40,17 @@ ccutils
 └─ utilities              # Individual utilities as separate crates
 ```
 
+## Project Status
+
+- [x] Design
+- [x] Mockups
+- [x] Development
+- [ ] Unit Testing
+- [ ] QA
+- [ ] Stage
+- [ ] Beta Testing
+- [ ] Production
+
 ### Utilities
 
 - [ ] **[embellish](utilities/embellish/)**: Formatting text in various ways.

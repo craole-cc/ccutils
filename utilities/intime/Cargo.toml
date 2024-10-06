@@ -1,0 +1,22 @@
+[package]
+name = "intime"
+version = { workspace = true }
+edition = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+description = "calculate and display duration"
+homepage = { workspace = true }
+repository = { workspace = true }
+
+[lints]
+workspace = true
+
+[dependencies]
+# Backend [lib.rs]
+battery = {workspace = true}
+chrono = {workspace = true}
+uom = { workspace = true }
+
+# Frontend [main.rs]
+clap = {workspace = true}
+

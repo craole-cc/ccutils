@@ -16,6 +16,7 @@ members = [
   #| Core
   "utilities/embellish",
   "utilities/geet",
+  "utilities/intime",
   "utilities/pathof",
   "utilities/slink",
   "utilities/sysfo",
