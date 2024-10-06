@@ -1,6 +1,6 @@
 # CCutils
 
-This project is a growing collection of CLI-based utilities, inspired by the versatility and power of tools like *[coreutils](https://uutils.github.io/coreutils/docs/)*. The primary objective of this project is to enhance my Rust programming skills while migrating and improving the personal utilities I have developed over the years.
+This project is a growing collection of CLI-based utilities, inspired by the versatility and power of tools like [coreutils](https://uutils.github.io/coreutils/docs/). The primary objective of this project is to enhance my Rust programming skills while migrating and improving the personal utilities I have developed over the years.
 
 This migration is driven by a desire to increase speed, consistency, and ease of use across my dotfiles and scripts, ensuring better portability. I operate across various environments, including Linux (particularly NixOS), Windows (Git Bash, Powershell and NixWSL), and recently macOS (with Nix). By building these utilities in Rust, I ensure they will run seamlessly across all my machines.
 
