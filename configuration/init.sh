@@ -391,11 +391,14 @@ prompt_init() {
 			echo "Warning: starship.toml not found in $PRJ_CONF"
 		fi
 
-	eval "$(starship init bash)"
+	# eval "$(starship init bash)"
 
 	# Function to start Fish shell
 	if app_available "$1"; then
+		# case "$1" in
+		# 	fish) 
 		exec "$1"
+		
 	else
 		bash
 	fi
@@ -405,5 +408,5 @@ main() {
 	helpers_init
 	project_info || return "$?"
 	project_init || return "$?"
-	prompt_init
+	prompt_init fish
 } && main "$@"
