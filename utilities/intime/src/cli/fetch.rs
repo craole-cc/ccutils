@@ -34,7 +34,9 @@ impl Command {
     fn parse_duration(&self, duration: &str) -> Result<u32> {
         let num_str = duration.trim_end_matches(|c: char| !c.is_ascii_digit());
         let unit_str = duration.trim_start_matches(num_str);
-        let num: u32 = num_str.parse().map_err(|_| Error::InvalidDuration("Invalid number".to_string()))?;
+        let num: u32 = num_str
+            .parse()
+            .map_err(|_| Error::InvalidDuration("Invalid number".to_string()))?;
 
         match unit_str {
             "s" | "" => Ok(num),

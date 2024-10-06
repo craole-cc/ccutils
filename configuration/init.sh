@@ -396,9 +396,9 @@ prompt_init() {
 	# Function to start Fish shell
 	if app_available "$1"; then
 		# case "$1" in
-		# 	fish) 
+		# 	fish)
 		exec "$1"
-		
+
 	else
 		bash
 	fi

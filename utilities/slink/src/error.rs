@@ -1,5 +1,5 @@
-use thiserror::Error;
 use std::path::PathBuf;
+use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum SymlinkError {
@@ -23,6 +23,8 @@ pub enum SymlinkError {
     IoError(String),
     #[error("Path error: {0}")]
     PathError(String),
-    #[error("Insufficient privileges to create symlink. Try running the program as administrator.")]
+    #[error(
+        "Insufficient privileges to create symlink. Try running the program as administrator."
+    )]
     InsufficientPrivileges,
 }

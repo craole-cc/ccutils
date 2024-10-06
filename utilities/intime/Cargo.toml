@@ -13,10 +13,10 @@ workspace = true
 
 [dependencies]
 # Backend [lib.rs]
-battery = {workspace = true}
-chrono = {workspace = true}
+battery = { workspace = true }
+chrono = { workspace = true }
 uom = { workspace = true }
 thiserror = { workspace = true }
 
 # Frontend [main.rs]
-clap = {workspace = true}
+clap = { workspace = true }
