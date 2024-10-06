@@ -42,7 +42,7 @@ ccutils
 
 ### Utilities
 
-- [ ] **[embellish](utilities/embellish)**: Formatting text in various ways.
+- [ ] **[embellish](documentation/utilities/embellish.md)**: Formatting text in various ways.
 - [ ] **[geet](utilities/geet)**: Simplifies common Git operations to enhance workflow.
 - [x] **[intime](./utilities/intime)**: Displays time in natural language.
 - [ ] **[pathof](utilities/pathof)**: Resolves and normalizes file paths, handling symbolic links, redundant paths, and more.
