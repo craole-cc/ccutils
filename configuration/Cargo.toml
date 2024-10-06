@@ -6,6 +6,7 @@
 rr = "run --release"
 rq = "run --quiet"
 wq = "watch --quiet --clear --exec rr"
+br = "build --release"
 
 #| Terminal Config
 [term]

@@ -1,1 +1,19 @@
-/target
+#| Hidden Files
+.*
+
+#| Config
+!.config/
+
+#| Git
+!.gitignore
+
+#| Nix
+!.envrc
+result*
+# flake.lock
+
+#| Rust
+!.cargo/
+target/
+debug/
+# Cargo.lock

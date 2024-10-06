@@ -258,9 +258,8 @@ project_init() {
 
 	[ -f "$PRJ_ROOT/.cargo/config.toml" ] || {
 		mkdir --parents "$PRJ_ROOT/.cargo"
-		ln --symbolic \
-			"$PRJ_CONF/cargo.toml" \
-			"$PRJ_ROOT/.cargo/config.toml"
+		# TODO: Use slink to make the link portable, especially on windows
+		cp "$PRJ_CONF/cargo.toml" "$PRJ_ROOT/.cargo/config.toml"
 	}
 
 	cargo build --release
