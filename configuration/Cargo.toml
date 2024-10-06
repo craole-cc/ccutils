@@ -1,15 +1,16 @@
-[package]
-name = "ccutils-config"
-version = { workspace = true }
-edition = { workspace = true }
+# Cargo config file.
+# See: https://doc.rust-lang.org/cargo/reference/config.html
 
-[lints]
-workspace = true
+#| Aliases
+[alias]
+rr = "run --release"
+rq = "run --quiet"
+wq = "watch --quiet --clear --exec rr"
 
-[dependencies]
-#| Local
+#| Terminal Config
+[term]
+quiet = false
 
-#| Information
-anyhow = { workspace = true }
-once_cell = { workspace = true }
-tracing = { workspace = true }
+#| Environment Variables
+[env]
+BROWSER = "firefox"
