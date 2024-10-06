@@ -1,10 +1,10 @@
 [package]
 name = "intime"
+description = "display duration in a human-readable format"
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }
 license = { workspace = true }
-description = "calculate and display duration"
 homepage = { workspace = true }
 repository = { workspace = true }
 
@@ -16,7 +16,7 @@ workspace = true
 battery = {workspace = true}
 chrono = {workspace = true}
 uom = { workspace = true }
+thiserror = { workspace = true }
 
 # Frontend [main.rs]
 clap = {workspace = true}
-
