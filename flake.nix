@@ -178,6 +178,8 @@
               tokei
               trashy
               treefmt
+              starship
+              fish
 
               # Formatters
               mdformat
@@ -189,7 +191,14 @@
             ];
 
             shellHook = ''
-              . ${configPath}/init.sh
+              ${if configPath != null then ". ${configPath}/init.sh" else "echo 'Warning: init.sh not found'"}
+
+              # Set up Starship prompt
+              export STARSHIP_CONFIG=${./starship.toml}
+              eval "$(starship init bash)"
+
+              # Launch Fish shell
+              exec fish
             '';
           };
         }
