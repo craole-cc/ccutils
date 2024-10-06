@@ -384,29 +384,21 @@ project_clean() {
 }
 
 prompt_init() {
-	[ "$STARSHIP_CONFIG" ] ||
-		if [ -f "$PRJ_CONF/starship.toml" ]; then
-			export STARSHIP_CONFIG="$PRJ_CONF/starship.toml"
-		else
-			echo "Warning: starship.toml not found in $PRJ_CONF"
-		fi
+	app_available starship && {
+		[ "$STARSHIP_CONFIG" ] ||
+			if [ -f "$PRJ_CONF/starship.toml" ]; then
+				export STARSHIP_CONFIG="$PRJ_CONF/starship.toml"
+			else
+				echo "Warning: starship.toml not found in $PRJ_CONF"
+			fi
 
-	# eval "$(starship init bash)"
-
-	# Function to start Fish shell
-	if app_available "$1"; then
-		# case "$1" in
-		# 	fish)
-		exec "$1"
-
-	else
-		bash
-	fi
+		eval "$(starship init bash)"
+	}
 }
 
 main() {
 	helpers_init
 	project_info || return "$?"
 	project_init || return "$?"
-	# prompt_init fish
+	prompt_init
 } && main "$@"
