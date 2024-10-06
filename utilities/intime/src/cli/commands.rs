@@ -5,17 +5,17 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum Error {
-	#[error("Greet error: {0}")]
-	Greet(#[from] greet::Error),
-
-	#[error("Fetch error: {0}")]
-	Fetch(#[from] fetch::Error),
-
 	#[error("Clap error: {0}")]
 	Clap(#[from] clap::Error),
 
 	#[error("IO error: {0}")]
 	IO(#[from] std::io::Error),
+
+	#[error("Greet error: {0}")]
+	Greet(#[from] greet::Error),
+
+	#[error("Fetch error: {0}")]
+	Fetch(#[from] fetch::Error),
 
 	#[error("Unknown error occurred")]
 	Unknown,
