@@ -405,7 +405,5 @@ main() {
 	helpers_init
 	project_info || return "$?"
 	project_init || return "$?"
-	# If project_info fails, main will immediately exit with the same status code.
-	#
-	# If project_init fails, main will immediately exit with the same status code.
+	prompt_init
 } && main "$@"
