@@ -1,51 +1,75 @@
-# ~/.config/starship.toml
 
-# Format of the prompt
-format = """
-$username@${hostname}[$directory]($style) $character
-"""
+# Wait x milliseconds for starship to check files under the current directory.
+command_timeout = 1111
+scan_timeout = 1000
 
-# Character module settings
-[character]
-success_symbol = "[➜](green)"
-error_symbol = "[✖](red)"
-disabled = false
+[line_break]
+# disabled = true
 
-# Username module settings
-[username]
-style = "bold blue"
-disabled = false
-
-# Hostname module settings
-[hostname]
-style = "bold yellow"
-disabled = false
-
-# Directory module settings
 [directory]
-style = "cyan"
-truncation_length = 3
-truncate_to_repo = true
+format = "[$path]($style)[$read_only]($read_only_style) "
+truncation_length = 4
+truncate_to_repo = false
+truncation_symbol = "…/"
 
-# Git module settings
-[git_branch]
-symbol = "🌿 "
+[directory.substitutions]
+"Documents" = " "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+"Dotfiles" = "°°°"
+"~/DOTS" = "°°°"
+"global" = "🌐"
+"nixos" = "❄️ "
+
+[package]
+disabled = true
+
+[cmd_duration]
+min_time = 1000
+show_notifications = true
+
+[time]
+# disabled = true
+format = '🕙[ $time ]($style)'
+time_format = "%H:%M"
+utc_time_offset = "-5"
+time_range = '22:00:00-07:00:00'
+
+[shell]
+disabled = true
+
+[status]
+# disabled = true
+symbol = "🔴"
+format = '[$symbol $common_meaning$signal_name$maybe_int]($style) '
+map_symbol = true
+
+[character]
+success_symbol = "🚀"
+error_symbol = "🚩"
+
+[battery]
+full_symbol = "🔋 "
+charging_symbol = "⚡️ "
+discharging_symbol = "💀 "
+
+[sudo]
 style = "bold green"
+symbol = "👩‍💻 "
+allow_windows = true
+# disabled = true
 
 [git_status]
-style = "red"
-
-# Command duration settings
-[cmd_duration]
-min_time = 1000 # Show command duration over 1 second
-format = " took [$duration]($style)"
-
-# Battery module settings
-[battery]
-full_symbol = "🔋"
-charging_symbol = "🔌"
-discharging_symbol = "⚡"
-
-[[battery.display]]
-threshold = 30
-style = "bold red"
+# disabled = true
+conflicted = "🏳"
+ahead = "🏎💨"
+behind = "😰"
+diverged = "😵"
+up_to_date = "✓"
+untracked = "🤷‍"
+stashed = "📦"
+modified = "📝"
+staged = '[++\($count\)](green)'
+renamed = "👅"
+deleted = "🗑"
