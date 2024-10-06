@@ -14,7 +14,7 @@ pub struct Battery {
 	pub status: State,
 	pub time_to_full: Option<Time>,
 	pub time_to_empty: Option<Time>,
-	pub time_remaining: Duration,
+	pub time_left: Duration,
 	pub technology: Technology,
 	pub cycles: Option<u32>,
 	pub brand: Option<String>,
@@ -26,15 +26,60 @@ pub struct Battery {
 }
 
 #[derive(clap::Parser)]
+#[command(about = "Get information about the system battery")]
 pub enum BatteryCommands {
-	#[clap(external_subcommand)]
-	External(Vec<String>),
-}
+	#[command(
+		about = "Display a natural language statement about the battery",
+		long_about = "Provides a detailed, human-readable statement regarding the current battery status."
+	)]
+	Statement,
 
+	#[command(
+		about = "Show all battery information",
+		long_about = "Displays comprehensive information about the battery, including level, status, and more."
+	)]
+	All,
+
+	#[command(
+		about = "Show battery level percentage",
+		long_about = "Indicates the current battery level as a percentage."
+	)]
+	Level,
+
+	#[command(
+		about = "Show battery charging status",
+		long_about = "Reveals whether the battery is currently charging, discharging, or fully charged."
+	)]
+	Status,
+
+	#[command(
+		about = "Show time remaining for charge/discharge",
+		long_about = "Estimates the remaining time for the battery to fully charge or discharge based on current usage."
+	)]
+	Time,
+
+	#[command(
+		about = "Show battery technology",
+		long_about = "Provides details about the battery's technology, such as Li-ion or NiMH."
+	)]
+	Technology,
+
+	#[command(
+		about = "Show battery cycle count",
+		long_about = "Displays the number of charge cycles the battery has undergone."
+	)]
+	Cycle,
+
+	#[command(
+		about = "Show battery manufacturer",
+		long_about = "Identifies the company that manufactured the battery."
+	)]
+	Brand,
+}
 pub trait PrettyBattery {
 	fn pretty_level(&self) -> String;
 	fn pretty_status(&self) -> String;
-	fn pretty_time_remaining(&self) -> String;
+	fn pretty_time_left(&self) -> String;
 	fn pretty_technology(&self) -> String;
 	fn pretty_cycles(&self) -> (u32, &str);
 	fn pretty_brand(&self) -> &str;
@@ -59,7 +104,7 @@ impl Default for Battery {
 		let status = battery.state();
 		let time_to_empty = battery.time_to_empty();
 		let time_to_full = battery.time_to_full();
-		let time_remaining = if time_to_empty.is_some() {
+		let time_left = if time_to_empty.is_some() {
 			Duration::from_battery_time(time_to_empty)
 		} else if time_to_full.is_some() {
 			Duration::from_battery_time(time_to_full)
@@ -77,7 +122,7 @@ impl Default for Battery {
 			status,
 			time_to_full,
 			time_to_empty,
-			time_remaining,
+			time_left,
 			technology,
 			cycles,
 			brand,
@@ -90,7 +135,7 @@ impl PrettyBattery for Battery {
 		format!("Level: {}\nStatus: {}\nTime: {}\nTechnology: {}\nCycles: {}\nBrand: {}",
 			self.pretty_level(),
 			self.pretty_status(),
-			self.pretty_time_remaining(),
+			self.pretty_time_left(),
 			self.pretty_technology(),
 			self.pretty_cycles().0,
 			self.pretty_brand()
@@ -103,7 +148,7 @@ impl PrettyBattery for Battery {
 				"The battery is currently at {} and {}, with {} remaining {}",
 				self.pretty_level(),
 				self.status,
-				self.pretty_time_remaining(),
+				self.pretty_time_left(),
 				if has_cycles {
 					format!(
 						"on this its {}{} charge cycle.",
@@ -152,8 +197,8 @@ impl PrettyBattery for Battery {
 		format!("{:?}", self.status)
 	}
 
-	fn pretty_time_remaining(&self) -> String {
-		format!("{}", self.time_remaining)
+	fn pretty_time_left(&self) -> String {
+		format!("{}", self.time_left)
 	}
 
 	fn pretty_technology(&self) -> String {
@@ -200,7 +245,7 @@ impl Display for Battery {
 			"Status",
 			self.pretty_status(),
 			"Time",
-			self.pretty_time_remaining(),
+			self.pretty_time_left(),
 			"Technology",
 			self.pretty_technology(),
 			"Cycles",
@@ -210,45 +255,31 @@ impl Display for Battery {
 		)
 	}
 }
-
 impl Battery {
 	pub fn handle_command(
 		&self,
 		command: Option<&BatteryCommands>,
 	) -> String {
 		match command {
-			None => self.statement(),
-			Some(BatteryCommands::External(args)) => {
-				match args.first().map(|s| s.as_str()) {
-					Some("statement") => self.statement(),
-					Some("all") => self.all(),
-					Some("level") => {
-						format!("Level: {}", self.pretty_level())
-					}
-					Some("status") => {
-						format!("Status: {}", self.pretty_status())
-					}
-					Some("timeremaining") => {
-						format!(
-							"Time remaining: {}",
-							self.pretty_time_remaining()
-						)
-					}
-					Some("technology") => {
-						format!(
-							"Technology: {}",
-							self.pretty_technology()
-						)
-					}
-					Some("cycle") => {
-						format!("Cycle: {}", self.pretty_cycles().0)
-					}
-					Some("brand") => {
-						format!("Brand: {}", self.pretty_brand())
-					}
-					_ => self.statement(), // Default to statement for unknown commands
+			None => self.all(),
+			Some(cmd) => match cmd {
+				BatteryCommands::Statement => self.statement(),
+				BatteryCommands::All => self.all(),
+				BatteryCommands::Level => self.pretty_level(),
+				BatteryCommands::Status => self.pretty_status(),
+				BatteryCommands::Time => {
+					self.pretty_time_left()
 				}
-			}
+				BatteryCommands::Technology => {
+					self.pretty_technology()
+				}
+				BatteryCommands::Cycle => {
+					self.pretty_cycles().0.to_string()
+				}
+				BatteryCommands::Brand => {
+					self.pretty_brand().to_string()
+				}
+			},
 		}
 	}
 }

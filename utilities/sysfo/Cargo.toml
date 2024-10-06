@@ -13,10 +13,11 @@ repository = { workspace = true }
 workspace = true
 
 [dependencies]
-once_cell = { workspace = true }
-chrono = { workspace = true }
-sysinfo = { workspace = true }
-crossterm = { workspace = true }
 battery = { workspace = true }
-uom = { workspace = true }
+chrono = { workspace = true }
 clap = { workspace = true }
+crossterm = { workspace = true }
+iana-time-zone = { workspace = true }
+once_cell = { workspace = true }
+sysinfo = { workspace = true }
+uom = { workspace = true }

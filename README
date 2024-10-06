@@ -4,7 +4,7 @@ This project is a growing collection of CLI-based utilities, inspired by the ver
 
 This migration is driven by a desire to increase speed, consistency, and ease of use across my dotfiles and scripts, ensuring better portability. I operate across various environments, including Linux (particularly NixOS), Windows (Git Bash, Powershell and NixWSL), and recently macOS (with Nix). By building these utilities in Rust, I ensure they will run seamlessly across all my machines.
 
-In the future, I expect to package this project so it can be installed as a binary via popular package managers. For now, the way to install will be to clone the repository. If Nix is installed, you can use nix develop, which will set up the entire project in a temporary, isolated store. If Nix is not installed, the project can be built with cargo build --release, and the utilities will be located in the target/release folder.
+In the future, I expect to package this project so it can be installed as a binary via popular package managers. For now, the way to install will be to clone the repository. If Nix is installed, you can use `nix develop`, which will set up the entire project in a temporary, isolated store. If Nix is not installed, the project can be built with `cargo build --release`, and the utilities will be located in the `target/release` folder.
 
 One of the things I want to do is also automatically add the utilities to the PATH so they are available system-wide, regardless of the terminal or shell being used.
 
@@ -36,7 +36,7 @@ ccutils
 │  └─ utilities           # Documentation for each utility
 ├─ LICENSE-APACHE
 ├─ LICENSE-MIT
-├─ README                 # The document you're reading
+├─ README.md              # The document you're reading
 └─ utilities              # Individual utilities as separate crates
 ```
 

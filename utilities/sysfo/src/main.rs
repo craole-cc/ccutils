@@ -1,33 +1,10 @@
-use clap::Parser;
-use sysfo::{Battery, BatteryCommands};
+fn main() {
+	let info = sysfo::Fetcher::default();
+	// println!("{}", info.battery);
+	println!("{:#?}", info.time);
+	println!("{}", info.time);
 
-#[derive(Parser)]
-struct Cli {
-    #[clap(subcommand)]
-    command: Option<Commands>,
-}
-
-#[derive(Parser)]
-enum Commands {
-    Battery {
-        #[clap(subcommand)]
-        command: Option<BatteryCommands>,
-    },
-}
-
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut manager = sysfo::SystemInfoManager::new()?;
-    manager.refresh();
-
-    let battery = Battery::default();
-    let cli = Cli::parse();
-
-    match &cli.command {
-        Some(Commands::Battery { command }) => {
-            println!("{}", battery.handle_command(command.as_ref()));
-        }
-        None => println!("No command provided"),
-    }
-
-    Ok(())
+	// Get the current time zone as a string.
+	let tz_str = iana_time_zone::get_timezone().expect("msg");
+	println!("The current time zone is: {}", tz_str);
 }
