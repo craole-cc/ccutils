@@ -191,14 +191,17 @@
             ];
 
             shellHook = ''
-              ${if configPath != null then ". ${configPath}/init.sh" else "echo 'Warning: init.sh not found'"}
+              [ -d "${configPath}" ] || {
+                printf "Error: Configuration path %s does not exist." ${configPath}
+                return 1
+              }
 
-              # Set up Starship prompt
-              export STARSHIP_CONFIG=${./starship.toml}
-              eval "$(starship init bash)"
+              [ -f "${configPath}/init.sh" ] || {
+                printf "Error: init.sh not found in %s." ${configPath}
+                return 1
+              }
 
-              # Launch Fish shell
-              exec fish
+              . "${configPath}/init.sh"
             '';
           };
         }

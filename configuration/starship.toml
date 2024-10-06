@@ -1,0 +1,51 @@
+# ~/.config/starship.toml
+
+# Format of the prompt
+format = """
+$username@${hostname}[$directory]($style) $character
+"""
+
+# Character module settings
+[character]
+success_symbol = "[➜](green)"
+error_symbol = "[✖](red)"
+disabled = false
+
+# Username module settings
+[username]
+style = "bold blue"
+disabled = false
+
+# Hostname module settings
+[hostname]
+style = "bold yellow"
+disabled = false
+
+# Directory module settings
+[directory]
+style = "cyan"
+truncation_length = 3
+truncate_to_repo = true
+
+# Git module settings
+[git_branch]
+symbol = "🌿 "
+style = "bold green"
+
+[git_status]
+style = "red"
+
+# Command duration settings
+[cmd_duration]
+min_time = 1000 # Show command duration over 1 second
+format = " took [$duration]($style)"
+
+# Battery module settings
+[battery]
+full_symbol = "🔋"
+charging_symbol = "🔌"
+discharging_symbol = "⚡"
+
+[[battery.display]]
+threshold = 30
+style = "bold red"
