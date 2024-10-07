@@ -196,17 +196,17 @@
             ];
 
             shellHook = ''
-              [ -d "${configPath}" ] || {
-                printf "Error: Configuration path %s does not exist." ${configPath}
+              [ -d "${binPath}" ] || {
+                printf "Error: Configuration path %s does not exist." ${binPath}
                 return 1
               }
 
-              [ -f "${configPath}/init" ] || {
-                printf "Error: init not found in %s." ${configPath}
+              [ -f "${binPath}/init" ] || {
+                printf "Error: init not found in %s." ${binPath}
                 return 1
               }
 
-              . "${configPath}/init"
+              . "${binPath}/init"
             '';
           };
         }
