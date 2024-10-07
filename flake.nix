@@ -118,9 +118,6 @@
         else
           search basePath getNext;
 
-      configPath = dirOf (pathOf {
-        items = "init.sh";
-      });
 
       toolchainPath = pathOf {
         items = [
@@ -130,6 +127,17 @@
           "rust-toolchain.toml"
         ];
       };
+
+      configPath = dirOf toolchainPath;
+
+      binPath = dirOf (pathOf {
+        items = [
+          "init"
+          "init.sh"
+          "init.fish"
+          "init.zsh"
+        ];
+      });
 
       perSystem =
         f:
@@ -193,12 +201,12 @@
                 return 1
               }
 
-              [ -f "${configPath}/init.sh" ] || {
-                printf "Error: init.sh not found in %s." ${configPath}
+              [ -f "${configPath}/init" ] || {
+                printf "Error: init not found in %s." ${configPath}
                 return 1
               }
 
-              . "${configPath}/init.sh"
+              . "${configPath}/init"
             '';
           };
         }
