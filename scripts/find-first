@@ -3,14 +3,30 @@
 main() {
   set_defaults
   parse_arguments "$@"
+  establish_environment
   execute
 }
 
 set_defaults() {
-  search_root="${PRJ_ROOT:-$PWD}"
-  search_depth=2
-  search_type="file"
-  search_ignore=".git target"
+  _root="${PRJ_ROOT:-$PWD}"
+  _depth=2
+  _limit=1
+  _type="file"
+  _ignore=".git"
+
+  # Read .gitignore and append to _ignore
+  if [ -f "$_root/.gitignore" ]; then
+    while IFS= read -r line || [ -n "$line" ]; do
+      # Ignore empty lines, comments and overrides
+      case "$line" in
+      \#* | "" | \!*) continue ;;
+      */) line="${line%?}" ;;
+      esac
+      # Remove leading/trailing whitespace and quotes
+      line=$(echo "$line" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/^"//' -e 's/"$//')
+      _ignore="$_ignore $line"
+    done <"$_root/.gitignore"
+  fi
 }
 
 parse_arguments() {
@@ -19,65 +35,105 @@ parse_arguments() {
     case "$1" in
     --path) [ "$2" ] && {
       shift
-      search_root=$1
+      _root=$1
     } ;;
     --target) [ "$2" ] && {
       shift
-      search_target="$1"
+      _target="$1"
     } ;;
     --depth) [ "$2" ] && {
       shift
-      search_depth="$1"
+      _depth="$1"
     } ;;
     --ignore) [ "$2" ] && {
       shift
-      search_ignore="$search_ignore $1"
+      _ignore="$_ignore $1"
     } ;;
     --type) [ "$2" ] && {
       shift
-      search_type="$1"
+      _type="$1"
+    } ;;
+    --limit) [ "$2" ] && {
+      shift
+      _limit="$1"
     } ;;
     --debug) debug=true ;;
-    *) [ "$search_target" ] || search_target="$1" ;;
+    *) [ "$_target" ] || _target="$1" ;;
     esac
     shift
   done
+}
+
+establish_environment() {
 
   #| Search type (first letter and lowercase)
-  search_type="$(
-    printf "%s" "${search_type%"${search_type#?}"}" |
+  _type="$(
+    printf "%s" "${_type%"${_type#?}"}" |
       tr '[:upper:]' '[:lower:]'
   )"
 
   #| Ignore patterns
-  for pattern in $search_ignore; do
-    # search_ignore="$search_ignore **$pattern**"
+  for pattern in $_ignore; do
+    # _ignore="$_ignore **$pattern**"
     ignore_patterns="$ignore_patterns -not -path **$pattern**"
     # ignore_patterns="$ignore_patterns -not -path \"**$pattern\"**"
   done
-
-  # Trim leading spaces
   ignore_patterns="${ignore_patterns#"${ignore_patterns%%[![:space:]]*}"}"
+
+  #| Find command
+  find_cmd() {
+    #| Define the command based on the variables
+    if app_available fd; then
+      cmd="fd \
+    --follow \
+    --max-depth $_depth \
+    --type $_type \
+    --ignore-case \
+    \"$_target\" \
+    \"$_root\" $ignore_patterns"
+    else
+      cmd="find \
+      -L \"$_root\" \
+      -maxdepth \"$_depth\" \
+      -type \"$_type\" \
+      -iname \"$_target\" \
+      $ignore_patterns"
+    fi
+
+    #| Limit number of results per user argument
+    case "$_limit" in
+    [0-9]) cmd="$cmd | head -n $_limit" ;;
+    [1-9][0-9]) cmd="$cmd | head -n $_limit" ;;
+    esac
+
+    #| Remove extra whitespace
+    cmd=$(printf "%s" "$cmd" | tr -s '[:space:]')
+
+    case "$1" in
+    --check) printf "%s" "$cmd" ;;
+    --run | *) eval "$cmd" ;;
+    esac
+  }
+
+  debug_output() {
+    printf "ROOT: %s\n" "$_root"
+    printf "DEPTH: %s\n" "$_depth"
+    printf "TYPE: %s\n" "$_type"
+    printf "TARGET: %s\n" "$_target"
+    printf "LIMIT: %s\n" "$_limit"
+    printf "IGNORE: %s\n" "$_ignore"
+    printf "FIND_CMD: %s\n" "$(find_cmd --check)"
+  }
 }
 
 execute() {
+  [ "$debug" ] && debug_output
 
-  [ "$debug" = "true" ] && {
-    printf "ROOT: %s\n" "$search_root"
-    printf "DEPTH: %s\n" "$search_depth"
-    printf "TYPE: %s\n" "$search_type"
-    printf "TARGET: %s\n" "$search_target"
-    printf "IGNORE: %s ==> %s\n" "$search_ignore" "$ignore_patterns"
-  }
-
-  # shellcheck disable=SC2086
-  find \
-    -L "$search_root" \
-    -maxdepth "$search_depth" \
-    -type "$search_type" \
-    -iname "$search_target" \
-    $ignore_patterns |
-    head -n1
+  if [ "$(find_cmd)" ]; then
+    printf "%s" "$(find_cmd)"
+  else
+    [ "$debug" ] && printf "%s" "No results found"
+  fi
 }
 
 main "$@"
