@@ -14,7 +14,6 @@
     }:
     let
       inherit (builtins)
-        any
         attrNames
         dirOf
         elem
@@ -142,8 +141,6 @@
               overlays = [
                 (import rust)
                 (self: super: { toolchain = super.rust-bin.fromRustupToolchainFile toolchainPath; })
-
-                # (self: super: { toolchain = super.rust-bin.fromRustupToolchainFile ./.config/toolchain.toml; })
               ];
             };
           }

@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2034
 
-		helpers_init() {
+helpers_init() {
 	print_block() {
 		printf "%s\n\n" "$*"
 	}
