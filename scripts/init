@@ -124,6 +124,7 @@ project_info() {
 
 		#| Project Bin Directory
 		PRJ_BIN="$(dirname "$(find_first --target "init*")")"
+		PATH="$PRJ_BIN:$PATH"
 
 		#| Project Readme
 		PRJ_INFO="$(find_first --target "readme*")"
