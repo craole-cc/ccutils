@@ -84,20 +84,18 @@ establish_environment() {
   find_cmd() {
     #| Define the command based on the variables
     if app_available fd; then
-      cmd="fd \
-    --follow \
-    --max-depth $_depth \
-    --type $_type \
-    --ignore-case \
-    \"$_target\" \
-    \"$_root\" $ignore_patterns"
+      cmd="
+        fd --follow --ignore-case \"$_target\"
+      "
     else
-      cmd="find \
-      -L \"$_root\" \
-      -maxdepth \"$_depth\" \
-      -type \"$_type\" \
-      -iname \"$_target\" \
-      $ignore_patterns"
+      cmd="
+      find \
+        -L \"$_root\" \
+        -maxdepth \"$_depth\" \
+        -type \"$_type\" \
+        -iname \"$_target\" \
+        $ignore_patterns
+      "
     fi
 
     #| Limit number of results per user argument
