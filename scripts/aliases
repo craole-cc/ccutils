@@ -2,21 +2,13 @@
 
 # Helper function to set aliases
 set_alias() {
-    case "$SHELL" in
-        */fish)
-            echo "alias $1='$2'" >> ~/.config/fish/config.fish
-            ;;
-        */zsh)
-            echo "alias $1='$2'" >> ~/.zshrc
-            ;;
-        */nu)
-            echo "alias $1 = '$2'" >> ~/.config/nushell/config.nu
-            ;;
-        *)
-            # Default to POSIX style for sh/bash
-            alias "$1"="$2"
-            ;;
-    esac
+  if [ "$FISH_VERSION" ]; then
+    alias "$1" "$2"
+  elif [ "$ZSH_VERSION" ]; then
+    alias "$1"="$2"
+  elif [ "$KSH_VERSION" ]; then
+    alias "$1"="$2"
+  fi
 }
 
 #@ Aliases @#
@@ -66,9 +58,9 @@ app_available cargo && set_alias W 'cargo watch --quiet --clear --exec "run --"'
 app_available cargo && set_alias X 'project_clean --reset'
 
 if [ -f "$PRJ_INFO" ]; then
-    set_alias Y "cat \"$PRJ_INFO\""
+  set_alias Y "cat \"$PRJ_INFO\""
 else
-    set_alias Y 'project_info'
+  set_alias Y 'project_info'
 fi
 
 set_alias Z 'tokei'
