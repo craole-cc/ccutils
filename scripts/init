@@ -120,7 +120,10 @@ project_info() {
 		fi
 
 		#| Project Config Directory
-		PRJ_CONF="$(dirname "$(find_first --target "init*")")"
+		PRJ_CONF="$(dirname "$(find_first --target "scripts" --type "dir")")"
+
+		#| Project Bin Directory
+		PRJ_BIN="$(dirname "$(find_first --target "init*")")"
 
 		#| Project Readme
 		PRJ_INFO="$(find_first --target "readme*")"
