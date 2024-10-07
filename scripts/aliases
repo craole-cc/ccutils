@@ -1,16 +1,5 @@
 #!/bin/sh
 
-# Helper function to set aliases
-set_alias() {
-  if [ "$FISH_VERSION" ]; then
-    alias "$1" "$2"
-  elif [ "$ZSH_VERSION" ]; then
-    alias "$1"="$2"
-  elif [ "$KSH_VERSION" ]; then
-    alias "$1"="$2"
-  fi
-}
-
 #@ Aliases @#
 app_available bat && set_alias cat 'bat --style=plain'
 
