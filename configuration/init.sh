@@ -128,6 +128,21 @@ project_info() {
 		#| Project Name
 		PRJ_NAME="$(basename "$PRJ_ROOT" | tr '[:upper:]' '[:lower:]' | tr ' ' '_')"
 
+		#| Starship
+		app_available starship &&
+			STARSHIP_CONFIG="${STARSHIP_CONFIG:-$PRJ_CONF/starship.toml}"
+
+		#| Helix
+		app_available hx && {
+			if
+				[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/helix/config.toml" ]
+			then
+				HELIX_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/helix/config.toml"
+			elif [ -f "$PRJ_CONF/helix.toml" ]; then
+				HELIX_CONFIG="$PRJ_CONF/helix.toml"
+			fi
+		}
+
 		#| Direnv Log Format
 		app_available direnv && DIRENV_LOG_FORMAT=""
 
@@ -164,10 +179,10 @@ project_info() {
 		app_available cargo && alias B='cargo build --release'
 		app_available cargo && alias C='project_clean'
 		app_available dust && alias D='cargo remove'
-		app_available hx && alias E='hx'
+		app_available hx && alias E='project_edit'
 		alias F='project_format'
 		app_available cargo && alias G='cargo generate'
-		app_available hx && alias H='hx "$PRJ_ROOT"'
+		app_available hx && alias H='project_edit "$PRJ_ROOT"'
 		alias I='project_init'
 		app_available just && alias J='just'
 		alias K='exit'
@@ -383,17 +398,12 @@ project_clean() {
 	done
 }
 
-prompt_init() {
-	app_available starship && {
-		[ "$STARSHIP_CONFIG" ] ||
-			if [ -f "$PRJ_CONF/starship.toml" ]; then
-				export STARSHIP_CONFIG="$PRJ_CONF/starship.toml"
-			else
-				echo "Warning: starship.toml not found in $PRJ_CONF"
-			fi
+project_edit() {
+	hx --config "$HELIX_CONFIG" "$@"
+}
 
-		eval "$(starship init bash)"
-	}
+prompt_init() {
+	[ -f "$STARSHIP_CONFIG" ] && eval "$(starship init bash)"
 }
 
 main() {
