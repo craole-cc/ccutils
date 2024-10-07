@@ -1,0 +1,83 @@
+#!/bin/sh
+
+main() {
+  set_defaults
+  parse_arguments "$@"
+  execute
+}
+
+set_defaults() {
+  search_root="${PRJ_ROOT:-$PWD}"
+  search_depth=2
+  search_type="file"
+  search_ignore=".git target"
+}
+
+parse_arguments() {
+  #| Command-line arguments
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+    --path) [ "$2" ] && {
+      shift
+      search_root=$1
+    } ;;
+    --target) [ "$2" ] && {
+      shift
+      search_target="$1"
+    } ;;
+    --depth) [ "$2" ] && {
+      shift
+      search_depth="$1"
+    } ;;
+    --ignore) [ "$2" ] && {
+      shift
+      search_ignore="$search_ignore $1"
+    } ;;
+    --type) [ "$2" ] && {
+      shift
+      search_type="$1"
+    } ;;
+    --debug) debug=true ;;
+    *) [ "$search_target" ] || search_target="$1" ;;
+    esac
+    shift
+  done
+
+  #| Search type (first letter and lowercase)
+  search_type="$(
+    printf "%s" "${search_type%"${search_type#?}"}" |
+      tr '[:upper:]' '[:lower:]'
+  )"
+
+  #| Ignore patterns
+  for pattern in $search_ignore; do
+    # search_ignore="$search_ignore **$pattern**"
+    ignore_patterns="$ignore_patterns -not -path **$pattern**"
+    # ignore_patterns="$ignore_patterns -not -path \"**$pattern\"**"
+  done
+
+  # Trim leading spaces
+  ignore_patterns="${ignore_patterns#"${ignore_patterns%%[![:space:]]*}"}"
+}
+
+execute() {
+
+  [ "$debug" = "true" ] && {
+    printf "ROOT: %s\n" "$search_root"
+    printf "DEPTH: %s\n" "$search_depth"
+    printf "TYPE: %s\n" "$search_type"
+    printf "TARGET: %s\n" "$search_target"
+    printf "IGNORE: %s ==> %s\n" "$search_ignore" "$ignore_patterns"
+  }
+
+  # shellcheck disable=SC2086
+  find \
+    -L "$search_root" \
+    -maxdepth "$search_depth" \
+    -type "$search_type" \
+    -iname "$search_target" \
+    $ignore_patterns |
+    head -n1
+}
+
+main "$@"

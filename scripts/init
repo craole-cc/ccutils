@@ -120,11 +120,13 @@ project_info() {
 		fi
 
 		#| Project Config Directory
-		PRJ_CONF="$(dirname "$(find_first --target "scripts" --type "dir")")"
+		[ "$PRJ_CONF" ] || PRJ_CONF="$(dirname "$(find_first --target "toolchain.toml")")"
+		[ "$PRJ_CONF" ] || PRJ_CONF="$(dirname "$(find_first --type dir --target "configuration")")"
 
-		#| Project Bin Directory
+		#| Project Bins Directory
 		PRJ_BIN="$(dirname "$(find_first --target "init*")")"
-		PATH="$PRJ_BIN:$PATH"
+		PRJ_RELEASE="$PRJ_ROOT/target/release"
+		PATH="$PRJ_RELEASE:$PRJ_BIN:$PATH"
 
 		#| Project Readme
 		PRJ_INFO="$(find_first --target "readme*")"

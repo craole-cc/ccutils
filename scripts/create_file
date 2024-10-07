@@ -1,0 +1,14 @@
+#!/bin/sh
+
+while [ "$#" -gt 0 ]; do
+
+  #? Create the parent directory if it doesn't exist
+  case "$1" in
+  */*) mkdir --parents "$(dirname "$1")" ;;
+  esac
+
+  #? Create the file
+  touch "$1"
+
+  shift
+done
