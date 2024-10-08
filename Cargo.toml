@@ -20,6 +20,7 @@ members = [
   "utilities/pathof",
   "utilities/slink",
   "utilities/sysfo",
+  "utilities/wheres",
 ]
 
 [workspace.lints.rust]
