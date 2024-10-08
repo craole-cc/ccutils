@@ -1,5 +1,6 @@
 [package]
 name = "whers"
+description = "Search for files matching a pattern"
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }
@@ -19,3 +20,5 @@ ignore = { workspace = true }
 num_cpus = { workspace = true }
 dirs = { workspace = true }
 strsim = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
