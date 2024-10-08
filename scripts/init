@@ -124,9 +124,10 @@ project_info() {
 		[ "$PRJ_CONF" ] || PRJ_CONF="$(dirname "$(find_first --type dir --target "configuration")")"
 
 		#| Project Bins Directory
-		PRJ_BIN="$(dirname "$(find_first --target "init*")")"
+		PRJ_SCRIPTS="$(dirname "$(find_first --target "init*")")"
 		PRJ_RELEASE="$PRJ_ROOT/target/release"
-		PATH="$PRJ_RELEASE:$PRJ_BIN:$PATH"
+		PRJ_BIN="$PRJ_RELEASE:$PRJ_BIN"
+		PATH="$PRJ_BIN:$PATH"
 
 		#| Project Readme
 		PRJ_INFO="$(find_first --target "readme*")"
@@ -162,7 +163,7 @@ project_info() {
 
 		print_heading "Variables"
 		print_block "$(
-			for var in PRJ_NAME PRJ_ROOT PRJ_CONF PRJ_INFO; do
+			for var in PRJ_NAME PRJ_ROOT PRJ_CONF PRJ_INFO PRJ_BIN; do
 				eval "val=\$$var"
 				[ -n "$val" ] && printf '%s=%s\n' "$var" "$val"
 			done

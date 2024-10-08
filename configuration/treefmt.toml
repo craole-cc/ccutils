@@ -11,9 +11,15 @@ excludes = [
 [formatter.mdformat]
 command = "mdformat"
 excludes = []
-includes = ["*.md", "**/*LICENSE", "**/*README"]
+includes = ["*.md", "**/*LICENSE", "**/*README", "LICENSE-*"]
 options = []
 priority = 0
+
+[formatter.alejandra]
+command = "alejandra"
+excludes = []
+includes = ["*.nix"]
+options = []
 
 [formatter.nixfmt]
 command = "nixfmt"
@@ -53,13 +59,13 @@ options = ["--edition", "2021"]
 
 [formatter.shellcheck]
 command = "shellcheck"
-includes = ["*.sh", ".env*"]
+includes = ["*.sh", ".env*", "scripts/*"]
 priority = 0
 
 [formatter.shfmt]
 command = "shfmt"
 options = ["-s", "-w"]
-includes = ["*.sh", ".gitignore", ".env*"]
+includes = ["*.sh", ".gitignore", ".ignore", ".env*", "scripts/*"]
 priority = 1
 
 [formatter.taplo]
