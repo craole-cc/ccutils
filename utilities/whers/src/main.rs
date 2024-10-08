@@ -1,8 +1,9 @@
 use clap::{Parser, ValueEnum};
-use std::process::{exit, Command};
+use rust_search_fork::SearchBuilder;
+use std::process::exit;
 
 #[derive(Parser, Debug)]
-#[command(name = "Rust Search Tool")]
+#[command(name = "WHErs")]
 #[command(version = "1.0")]
 #[command(about = "Search for files matching a pattern")]
 struct Config {
@@ -38,41 +39,42 @@ struct Config {
 fn main() {
 	let config = Config::parse();
 
-	execute_process(&config);
+	execute_search(&config);
 }
 
-fn execute_process(config: &Config) {
-	let mut command = Command::new("fd");
+fn execute_search(config: &Config) {
+	let search =
+		SearchBuilder::default().location(&config.path).build();
 
-	if let Some(depth) = config.depth {
-		command.arg("--max-depth").arg(depth.to_string());
-	}
+	// if let Some(depth) = config.depth {
+	// 	options.max_depth(depth as usize);
+	// }
 
-	if !config.ignore.is_empty() {
-		for ignore in &config.ignore {
-			command.arg("--ignore").arg(ignore);
-		}
-	}
+	// if !config.ignore.is_empty() {
+	// 	for ignore in &config.ignore {
+	// 		options.ignore_pattern(ignore);
+	// 	}
+	// }
 
-	if config.hidden {
-		command.arg("--hidden");
-	}
+	// if config.hidden {
+	// 	options.include_hidden(true);
+	// }
 
-	if config.case_sensitive {
-		command.arg("--case-sensitive");
-	} else {
-		command.arg("--ignore-case");
-	}
+	// options.case_sensitive(config.case_sensitive);
 
-	command.arg(&config.pattern).arg(&config.path);
+	// if let Some(limit) = config.limit {
+	// 	options.max_results(limit as usize);
+	// }
 
-	let output = command.output().expect("Failed to execute process");
+	// let results = Search::new(&config.pattern, &config.path, options)
+	// 	.expect("Failed to execute search");
 
-	if output.status.success() {
-		let result = String::from_utf8_lossy(&output.stdout);
-		println!("{}", result);
-	} else {
-		eprintln!("No results found");
-		exit(1);
-	}
+	// if !results.is_empty() {
+	// 	for result in results {
+	// 		println!("{}", result.path().display());
+	// 	}
+	// } else {
+	// 	eprintln!("No results found");
+	// 	exit(1);
+	// }
 }
