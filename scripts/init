@@ -126,8 +126,16 @@ project_info() {
 		#| Project Bins Directory
 		PRJ_SCRIPTS="$(dirname "$(find_first --target "init*")")"
 		PRJ_RELEASE="$PRJ_ROOT/target/release"
-		PRJ_BIN="$PRJ_RELEASE:$PRJ_BIN"
-		PATH="$PRJ_BIN:$PATH"
+
+		for path in "$PRJ_SCRIPTS" "$PRJ_SCRIPTS"; do
+			[ -d "$path" ] || continue
+
+			case "$PRJ_BIN" in *$path*) continue ;;
+			*) PRJ_BIN="$path:$PRJ_BIN" ;; esac
+
+			case "$PATH" in *$path*) continue ;;
+			*) PATH="$path:$PATH" ;; esac
+		done
 
 		#| Project Readme
 		PRJ_INFO="$(find_first --target "readme*")"
