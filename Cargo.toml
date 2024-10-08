@@ -20,7 +20,6 @@ members = [
   "utilities/pathof",
   "utilities/slink",
   "utilities/sysfo",
-  "utilities/wheres",
   "utilities/whers",
 ]
 

@@ -768,17 +768,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust_search"
-version = "2.1.2"
-dependencies = [
- "dirs 5.0.1",
- "ignore",
- "num_cpus",
- "regex",
- "strsim 0.11.1",
-]
-
-[[package]]
 name = "rust_search_fork"
 version = "2.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1175,14 +1164,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c62a0a307cb4a311d3a07867860911ca130c3494e8c2719593806c08bc5d0484"
 
 [[package]]
-name = "wheres"
+name = "whers"
 version = "0.1.0"
 dependencies = [
  "battery",
  "chrono",
  "clap",
- "rust_search 2.1.0",
+ "dirs 5.0.1",
+ "ignore",
+ "num_cpus",
+ "regex",
+ "rust_search",
  "rust_search_fork",
+ "strsim 0.11.1",
 ]
 
 [[package]]

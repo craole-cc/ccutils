@@ -1,18 +1,19 @@
 [package]
-name = "rust_search"
-version = "2.1.2"
-description = "Blazingly fast file search library built in Rust"
-edition = "2021"
-authors = ["Parth Jadhav <jadhavparth99@gmail.com>"]
-license = "MIT"
-readme = "README.md"
-repository = "https://github.com/ParthJadhav/rust_search"
-keywords = ["search", "files", "directories", "library"]
-categories = ["filesystem", "algorithms"]
+name = "whers"
+version = { workspace = true }
+edition = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lints]
+workspace = true
 
 [dependencies]
+battery = { workspace = true }
+chrono = { workspace = true }
+clap = { workspace = true }
+rust_search = { workspace = true }
+rust_search_fork = { workspace = true }
 regex = { workspace = true }
 ignore = { workspace = true }
 num_cpus = { workspace = true }
