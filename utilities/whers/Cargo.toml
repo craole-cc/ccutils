@@ -1,0 +1,20 @@
+[package]
+name = "rust_search"
+version = "2.1.2"
+description = "Blazingly fast file search library built in Rust"
+edition = "2021"
+authors = ["Parth Jadhav <jadhavparth99@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/ParthJadhav/rust_search"
+keywords = ["search", "files", "directories", "library"]
+categories = ["filesystem", "algorithms"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+regex = { workspace = true }
+ignore = { workspace = true }
+num_cpus = { workspace = true }
+dirs = { workspace = true }
+strsim = { workspace = true }

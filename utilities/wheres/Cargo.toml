@@ -4,3 +4,13 @@ version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }
 license = { workspace = true }
+
+[lints]
+workspace = true
+
+[dependencies]
+battery = { workspace = true }
+chrono = { workspace = true }
+clap = { workspace = true }
+rust_search = { workspace = true }
+rust_search_fork = { workspace = true }
