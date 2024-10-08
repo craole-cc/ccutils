@@ -160,7 +160,7 @@ pub fn init() {
 		_ => println!("Don't be crazy"),
 	}
 
-	tracing::info!("Config: {:#?}", cli);
+	// ::info!("Config: {:#?}", cli);
 	// search(&cli);
 }
 
@@ -210,7 +210,7 @@ fn search(config: &Cli) {
 	// }
 
 	let result: Vec<String> = options.build().collect();
-	tracing::info!("Results: {:#?}", result);
+	// tracing::info!("Results: {:#?}", result);
 
 	if !result.is_empty() {
 		for result in result {

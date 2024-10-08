@@ -8,20 +8,21 @@ homepage = "https://craole.cc/utils"
 repository = "https://github.com/craole-cc/ccutils"
 
 [workspace]
-resolver = "2"
 members = [
   #| Support
   # "configuration",
+  "crates/tracer",
+  "crates/intime",
 
   #| Core
-  "utilities/embellish",
-  "utilities/geet",
-  "utilities/intime",
-  "utilities/pathof",
-  "utilities/slink",
-  "utilities/sysfo",
-  "utilities/whers",
+  "crates/embellish",
+  "crates/geet",
+  "crates/pathof",
+  "crates/slink",
+  "crates/sysfo",
+  "crates/whers",
 ]
+resolver = "2"
 
 [workspace.lints.rust]
 unsafe_code = { level = "forbid", priority = -1 }
@@ -44,7 +45,7 @@ dirs = "5.0.1"
 
 #| Utilities
 crossterm = "0.28.1"
-clap = { version = "4.5.18", features = ["derive", "cargo"] }
+clap = { version = "4.5.20", features = ["derive", "cargo"] }
 directories = "5.0.1"
 glob = "0.3.1"
 tempfile = "3.13.0"

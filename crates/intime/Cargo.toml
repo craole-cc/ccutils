@@ -17,6 +17,7 @@ battery = { workspace = true }
 chrono = { workspace = true }
 uom = { workspace = true }
 thiserror = { workspace = true }
+tracing-subscriber = { workspace = true }
 
 # Frontend [main.rs]
 clap = { workspace = true }

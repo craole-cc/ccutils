@@ -1,6 +1,6 @@
 # InTime - Time Duration Formatter
 
-InTime is a versatile utility designed to format time durations into a human-readable format. As part of the **[ccutils](../../)** Rust project, it primarily functions as a library for integration into Rust applications, but it also includes a command-line interface (CLI) for ease of use. This dual functionality allows developers to leverage InTime's capabilities in various contexts, whether embedding it in larger projects or using it directly from the terminal.
+InTime is a versatile utility designed to format time durations into a human-readable format. As part of the **[ccutils](../..)** Rust project, it primarily functions as a library for integration into Rust applications, but it also includes a command-line interface (CLI) for ease of use. This dual functionality allows developers to leverage InTime's capabilities in various contexts, whether embedding it in larger projects or using it directly from the terminal.
 
 ## Features
 
