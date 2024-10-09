@@ -252,7 +252,7 @@ project_info() {
 
 		print_heading "Aliases"
 
-		print_block "$(printf "   " alias | grep "alias [A-Z]=")"
+		print_block "$(alias | grep "   alias [A-Z]=")"
 	}
 
 	size_check() {
