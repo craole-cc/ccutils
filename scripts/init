@@ -123,11 +123,11 @@ project_info() {
 		[ "$PRJ_CONF" ] || PRJ_CONF="$(dirname "$(find_first --target "toolchain.toml")")"
 		[ "$PRJ_CONF" ] || PRJ_CONF="$(dirname "$(find_first --type dir --target "configuration")")"
 
-		#| Project Bins Directory
+		#| Project Bin Directory
 		PRJ_SCRIPTS="$(dirname "$(find_first --target "init*")")"
 		PRJ_RELEASE="$PRJ_ROOT/target/release"
 
-		for path in "$PRJ_SCRIPTS" "$PRJ_SCRIPTS"; do
+		for path in "$PRJ_SCRIPTS" "$PRJ_RELEASE"; do
 			[ -d "$path" ] || continue
 
 			case "$PRJ_BIN" in *$path*) continue ;;
@@ -168,19 +168,33 @@ project_info() {
 		}
 
 		set +o allexport
+		echo "$PRJ_BIN"
 
 		print_heading "Variables"
 		print_block "$(
+			# PRJ_BIN="$(printf '[\n\t %s\n\t]' "${PRJ_BIN%?}" | tr ':' ' ' | sed 's/^//g')"
+			# PRJ_BIN="$(printf '[\n\t %s\n  ]' "$(printf '%s\n' "${PRJ_BIN%?}" | tr ':' '\n')")"
+			# PRJ_BIN="$(printf '[\n\t%s\n]' "$(printf '\t%s\n' "$(echo "${PRJ_BIN%:}" | tr ':' '\n')")")"
+			# PRJ_BIN="$(printf '[\n%s\n]' "$(echo "$PRJ_BIN" | tr ':' '\n' | sed 's/^/\t/')")"
+			PRJ_BIN="$(
+				printf '[\n%s\n\t         ]' "$(
+					printf "%s" "$PRJ_BIN" |
+						tr ':' '\n' |
+						sed 's/^/\t\t   /'
+				)"
+			)"
+
 			for var in PRJ_NAME PRJ_ROOT PRJ_CONF PRJ_INFO PRJ_BIN; do
 				eval "val=\$$var"
-				[ -n "$val" ] && printf '%s=%s\n' "$var" "$val"
+				[ -n "$val" ] && printf '%14s = %s\n' "$var" "$val"
+
 			done
 
 			app_available just && {
 
 				for var in JUST_JUSTFILE JUST_UNSTABLE; do
 					eval "val=\$$var"
-					[ -n "$val" ] && printf '%s=%s\n' "$var" "$val"
+					[ -n "$val" ] && printf '%14s = %s\n' "$var" "$val"
 				done
 			}
 		)"
@@ -254,6 +268,7 @@ project_info() {
 		print_block "$(
 			apps="cargo code dust hx just rustc tokei treefmt"
 			for app in $apps; do
+				printf "   "
 				if app_available "$app"; then
 					print_status --success --app "$app"
 				else

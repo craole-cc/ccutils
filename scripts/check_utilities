@@ -7,10 +7,10 @@ apps="cargo code dust hx just rustc tokei treefmt"
 set -- $apps
 
 while [ "$#" -gt 0 ]; do
-  if app_available "$1"; then
-    pout --status --success --app "$1"
-  else
-    pout --status --failure --app "$1"
-  fi
-  shift
+	if app_available "$1"; then
+		pout --status --success --app "$1"
+	else
+		pout --status --failure --app "$1"
+	fi
+	shift
 done

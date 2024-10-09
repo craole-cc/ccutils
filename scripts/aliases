@@ -10,24 +10,24 @@ app_available dust && set_alias D 'cargo remove'
 app_available hx && set_alias E 'project_edit'
 set_alias F 'project_format'
 app_available cargo && set_alias G 'cargo generate'
-app_available hx && set_alias H 'project_edit "$PRJ_ROOT"'
+app_available hx && set_alias H "project_edit \"$PRJ_ROOT\""
 set_alias I 'project_init'
 app_available just && set_alias J 'just'
 set_alias K 'exit'
 
 if app_available eza; then
-  set_alias ls 'eza --almost-all --group-directories-first --color=always --icons=always --git --git-ignore --time-style relative --total-size --smart-group'
-  set_alias L 'ls --long '
-  set_alias La 'ls --long --git'
-  set_alias Lt 'L --tree'
+	set_alias ls 'eza --almost-all --group-directories-first --color=always --icons=always --git --git-ignore --time-style relative --total-size --smart-group'
+	set_alias L 'ls --long '
+	set_alias La 'ls --long --git'
+	set_alias Lt 'L --tree'
 elif app_available lsd; then
-  set_alias ls 'lsd --almost-all --group-directories-first --color=always'
-  set_alias L 'ls --long --git --date=relative --versionsort --total-size'
-  set_alias Lt 'L --tree'
+	set_alias ls 'lsd --almost-all --group-directories-first --color=always'
+	set_alias L 'ls --long --git --date=relative --versionsort --total-size'
+	set_alias Lt 'L --tree'
 else
-  set_alias ls 'ls --almost-all --group-directories-first --color=always'
-  set_alias L 'ls -l'
-  set_alias Lt 'L --recursive'
+	set_alias ls 'ls --almost-all --group-directories-first --color=always'
+	set_alias L 'ls -l'
+	set_alias Lt 'L --recursive'
 fi
 
 app_available pls && set_alias Lp 'pls --det perm --det oct --det user --det group --det mtime --det git --det size --header false'
@@ -47,9 +47,9 @@ app_available cargo && set_alias W 'cargo watch --quiet --clear --exec "run --"'
 app_available cargo && set_alias X 'project_clean --reset'
 
 if [ -f "$PRJ_INFO" ]; then
-  set_alias Y "cat \"$PRJ_INFO\""
+	set_alias Y "cat \"$PRJ_INFO\""
 else
-  set_alias Y 'project_info'
+	set_alias Y 'project_info'
 fi
 
 set_alias Z 'tokei'

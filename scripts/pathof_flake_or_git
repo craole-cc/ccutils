@@ -3,18 +3,18 @@
 #? Check if the current directory or any parent directory has a flake.nix file
 dir="$PWD"
 while [ "$dir" != "/" ]; do
-  if [ -f "$dir/flake.nix" ]; then
-    printf "%s" "$dir"
-    return 0
-  fi
-  dir=$(dirname "$dir")
+	if [ -f "$dir/flake.nix" ]; then
+		printf "%s" "$dir"
+		return 0
+	fi
+	dir=$(dirname "$dir")
 done
 
 #? In the unlikely event that this is not a Flake, check if the current directory or any parent directory is a Git repository
 if git rev-parse --show-toplevel >/dev/null 2>&1; then
-  git rev-parse --show-toplevel
+	git rev-parse --show-toplevel
 else
-  #? If not a Git repository, print an error message and exit
-  print_status --error "Failed to determine the project root (either a Flake or Git repository)"
-  return 2
+	#? If not a Git repository, print an error message and exit
+	print_status --error "Failed to determine the project root (either a Flake or Git repository)"
+	return 2
 fi
