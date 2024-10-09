@@ -286,7 +286,6 @@ project_info() {
 project_init() {
 	print_heading "Project"
 	app_available cargo || {
-		printf "   "
 		print_status \
 			--error "Initialization failed" \
 			--dependency "cargo"
