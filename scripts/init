@@ -268,7 +268,6 @@ project_info() {
 		print_block "$(
 			apps="cargo code dust hx just rustc tokei treefmt"
 			for app in $apps; do
-				printf "   "
 				if app_available "$app"; then
 					print_status --success --app "$app"
 				else
