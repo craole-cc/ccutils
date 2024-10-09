@@ -251,8 +251,7 @@ project_info() {
 		alias Z='tokei'
 
 		print_heading "Aliases"
-
-		print_block "$(alias | grep "   alias [A-Z]=")"
+		print_block "$(alias | grep "alias [A-Z]=")"
 	}
 
 	size_check() {
