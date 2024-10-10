@@ -11,7 +11,7 @@ repository = "https://github.com/craole-cc/ccutils"
 members = [
   #| Support
   # "configuration",
-  "crates/tracer",
+  "crates/logline",
   "crates/intime",
 
   #| Core

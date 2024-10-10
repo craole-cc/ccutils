@@ -10,7 +10,7 @@ license = { workspace = true }
 workspace = true
 
 [dependencies]
-tracer = { path = "../tracer" }
+logline = { path = "../logline" }
 clap = { workspace = true }
 
 rust_search = { workspace = true }

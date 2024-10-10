@@ -13,6 +13,7 @@ repository = { workspace = true }
 workspace = true
 
 [dependencies]
+logline = { path = "../logline" }
 battery = { workspace = true }
 chrono = { workspace = true }
 clap = { workspace = true }

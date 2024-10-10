@@ -6,16 +6,28 @@ use tracing_subscriber::{
 
 /// A struct to configure and initialize tracing.
 #[derive(Debug)]
-pub struct Tracer {
+pub struct Options {
+	max_level: Level,
+	time_type: TimeOption,
 	use_env: bool,
-	with_time_type: TimeOption,
-	without_time: bool,
-	with_duration: bool,
 	with_file: bool,
 	with_target: bool,
 	with_lines: bool,
 	with_level: bool,
-	max_level: Level,
+}
+
+impl Default for Options {
+	fn default() -> Self {
+		Self {
+			max_level: Level::INFO,
+			time_type: TimeOption::default(),
+			with_file: false,
+			use_env: false,
+			with_target: true,
+			with_lines: false,
+			with_level: true,
+		}
+	}
 }
 
 #[derive(Debug, Default, PartialEq, Clone)]
@@ -26,24 +38,8 @@ pub enum TimeOption {
 	Time,
 }
 
-impl Default for Tracer {
-	fn default() -> Self {
-		Self {
-			use_env: false, // Use environment variables
-			with_time_type: TimeOption::default(), // Time option
-			without_time: true, // Hides all timestamps and duration output
-			with_duration: true, // Shows the time it took to execute
-			with_file: false, // Shows the file name and line number
-			with_target: true, // Shows the name of the crate that logs the trace
-			with_lines: false, // Shows the line number
-			with_level: true,  // Shows the log level
-			max_level: Level::INFO, // The default log level
-		}
-	}
-}
-
-impl Tracer {
-	/// Creates a new Tracer with default settings.
+impl Options {
+	/// Creates a new logline with default settings.
 	pub fn new() -> Self {
 		Self::default()
 	}
@@ -62,22 +58,22 @@ impl Tracer {
 
 	/// Configures the time option.
 	pub fn with_time_option(mut self, option: TimeOption) -> Self {
-		self.with_time_type = option.clone();
+		self.time_type = option.clone();
 		self
 	}
 
 	pub fn without_time(mut self) -> Self {
-		self.with_time_type = TimeOption::None;
+		self.time_type = TimeOption::None;
 		self
 	}
 
 	pub fn with_time(mut self) -> Self {
-		self.with_time_type = TimeOption::Time;
+		self.time_type = TimeOption::Time;
 		self
 	}
 
 	pub fn with_duration(mut self) -> Self {
-		self.with_time_type = TimeOption::Duration;
+		self.time_type = TimeOption::Duration;
 		self
 	}
 
@@ -194,7 +190,7 @@ impl Tracer {
 
 	pub fn init(self) {
 		match self.use_env {
-			true => match self.with_time_type {
+			true => match self.time_type {
 				TimeOption::Duration => {
 					self.init_via_env_with_duration()
 				}
@@ -203,7 +199,7 @@ impl Tracer {
 					self.init_via_env_with_without_time()
 				}
 			},
-			false => match self.with_time_type {
+			false => match self.time_type {
 				TimeOption::Duration => {
 					self.init_via_subscriber_with_duration()
 				}

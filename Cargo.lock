@@ -525,6 +525,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a7a70ba024b9dc04c27ea2f0c0548feb474ec5c54bba33a7f72f873a39d07b24"
 
 [[package]]
+name = "logline"
+version = "0.1.0"
+dependencies = [
+ "intime",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "mach"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -935,6 +944,7 @@ dependencies = [
  "clap",
  "crossterm",
  "iana-time-zone",
+ "logline",
  "once_cell",
  "sysinfo",
  "uom 0.36.0",
@@ -995,15 +1005,6 @@ checksum = "8b9ef9bad013ada3808854ceac7b46812a6465ba368859a37e2100283d2d719c"
 dependencies = [
  "cfg-if",
  "once_cell",
-]
-
-[[package]]
-name = "tracer"
-version = "0.1.0"
-dependencies = [
- "intime",
- "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]
@@ -1189,12 +1190,12 @@ dependencies = [
  "clap",
  "dirs 5.0.1",
  "ignore",
+ "logline",
  "num_cpus",
  "regex",
  "rust_search",
  "rust_search_fork",
  "strsim 0.11.1",
- "tracer",
  "which",
 ]
 

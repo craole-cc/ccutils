@@ -1,5 +1,5 @@
 [package]
-name = "tracer"
+name = "logline"
 description = "manages tracing and debug messages internally"
 version = { workspace = true }
 edition = { workspace = true }
