@@ -1,20 +1,14 @@
-use logline::{debug, error, info, trace, warn, Info, Level, Time};
 // mod cli;
 
 fn main() {
-	Info::default()
-		// .with_max_level(Level::DEBUG)
-		// .use_env()
-		// .with_time(Time::Datetime)
-		.show_line()
-		.init();
-
+	logline::init();
+	// init_tracing()
 	// cli::init();
-	let message = "Hello, world!";
-	// println!("{}", message);
-	trace!("{}", message);
-	debug!("{}", message);
-	info!("{}", message);
-	warn!("{}", message);
-	error!("{}", message);
+
+	let message = "Tracing initialized via logline!";
+	logline::trace!("{}", message);
+	logline::debug!("{}", message);
+	logline::info!("{}", message);
+	logline::warn!("{}", message);
+	logline::error!("{}", message);
 }

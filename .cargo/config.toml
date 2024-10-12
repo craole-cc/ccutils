@@ -42,5 +42,5 @@ quiet = false
 
 #| Environment Variables
 [env]
-RUST_LOG = "whers=error,sysfo=info,intime=TRACE"
+RUST_LOG = "whers=trace,sysfo=trace,intime=TRACE"
 BROWSER = "firefox"

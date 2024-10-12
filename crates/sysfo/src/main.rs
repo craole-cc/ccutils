@@ -1,10 +1,9 @@
 fn main() {
-	logline::Info::new()
-		.with_max_level(logline::Level::TRACE)
-		.init();
+	logline::init();
 
 	let info = sysfo::Fetcher::default();
 	// println!("{}", info.battery);
 	println!("{:#?}", info.time);
-	println!("{}", info.time);
+	logline::trace!("{:#?}", info.time);
+	logline::error!("{:#?}", info.time);
 }

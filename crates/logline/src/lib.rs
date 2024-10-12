@@ -1,9 +1,7 @@
-mod display;
-mod info;
-mod utils;
+mod config;
+pub mod utils;
 
-pub use info::{Info, Options, Time};
-
-// Re-export the tracing and tracing_subscriber crates
-pub use tracing::{self, debug, error, info, trace, warn, Level};
+pub use config::*;
+pub use tracing::{self, debug, error, info, trace, warn};
 pub use tracing_subscriber;
+pub use utils::*;
