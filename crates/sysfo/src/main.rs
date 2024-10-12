@@ -1,5 +1,5 @@
 fn main() {
-	logline::Options::new()
+	logline::Info::new()
 		.with_max_level(logline::Level::TRACE)
 		.init();
 

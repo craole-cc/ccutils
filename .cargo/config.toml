@@ -5,8 +5,36 @@
 [alias]
 rr = "run --release"
 rq = "run --quiet"
-wq = "watch --quiet --clear --exec rr"
+rp = "run --package"
+rrp = "run  --release --package"
+rqp = "run --quiet --package"
+wq = "watch --quiet --clear --exec"
+wrp = "wq rrp --"
+# wqp = "wq rqp --"
+wqp = "watch --quiet --clear --exec rqp"
+
 br = "build --release"
+# sysfo = "watch --quiet --clear --exe sysfo"
+# whers = "watch -q -x -x 'rq whers'"
+
+
+#> sysfo
+rr-sysfo = "rrp sysfo"
+rq-sysfo = "rqp sysfo"
+wr-sysfo = "wq rr-sysfo"
+wq-sysfo = "wq rq-sysfo"
+
+#> intime
+rr-intime = "rrp intime"
+rq-intime = "rqp intime"
+wr-intime = "wrp rrp intime"
+w-intime = "wq rq-intime"
+
+#> whers
+rr-whers = "rrp whers"
+rq-whers = "rqp whers"
+wr-whers = "wq rr-whers"
+wq-whers = "wq rq-whers"
 
 #| Terminal Config
 [term]
@@ -14,4 +42,5 @@ quiet = false
 
 #| Environment Variables
 [env]
+RUST_LOG = "whers=error,sysfo=info,intime=TRACE"
 BROWSER = "firefox"
