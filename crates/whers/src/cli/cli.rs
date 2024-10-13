@@ -4,7 +4,7 @@ use clap::{Parser, ValueEnum};
 use rust_search_fork::{FilterExt, SearchBuilder};
 
 #[derive(Parser, Debug, Clone)]
-#[command(name="WHErs",version, about, long_about = None)]
+#[command(name="whers",version, about, long_about = None)]
 struct Cli {
     /// The pattern to search for
     query: Vec<String>,
