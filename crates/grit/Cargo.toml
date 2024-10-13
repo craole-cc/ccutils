@@ -1,5 +1,5 @@
 [package]
-name = "pathof"
+name = "grit"
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }

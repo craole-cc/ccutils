@@ -4,18 +4,16 @@ use std::path::PathBuf;
 
 fn main() -> AnyhowResult<()> {
 	logline::init();
-	logline::info!("{}", "Tracing initialized via logline!");
-	// init_tracing()
-	// cli::init();
-
-	// let pathof = core::pathof_cmd("ls").context(
-	// 	"Failed to find the path"
-	// )?;
 
 	test_pathof_cmd("rustc");
-	test_pathof_cmd("pathof");
 	test_pathof_cmd("type");
 	test_pathof_cmd("ls");
+	test_pathof_cmd("mv");
+	test_pathof_cmd("ver3n");
+	test_pathof_cmd("wal");
+	test_pathof_cmd("fd");
+	test_pathof_cmd("find");
+	test_pathof_cmd("pwsh.exe");
 	test_pathof_cmd("whereis");
 
 	Ok(())

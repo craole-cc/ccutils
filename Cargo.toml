@@ -17,8 +17,7 @@ members = [
 
   #| Core
   "crates/embellish",
-  "crates/geet",
-  "crates/pathof",
+  "crates/grit",
   "crates/slink",
   "crates/sysfo",
   "crates/whers",

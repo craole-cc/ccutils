@@ -1,4 +1,4 @@
-mod utils;
+mod cmd;
 mod error;
 
-pub use utils::*;
+pub use cmd::pathof_cmd;
