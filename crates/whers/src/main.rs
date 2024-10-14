@@ -1,31 +1,17 @@
-mod core;
-use erks::{AnyhowResult, Context};
-use std::path::PathBuf;
+// mod cli;
+use erks::AnyhowResult;
 
 fn main() -> AnyhowResult<()> {
-	logline::init();
+	logline::init_warnings();
+	let search = whers::data::Search::default()
+		.with_pattern("init")
+		.with_direction("Both")
+		.exclude(vec!["target".to_string()]);
 
-	test_pathof_cmd("rustc");
-	test_pathof_cmd("type");
-	test_pathof_cmd("ls");
-	test_pathof_cmd("mv");
-	test_pathof_cmd("ver3n");
-	test_pathof_cmd("wal");
-	test_pathof_cmd("fd");
-	test_pathof_cmd("find");
-	test_pathof_cmd("pwsh.exe");
-	test_pathof_cmd("whereis");
+	logline::info!("{:#?}", search);
+
+	logline::warn!("{:#?}", search.execute()?);
+	// cli::init();
 
 	Ok(())
-}
-
-fn test_pathof_cmd(command: &str) {
-	match core::pathof_cmd(command) {
-		Ok(path) => {
-			logline::info!("{:#?}", path);
-		}
-		Err(e) => {
-			logline::error!("{}", e);
-		}
-	};
 }

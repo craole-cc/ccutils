@@ -1,18 +1,38 @@
-use super::error::{CommandError, PathError};
-use std::collections::HashSet;
-use std::env;
-use std::path::{Path, PathBuf};
-use std::process::Command;
+use std::{
+	env,
+	path::{Path, PathBuf},
+};
 use whereismybin::whereismybin;
 use which::which;
 
-fn get_path_env() -> Vec<PathBuf> {
+
+pub fn locate_executable(command: &str) -> Option<PathBuf> {
+	// Try whereismybin
+	if let Some(path) = whereismybin(command) {
+		path;
+	}
+
+	// Try which
+	if let Ok(path) = which(command) {
+		path;
+	}
+
+	// Search in PATH
+	for path in search_in_path(command) {
+		path;
+	}
+
+	None
+}
+
+
+pub fn get_path_env() -> Vec<PathBuf> {
 	env::var_os("PATH")
 		.map(|paths| env::split_paths(&paths).collect())
 		.unwrap_or_default()
 }
 
-fn search_in_path(command: &str) -> Vec<PathBuf> {
+pub fn search_in_path(command: &str) -> Vec<PathBuf> {
 	get_path_env()
 		.into_iter()
 		.filter_map(|dir| {
@@ -27,7 +47,7 @@ fn search_in_path(command: &str) -> Vec<PathBuf> {
 }
 
 #[cfg(target_family = "unix")]
-fn get_shell_builtin_commands() -> Vec<String> {
+pub fn get_shell_builtin_commands() -> Vec<String> {
 	// This list is not exhaustive and may vary depending on the shell
 	vec![
 		"alias", "bg", "cd", "command", "echo", "eval", "exec",
@@ -40,7 +60,7 @@ fn get_shell_builtin_commands() -> Vec<String> {
 }
 
 #[cfg(target_family = "windows")]
-fn get_shell_builtin_commands() -> Vec<String> {
+pub fn get_shell_builtin_commands() -> Vec<String> {
 	// This list is not exhaustive and may vary depending on the shell (cmd.exe or PowerShell)
 	vec![
 		"cd", "chdir", "cls", "copy", "del", "dir", "echo", "exit",
@@ -52,41 +72,8 @@ fn get_shell_builtin_commands() -> Vec<String> {
 	.collect()
 }
 
-pub fn pathof_cmd(
-	command: &str,
-) -> Result<Vec<PathBuf>, CommandError> {
-	let mut paths = HashSet::new();
-
-	// Check if it's a shell builtin
-	if get_shell_builtin_commands().contains(&command.to_lowercase())
-	{
-		paths.insert(PathBuf::from("[shell builtin]"));
-	}
-
-	// Try whereismybin
-	if let Some(path) = whereismybin(command) {
-		paths.insert(path);
-	}
-
-	// Try which
-	if let Ok(path) = which(command) {
-		paths.insert(path);
-	}
-
-	// Search in PATH
-	paths.extend(search_in_path(command));
-
-	// If no paths found, return an error
-	if paths.is_empty() {
-		Err(CommandError::CommandNotFound(command.to_string()))
-	} else {
-		Ok(paths.into_iter().collect())
-	}
-}
-
-// Helper function to check if a path is executable
 #[cfg(unix)]
-fn is_executable(path: &Path) -> bool {
+pub fn is_executable(path: &Path) -> bool {
 	use std::os::unix::fs::PermissionsExt;
 	path.metadata()
 		.map(|m| m.permissions().mode() & 0o111 != 0)
@@ -94,7 +81,9 @@ fn is_executable(path: &Path) -> bool {
 }
 
 #[cfg(windows)]
-fn is_executable(path: &Path) -> bool {
+pub fn is_executable(path: &Path) -> bool {
+	use std::path::Path;
+
 	path.extension().map_or(false, |ext| {
 		ext.eq_ignore_ascii_case("exe")
 			|| ext.eq_ignore_ascii_case("cmd")

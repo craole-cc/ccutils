@@ -1,6 +1,6 @@
 [package]
 name = "whers"
-description = "Search for files matching a pattern"
+description = "Locate files or commands"
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }
@@ -12,9 +12,11 @@ workspace = true
 [dependencies]
 logline = { path = "../logline" }
 erks = { path = "../erks" }
-thiserror = { workspace = true }
-anyhow = { workspace = true }
-which = { workspace = true }
-whereis = { workspace = true }
-whereismybin = { workspace = true }
 clap = { workspace = true }
+directories = { workspace = true }
+thiserror = { workspace = true }
+regex = { workspace = true }
+which = { workspace = true }
+criterion = { workspace = true }
+
+[dev-dependencies]
