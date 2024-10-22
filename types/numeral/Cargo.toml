@@ -18,5 +18,34 @@ clap = { workspace = true }
 num2words = { workspace = true }
 num = { workspace = true }
 num-bigfloat = { workspace = true }
-bigdecimal = { workspace = true }
+bigdecimal = { workspace = true, optional = true }
+rust_decimal = { workspace = true }
 once_cell = { workspace = true }
+# thiserror = { workspace = true }
+
+mimalloc = { version = "0.1", optional = true }
+lru = { workspace = true }
+dashmap = { workspace = true }
+simd-json = { workspace = true }
+cfg-if = { workspace = true }
+
+[dev-dependencies]
+criterion = { workspace = true }
+proptest = { workspace = true }
+test-case = { workspace = true }
+
+[features]
+default = [
+  "std-alloc",
+  "bigdecimal",
+  "mi-alloc",
+  "simd",
+] # Enable all features by default
+bigdecimal = ["dep:bigdecimal"]
+std-alloc = []
+mi-alloc = ["dep:mimalloc"]
+simd = []
+
+# [[bench]]
+# name = "parse_decimal"
+# harness = false

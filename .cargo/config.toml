@@ -22,8 +22,6 @@ rr-numeral = "rrp numeral"
 rq-numeral = "rqp numeral"
 wr-numeral = "wq rr-numeral"
 wq-numeral = "wq rq-numeral"
-# wq-numeral = "watch --quiet --clear --exec 'run --quiet --package numeral -- 90'"
-
 
 #> sysfo
 rr-sysfo = "rrp sysfo"

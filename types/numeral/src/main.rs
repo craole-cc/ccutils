@@ -1,4 +1,11 @@
-
 fn main() -> erks::AnyhowResult<()> {
-	numeral::test()
+	logline::Logline::default()
+		.with_level(logline::TRACE)
+		.ugly()
+		.show_line()
+		// .show_target()
+		.init();
+
+	numeral::test();
+	Ok(())
 }

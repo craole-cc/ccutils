@@ -1,6 +1,7 @@
-use erks::thiserror;
+use bigdecimal::ParseBigDecimalError;
 use num::bigint::ParseBigIntError;
 use std::{borrow::Cow, num::ParseIntError};
+use erks::thiserror;
 
 /// An enumeration of errors that can occur during parsing operations.
 ///
@@ -9,10 +10,6 @@ use std::{borrow::Cow, num::ParseIntError};
 /// and parsing failures.
 #[derive(Debug, thiserror::Error)]
 pub enum Error<'a> {
-	/// Indicates that an empty string was provided for parsing.
-	#[error("Empty string after cleaning")]
-	EmptyString,
-
 	/// Indicates that there are too many decimal points in the input.
 	#[error("Too many decimal points: {0}")]
 	TooManyDecimalPoints(usize),
@@ -65,6 +62,32 @@ pub enum Error<'a> {
 	/// - `input`: The original input string that caused the error.
 	#[error("Failed to parse valid fractional from '{1}'\nInvalidFractional: {0}")]
 	InvalidFractional(ParseIntError, Cow<'a, str>),
+
+	#[error("Failed to parse valid mantissa from '{1}'\nInvalidFractional: {0}")]
+	InvalidMantissa(ParseBigDecimalError, Cow<'a, str>),
+
+	#[error("Failed to parse valid exponent from '{1}'\nInvalidFractional: {0}")]
+	InvalidExponent(ParseIntError, Cow<'a, str>),
+
+	#[error("Failed to parse Int from '{1}'\nParseIntError: {0}")]
+	InvalidBigDecimal(ParseBigDecimalError, Cow<'a, str>),
+
+	#[error("Failed to parse scientific notation from '{1}'\nParseFloatError: {0}")]
+	InvalidScientificNotation(
+		std::num::ParseFloatError,
+		Cow<'a, str>,
+	),
+	#[error("Invalid decimal format: {0}")]
+	InvalidFormat(&'a str),
+	#[error("Number too large: {0}")]
+	Overflow(&'a str),
+	#[error("Invalid scientific notation: {0}")]
+	InvalidScientific(&'a str),
+	#[cfg(feature = "bigdecimal")]
+	#[error("BigDecimal error: {0}")]
+	BigDecimal(#[from] bigdecimal::ParseBigDecimalError),
+	#[error("Decimal error: {0}")]
+	Decimal(#[from] rust_decimal::Error),
 }
 
 impl<'a> Error<'a> {

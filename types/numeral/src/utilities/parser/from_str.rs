@@ -30,12 +30,13 @@ pub fn big_integer<T: AsRef<str>>(
 
 	// Check if the cleaned string is empty
 	if cleaned.is_empty() {
-		return Err(Error::EmptyString);
+		// return Err(Error::EmptyString);
+		Ok(BigInt::zero())
+	} else {
+		// Parse the BigInt from the cleaned string
+		BigInt::from_str(&cleaned)
+			.map_err(|err| Error::InvalidBigInt(err, cleaned.into()))
 	}
-
-	// Parse the BigInt from the cleaned string
-	BigInt::from_str(&cleaned)
-		.map_err(|err| Error::InvalidBigInt(err, cleaned.into()))
 }
 
 /// Parses a string into an `isize`.
@@ -57,18 +58,21 @@ pub fn big_integer<T: AsRef<str>>(
 /// This function can return the following errors:
 /// - `Error::EmptyString`: If the cleaned string is empty.
 /// - `Error::InvalidInt`: If parsing the cleaned string into an `isize` fails.
-pub fn integer<T: AsRef<str>>(integer: T) -> Result<isize, Error<'static>> {
+pub fn integer<T: AsRef<str>>(
+	integer: T,
+) -> Result<isize, Error<'static>> {
 	// Clean the string by removing leading/trailing whitespace and commas
 	let cleaned = integer.as_ref().trim().replace(",", "");
 
 	// Check if the cleaned string is empty
 	if cleaned.is_empty() {
-		return Err(Error::EmptyString);
+		// return Err(Error::EmptyString);
+		Ok(isize::zero())
+	} else {
+		// Parse the BigInt from the cleaned string
+		isize::from_str(&cleaned)
+			.map_err(|err| Error::InvalidInt(err, cleaned.into()))
 	}
-
-	// Parse the integer from the cleaned string
-	isize::from_str(&cleaned)
-		.map_err(|err| Error::InvalidInt(err, cleaned.into()))
 }
 
 /// Parses a string into a `BigDecimal`.
@@ -93,13 +97,15 @@ pub fn integer<T: AsRef<str>>(integer: T) -> Result<isize, Error<'static>> {
 /// - `Error::TooManyDecimalPoints`: If more than one decimal point is found in the input.
 /// - `Error::InvalidBigInt`: If parsing fails while converting to BigInt.
 /// - `Error::InvalidFractional`: If there are issues with parsing fractional parts.
-pub fn float<T: AsRef<str>>(float: T) -> Result<BigDecimal, Error<'static>> {
+pub fn float<T: AsRef<str>>(
+	float: T,
+) -> Result<BigDecimal, Error<'static>> {
 	// Clean the string by removing leading/trailing whitespace and commas
 	let cleaned = float.as_ref().trim().replace(",", "");
 
 	// Check if the cleaned string is empty
 	if cleaned.is_empty() {
-		return Err(Error::EmptyString);
+		return Ok(BigDecimal::zero());
 	}
 
 	// Split the string into integer and fractional parts
@@ -128,8 +134,7 @@ pub fn float<T: AsRef<str>>(float: T) -> Result<BigDecimal, Error<'static>> {
 	};
 
 	// Determine scale (number of digits after decimal point)
-	const MAX_SCALE: usize = 19; // Example maximum scale size for illustration
-
+	const MAX_SCALE: usize = isize::MAX as usize;
 	let scale = match parts.get(1) {
 		Some(fractional_part) if !fractional_part.is_empty() => {
 			// Check for negative fractional part
