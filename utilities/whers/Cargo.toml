@@ -13,7 +13,7 @@ workspace = true
 [dependencies]
 logline = { path = "../../libraries/logline" }
 erks = { path = "../../libraries/erks" }
-numeral = { path = "../../types/numeral" }
+numba = { path = "../../types/numba" }
 clap = { workspace = true }
 directories = { workspace = true }
 regex = { workspace = true }

@@ -112,9 +112,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.90"
+version = "1.0.91"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37bf3594c4c988a53154954629820791dde498571819ae4ca50ca811e060cc95"
+checksum = "c042108f3ed77fd83760a5fd79b53be043192bb3b9dba91d8c574c0ada7850c8"
 
 [[package]]
 name = "arrayvec"
@@ -957,12 +957,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "num-bigfloat"
-version = "1.7.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d5ee1e61b978cc2196731ebb9e349d6f27b99750ad674ae7a2f26ae6e93be7e4"
-
-[[package]]
 name = "num-bigint"
 version = "0.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1023,16 +1017,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "num2words"
-version = "1.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2ab78b987a0e1e6cf869a443f7f1c9dc696117d47780227e961e742d0b45d706"
-dependencies = [
- "num-bigfloat",
-]
-
-[[package]]
-name = "numeral"
+name = "numba"
 version = "0.1.0"
 dependencies = [
  "bigdecimal",
@@ -1045,8 +1030,6 @@ dependencies = [
  "lru",
  "mimalloc",
  "num",
- "num-bigfloat",
- "num2words",
  "once_cell",
  "proptest",
  "rust_decimal",
@@ -1574,9 +1557,9 @@ dependencies = [
 
 [[package]]
 name = "simd-json"
-version = "0.14.1"
+version = "0.14.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bfa5500f67df6466a45c6f83d1aada89fe0f7e9b17afec424ea06feee0906549"
+checksum = "b1df0290e9bfe79ddd5ff8798ca887cd107b75353d2957efe9777296e17f26b5"
 dependencies = [
  "getrandom",
  "halfbrown",
@@ -1736,18 +1719,18 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "1.0.64"
+version = "1.0.65"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d50af8abc119fb8bb6dbabcfa89656f46f84aa0ac7688088608076ad2b459a84"
+checksum = "5d11abd9594d9b38965ef50805c5e469ca9cc6f197f883f717e0269a3057b3d5"
 dependencies = [
  "thiserror-impl",
 ]
 
 [[package]]
 name = "thiserror-impl"
-version = "1.0.64"
+version = "1.0.65"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08904e7672f5eb876eaaf87e0ce17857500934f4981c4a0ab2b4aa98baac7fc3"
+checksum = "ae71770322cbd277e69d762a16c444af02aa0575ac0d174f0b9562d3b37f8602"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2039,7 +2022,7 @@ dependencies = [
  "directories",
  "erks",
  "logline",
- "numeral",
+ "numba",
  "regex",
  "which",
 ]

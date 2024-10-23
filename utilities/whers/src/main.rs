@@ -4,8 +4,8 @@ use whers::data::*;
 
 fn main() -> AnyhowResult<()> {
 	logline::init();
+	numba::test();
 	Search::test();
-	numeral::test();
 
 	// let result = whers::types::Number;
 	// logline::info!("{:#?}", result);

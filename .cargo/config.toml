@@ -17,11 +17,11 @@ br = "build --release"
 # sysfo = "watch --quiet --clear --exe sysfo"
 # whers = "watch -q -x -x 'rq whers'"
 
-#> numeral
-rr-numeral = "rrp numeral"
-rq-numeral = "rqp numeral"
-wr-numeral = "wq rr-numeral"
-wq-numeral = "wq rq-numeral"
+#> numba
+rr-numba = "rrp numba"
+rq-numba = "rqp numba"
+wr-numba = "wq rr-numba"
+wq-numba = "wq rq-numba"
 
 #> sysfo
 rr-sysfo = "rrp sysfo"
