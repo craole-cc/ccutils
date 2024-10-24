@@ -1,6 +1,4 @@
-mod cache;
 mod output;
-pub use cache::CACHE;
 
 mod data;
 pub use data::*;
