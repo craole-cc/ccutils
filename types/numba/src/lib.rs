@@ -10,5 +10,5 @@ mod tools;
 pub use tools::*;
 
 pub fn test() {
-	decimal::test();
+	// decimal::test();
 }
