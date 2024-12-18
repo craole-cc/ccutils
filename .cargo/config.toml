@@ -17,6 +17,12 @@ br = "build --release"
 # sysfo = "watch --quiet --clear --exe sysfo"
 # whers = "watch -q -x -x 'rq whers'"
 
+#> genna
+rr-genna = "rrp genna"
+rq-genna = "rqp genna"
+wr-genna = "wq rr-genna"
+wq-genna = "wq rq-genna"
+
 #> numba
 rr-numba = "rrp numba"
 rq-numba = "rqp numba"
@@ -47,5 +53,5 @@ quiet = false
 
 #| Environment Variables
 [env]
-RUST_LOG = "whers=trace,sysfo=trace,intime=TRACE"
+RUST_LOG = "whers=trace,sysfo=trace,intime=TRACE,genna=trace,numba=trace"
 BROWSER = "firefox"
