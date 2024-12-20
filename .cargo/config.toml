@@ -3,6 +3,7 @@
 
 #| Aliases
 [alias]
+br = "build --release"
 rr = "run --release"
 rq = "run --quiet"
 rp = "run --package"
@@ -10,12 +11,7 @@ rrp = "run  --release --package"
 rqp = "run --quiet --package"
 wq = "watch --quiet --clear --exec"
 wrp = "wq rrp --"
-# wqp = "wq rqp --"
 wqp = "watch --quiet --clear --exec rqp"
-
-br = "build --release"
-# sysfo = "watch --quiet --clear --exe sysfo"
-# whers = "watch -q -x -x 'rq whers'"
 
 #> genna
 rr-genna = "rrp genna"
@@ -28,6 +24,12 @@ rr-numba = "rrp numba"
 rq-numba = "rqp numba"
 wr-numba = "wq rr-numba"
 wq-numba = "wq rq-numba"
+
+#> scraps
+rr-scraps = "rrp scraps"
+rq-scraps = "rqp scraps"
+wr-scraps = "wq rr-scraps"
+wq-scraps = "wq rq-scraps"
 
 #> sysfo
 rr-sysfo = "rrp sysfo"

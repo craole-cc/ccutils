@@ -1,30 +1,34 @@
 use crate::{
 	debug, error, info, trace, warn, Logline, DEBUG, ERROR, INFO,
-	TRACE, WARN,
+	TRACE, WARN, Level,
 };
 
 pub fn init() {
 	Logline::default().init();
 }
 
+pub fn init_with_level(level: Level) {
+	Logline::default().with_level(level).init();
+}
+
 pub fn init_trace() {
-	Logline::default().with_level(TRACE).init();
+	init_with_level(TRACE);
 }
 
 pub fn init_debug() {
-	Logline::default().with_level(DEBUG).init();
+	init_with_level(DEBUG);
 }
 
 pub fn init_info() {
-	Logline::default().with_level(INFO).init();
+	init_with_level(INFO);
 }
 
 pub fn init_warnings() {
-	Logline::default().with_level(WARN).init();
+	init_with_level(WARN);
 }
 
 pub fn init_errors() {
-	Logline::default().with_level(ERROR).init();
+	init_with_level(ERROR);
 }
 
 pub fn test() {
