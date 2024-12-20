@@ -1,7 +1,7 @@
 use scraps::*;
 
 #[tokio::main]
-async fn main() -> AnyhowResult<()> {
+async fn main() -> anyhow::Result<()> {
     logline::init_with_level(INFO);
 
     let target_url = "https://scrapeme.live/shop/";

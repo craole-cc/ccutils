@@ -1,4 +1,6 @@
-// use anyhow::{Context, Result};
+
+use anyhow::{Context, Result};
+use logline::debug;
 use reqwest::get;
 use scraper::{Html, Selector};
 // use tracing::debug;
@@ -12,7 +14,7 @@ use scraper::{Html, Selector};
 /// # Returns
 ///
 /// * `Result<String>` - On success, returns the HTML content as a `String`. On failure, returns an error.
-pub async fn html_content(url: &str) -> AnyhowResult<String> {
+pub async fn html_content(url: &str) ->Result<String> {
     let response = get(url)
         .await
         .context(format!("Failed to send URL request for: '{}'", url))?;

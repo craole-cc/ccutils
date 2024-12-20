@@ -2479,14 +2479,11 @@ dependencies = [
 name = "scraps"
 version = "0.1.0"
 dependencies = [
- "anyhow",
  "erks",
  "logline",
  "reqwest",
  "scraper",
  "tokio",
- "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]
