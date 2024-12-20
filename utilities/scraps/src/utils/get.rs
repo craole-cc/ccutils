@@ -1,7 +1,7 @@
 // use anyhow::{Context, Result};
 use reqwest::get;
 use scraper::{Html, Selector};
-use tracing::debug;
+// use tracing::debug;
 
 /// Fetches the content from the given URL and returns it as a `String`.
 ///
