@@ -15,3 +15,5 @@ workspace = true
 logline = { path = "../../libraries/logline" }
 tokio = { workspace = true }
 genai = { workspace = true }
+dotenv-vault = { workspace = true }
+dotenvy = { workspace = true }

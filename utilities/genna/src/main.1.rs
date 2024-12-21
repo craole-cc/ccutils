@@ -11,7 +11,6 @@ use genai::{
 use std::env::var;
 
 const MODELS: &[(&str, &str)] = &[
-	("MODEL_TAG", "MODEL_KEY"),
 	("OPENAI_MODEL", "OPENAI_API_KEY"),
 	("ANTHROPIC_MODEL", "ANTHROPIC_API_KEY"),
 	("GEMINI_MODEL", "GEMINI_API_KEY"),
@@ -32,47 +31,33 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 		ChatMessage::system("Answer the following question!"),
 		ChatMessage::user("What is the meaning of life?"),
 	]);
-	let print_options =
-		PrintChatStreamOptions::from_print_events(false);
+	// let options Option<T> = None;
+	// let response =
+	// 	client.exec_chat_stream(model, request, None).await?;
+
+	// print_chat_stream(response, None).await?;
 
 	for (model_var, key_var) in MODELS {
 		let model = match var(model_var) {
 			Ok(val) => val,
 			Err(_) => continue,
 		};
+
 		let key = match var(key_var) {
 			Ok(val) => val,
 			Err(_) => continue,
 		};
 		logline::trace!("{:#?}: {:#?}", &model, &key);
 
-		let response =
-			client.exec_chat(&model, request.clone(), None).await?;
 
-		let response_content = match response.content_text_into_string() {
-			Ok(content) => content,
-			Err(err) => {
-				logline::error!("Error: {:#?}", &err);
-				continue;
-			}
-		};
+		let adapter = client.resolve_service_target(&model);
+		// logline::trace!("adapter_kind: {:#?}", adapter_kind.ok().unwrap());
 
-		let stream = client
-			.exec_chat_stream(&model, request.clone(), None)
-			.await?;
+		// let adapter_kind = adapter::AdapterKind::from(model.as_str());
 
-		logline::trace!("Response: {:#?}", &response_content);
-		// logline::trace!(
-		// 	"StreamedResponse: {:#?}",
-		// 	print_chat_stream(stream, Some(&print_options)).await?
-		// );
+		// let adapter_kind = client.resolve_model_iden(&model);
+		// client.resolve_model_iden(&model)?.adapter_kind;
 	}
 
 	Ok(())
-}
-
-fn get_env_var(
-	key: &str,
-) -> Result<String, Box<dyn std::error::Error>> {
-	var(key).map_err(|_| format!("{} not set", key).into())
 }
