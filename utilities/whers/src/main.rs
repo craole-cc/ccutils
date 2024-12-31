@@ -1,8 +1,7 @@
 // mod cli;
-use erks::AnyhowResult;
 use whers::data::*;
 
-fn main() -> AnyhowResult<()> {
+fn main() -> anyhow::Result<()> {
 	logline::init();
 	numba::test();
 	Search::test();

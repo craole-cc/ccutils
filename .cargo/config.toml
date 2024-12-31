@@ -14,6 +14,12 @@ wrp = "wq rrp --"
 wqp = "watch --quiet --clear --exec rqp"
 
 #> genna
+rr-colorscheme = "rrp colorscheme"
+rq-colorscheme = "rqp colorscheme"
+wr-colorscheme = "wq rr-colorscheme"
+wq-colorscheme = "wq rq-colorscheme"
+
+#> genna
 rr-genna = "rrp genna"
 rq-genna = "rqp genna"
 wr-genna = "wq rr-genna"

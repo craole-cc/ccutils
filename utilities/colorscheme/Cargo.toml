@@ -1,6 +1,6 @@
 [package]
-name = "whers"
-description = "Locate files or commands"
+name = "colorscheme"
+description = "Get or set the desktop color scheme"
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }
@@ -12,13 +12,12 @@ workspace = true
 
 [dependencies]
 logline = { path = "../../libraries/logline" }
-# erks = { path = "../../libraries/erks" }
+erks = { path = "../../libraries/erks" }
 numba = { path = "../../types/numba" }
 clap = { workspace = true }
 directories = { workspace = true }
 regex = { workspace = true }
 which = { workspace = true }
-# criterion = { workspace = true }
 thiserror = { workspace = true }
 anyhow = { workspace = true }
 

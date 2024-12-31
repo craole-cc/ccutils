@@ -19,6 +19,9 @@ num = { workspace = true }
 # num2words = { workspace = true }
 # num-bigfloat = { workspace = true }
 
+#| Error Handling
+thiserror = { workspace = true }
+
 #| Config
 logline = { path = "../../libraries/logline" }
 erks = { path = "../../libraries/erks" }

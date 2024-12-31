@@ -18,6 +18,7 @@ members = [
   "libraries/logline",
   "libraries/intime",
   "types/numba",
+  "utilities/colorscheme",
   "utilities/embellish",
   "utilities/genna",
   "utilities/grit",

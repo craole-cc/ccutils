@@ -16,12 +16,12 @@ workspace = true
 tokio = { workspace = true }
 
 #| Web
-reqwest={workspace = true}
-scraper={workspace = true}
+reqwest = { workspace = true }
+scraper = { workspace = true }
 
 #| Logging
 logline = { path = "../../libraries/logline" }
-erks = { path = "../../libraries/erks" }
-# anyhow = "1.0.94"
+# erks = { path = "../../libraries/erks" }
+anyhow = { workspace = true }
 # tracing = "0.1"
 # tracing-subscriber = "0.3"
