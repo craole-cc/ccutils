@@ -13,7 +13,13 @@ wq = "watch --quiet --clear --exec"
 wrp = "wq rrp --"
 wqp = "watch --quiet --clear --exec rqp"
 
-#> genna
+#> app
+rr-app = "rrp app"
+rq-app = "rqp app"
+wr-app = "wq rr-app"
+wq-app = "wq rq-app"
+
+#> colorscheme
 rr-colorscheme = "rrp colorscheme"
 rq-colorscheme = "rqp colorscheme"
 wr-colorscheme = "wq rr-colorscheme"
@@ -61,5 +67,5 @@ quiet = false
 
 #| Environment Variables
 [env]
-RUST_LOG = "whers=trace,sysfo=trace,intime=TRACE,genna=trace,numba=trace"
+RUST_LOG = "app=trace,whers=trace,sysfo=trace,intime=TRACE,genna=trace,numba=trace"
 BROWSER = "firefox"

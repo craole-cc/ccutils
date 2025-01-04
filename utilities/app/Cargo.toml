@@ -1,0 +1,34 @@
+[package]
+name = "app"
+description = "Installs applications using various package managers"
+version = { workspace = true }
+edition = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+keywords = [
+    "app",
+    "installer",
+    "winget",
+    "chocolatey",
+    "snap",
+    "flatpak",
+    "apt",
+    "pacman",
+    "brew",
+    "port",
+    "nixos",
+    "nix",
+    "emerge",
+    "apk",
+    "dnf",
+    "zypper",
+]
+
+[lints]
+workspace = true
+
+[dependencies]
+logline = { path = "../../libraries/logline" }
+anyhow = { workspace = true }
+serde = { workspace = true }
+clap = { workspace = true }
