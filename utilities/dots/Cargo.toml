@@ -1,0 +1,17 @@
+[package]
+name = "dots"
+description = "Initializes dotfiles, specifically adding binaries to $PATH"
+version = { workspace = true }
+edition = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+keywords = ["dotfiles", "PATH", "scripts"]
+
+[lints]
+workspace = true
+
+[dependencies]
+logline = { path = "../../libraries/logline" }
+anyhow = { workspace = true }
+serde = { workspace = true }
+clap = { workspace = true }

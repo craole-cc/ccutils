@@ -19,6 +19,7 @@ members = [
   "libraries/intime",
   "types/numba",
   "utilities/app",
+  "utilities/dots",
   "utilities/colorscheme",
   "utilities/embellish",
   "utilities/genna",

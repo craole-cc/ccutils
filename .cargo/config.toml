@@ -13,6 +13,12 @@ wq = "watch --quiet --clear --exec"
 wrp = "wq rrp --"
 wqp = "watch --quiet --clear --exec rqp"
 
+#> dots
+rr-dots = "rrp dots"
+rq-dots = "rqp dots"
+wr-dots = "wq rr-dots"
+wq-dots = "wq rq-dots"
+
 #> app
 rr-app = "rrp app"
 rq-app = "rqp app"

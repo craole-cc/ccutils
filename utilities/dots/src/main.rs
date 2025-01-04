@@ -1,4 +1,4 @@
-use app::*;
+use dots::*;
 
 fn main() -> anyhow::Result<()> {
     logline::init();
