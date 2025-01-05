@@ -1,9 +1,11 @@
 // mod cli;
 // mod default;
 // mod error;
+// mod display;
+mod default;
 mod utils;
 
-// mod display;
+pub use default::{Info, Name};
 
 // pub use cli::Commands;
 // pub use default::Info;
@@ -14,6 +16,6 @@ mod utils;
 
 pub fn test() -> Result<(), anyhow::Error> {
     let shell = utils::Shell::current();
-    println!("Detected shell: {:?}", shell);
+    logline::debug!("Shell: {:?}", shell);
     Ok(())
 }

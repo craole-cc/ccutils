@@ -2,6 +2,6 @@
 mod default;
 mod process;
 mod time;
-mod shell;
+// mod shell;
 
 pub use default::*;

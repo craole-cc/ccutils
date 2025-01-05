@@ -1,6 +1,7 @@
 // mod cli;
-mod default;
 mod error;
+// mod modules;
+mod default;
 mod utils;
 
 // mod display;
@@ -8,6 +9,5 @@ mod utils;
 // pub use cli::Commands;
 pub use default::Info;
 pub use error::Error;
-// pub use utils::*;
-
+// pub use modules::{process::process, *};
 // pub use display::Display;

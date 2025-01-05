@@ -5,9 +5,9 @@ use std::sync::Mutex;
 use sysinfo::System;
 
 pub static SYSTEM_INFO: Lazy<Mutex<System>> = Lazy::new(|| {
-    let mut sys = System::new_all();
-    sys.refresh_all();
-    Mutex::new(sys)
+    let mut system = System::new_all();
+    system.refresh_all();
+    Mutex::new(system)
 });
 
 #[derive(Debug)]
@@ -18,13 +18,13 @@ pub struct Fetcher {
 
 impl Default for Fetcher {
     fn default() -> Self {
-        let mut info = SYSTEM_INFO.lock().unwrap();
-        info.refresh_all();
+        let time = time::Info::default();
+        let process = process::Info::default();
 
-        let time = time::Info::new();
-        let process = process::Info::new(&info).expect("Failed to get process info");
-
-        Self { time, process }
+        Self {
+            time,
+            process,
+        }
     }
 }
 
@@ -46,11 +46,12 @@ pub fn init() -> Fetcher {
 pub fn test() -> anyhow::Result<()> {
     let info = init();
 
+    // logline::debug!("{:#?}", info.system);
     logline::debug!("{}", info.time.fetch());
     logline::debug!("{}", info.process.fetch());
-    // logline::debug!("{}", info..fetch());
+    // logline::debug!("{}", info.process.new());
 
-    crate::core::shell::test();
+    // crate::core::shell::test();
 
     Ok(())
 }
