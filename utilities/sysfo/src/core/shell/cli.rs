@@ -26,7 +26,7 @@ impl Commands {
     pub fn handle_command(&self, info: &Info) -> String {
         match self {
             Self::Statement => info.statement(),
-            Self::All => info.fetch(),
+            Self::All => info.all(),
         }
     }
 }

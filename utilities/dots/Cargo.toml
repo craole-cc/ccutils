@@ -15,3 +15,5 @@ logline = { path = "../../libraries/logline" }
 anyhow = { workspace = true }
 serde = { workspace = true }
 clap = { workspace = true }
+directories = { workspace = true }
+sysinfo = { workspace = true }

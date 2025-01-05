@@ -1,20 +1,17 @@
+use data::shell;
 use dots::*;
 
 fn main() -> anyhow::Result<()> {
-    logline::init();
-    cli::init();
+    logline::init_trace();
+    logline::trace!("Starting up");
 
-    let mut test_cmd = std::process::Command::new("app");
-    // .args(["bat"])
-    // .args(["add", "bat"])
-    // .args(["add", "sharkdp.bat"])
-    // .spawn()?;
+    // Shell Definitions
+    logline::trace!("Identified installed shells and their associated rc files (bash, zsh, pwsh, powershell, fish, nushell, etc.)");
+    utils::test();
 
-    if let Err(e) = test_cmd.spawn() {
-        println!("Error: {}", e);
-    } else {
-        println!("Command completed successfully");
-    };
+    // Define directories that should be added to path
+
+    // Update the config rc for each shell
 
     Ok(())
 }

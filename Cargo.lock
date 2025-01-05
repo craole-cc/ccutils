@@ -765,8 +765,10 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
+ "directories",
  "logline",
  "serde",
+ "sysinfo",
 ]
 
 [[package]]
@@ -1027,9 +1029,9 @@ dependencies = [
 
 [[package]]
 name = "genai"
-version = "0.1.15"
+version = "0.1.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f902d2a31eae179829cd73b12db5b21f5aee9209622a82e4d4a1f273748de9d2"
+checksum = "509975accb5ce7b1a26368cff7d6133aab6ef3a24b3b340193d28071d9c3a12e"
 dependencies = [
  "bytes",
  "derive_more 1.0.0",
@@ -2945,6 +2947,7 @@ dependencies = [
 name = "sysfo"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "battery",
  "chrono",
  "clap",
@@ -2953,6 +2956,7 @@ dependencies = [
  "logline",
  "once_cell",
  "sysinfo",
+ "thiserror 2.0.9",
  "uom 0.36.0",
 ]
 

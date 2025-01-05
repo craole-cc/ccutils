@@ -1,9 +1,6 @@
-fn main() {
-	logline::init();
+fn main() -> anyhow::Result<()> {
+    logline::init();
+    sysfo::test();
 
-	let info = sysfo::Fetcher::default();
-	// println!("{}", info.battery);
-	println!("{:#?}", info.time);
-	logline::trace!("{:#?}", info.time);
-	logline::error!("{:#?}", info.time);
+    Ok(())
 }
