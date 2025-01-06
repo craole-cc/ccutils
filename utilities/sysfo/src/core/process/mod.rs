@@ -7,6 +7,6 @@ pub mod modules;
 
 // pub use cli::Commands;
 // pub use default::Info;
-pub use error::Error;
-pub use modules::{process, shell};
 // pub use display::Display;
+pub use error::Error;
+pub use modules::process::Info;

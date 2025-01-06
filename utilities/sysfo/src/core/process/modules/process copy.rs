@@ -1,5 +1,3 @@
-use crate::core::process::Error;
-
 use super::shell;
 use std::{
     collections::{BTreeMap, HashMap},
@@ -26,51 +24,40 @@ impl Default for Info {
     fn default() -> Self {
         let mut system = System::new_all();
         system.refresh_all();
-        Self::new(&system).unwrap_or_else(|_| Self {
-            id: 0,
-            name: String::new(),
-            path: PathBuf::new(),
-            user: String::new(),
-            time_started: 0,
-            time_running: 0,
-            cwd: PathBuf::new(),
-            dependencies: BTreeMap::new(),
-            env: HashMap::new(),
-            shell: shell::Info::default(),
-        })
+        Self::new(&system)
     }
 }
 
 impl Info {
-    pub fn new(system: &System) -> Result<Self, Error> {
+    pub fn new(system: &System) -> Self {
         let id = id();
 
         let process = match system.process(Pid::from_u32(id)) {
             Some(process) => process,
-            None => return Err(Error::ProcessNotFound),
+            None => return Self::default(), // TODO: This should return an error: "Could not get process with id: {id}"
         };
         let name = process.name().to_string_lossy().to_string();
         let path = match process.exe() {
             Some(path) => path.to_path_buf(),
-            None => return Err(Error::ProcessNotFound),
+            None => return Self::default(), // TODO: This should return an error: "Could not get process path"
         };
         let users = Users::new_with_refreshed_list();
         let user_id = match process.user_id() {
             Some(user_id) => user_id,
-            None => return Err(Error::ProcessNotFound),
+            None => return Self::default(), // TODO: This should return an error: "Could not get user id"
         };
         let user = match users.get_user_by_id(user_id) {
             Some(user) => user.name().to_string(),
-            None => return Err(Error::ProcessNotFound),
+            None => return Self::default(), // TODO: This should return an error: "Could not get user name"
         };
         let time_started = process.start_time();
         let time_running = process.run_time();
         let cwd = match process.cwd() {
             Some(cwd) => cwd.to_path_buf(),
-            None => return Err(Error::ProcessNotFound),
+            None => return Self::default(), // TODO: This should return an error: "Could not get process cwd"
         };
 
-        // Rest of the implementation remains the same
+        // Convert environment variables from OsString
         let env: HashMap<String, String> = process
             .environ()
             .iter()
@@ -85,11 +72,13 @@ impl Info {
             })
             .collect();
 
+        // Collect all parent PIDs and their names in sorted order
         let mut dependencies: BTreeMap<u32, String> = BTreeMap::new();
         let mut pid = process.pid();
 
         while let Some(current_process) = system.process(pid) {
             if let Some(parent_pid) = current_process.parent() {
+                // Get the parent process name
                 if let Some(parent_process) = system.process(parent_pid) {
                     dependencies.insert(
                         parent_pid.as_u32(),
@@ -98,6 +87,7 @@ impl Info {
                 }
                 pid = parent_pid;
 
+                // Safety check to prevent infinite loops
                 if dependencies.len() > 10 {
                     break;
                 }
@@ -106,6 +96,7 @@ impl Info {
             }
         }
 
+        // Detect shell by traversing parent processes
         let shell = dependencies
             .iter()
             .rev()
@@ -121,6 +112,7 @@ impl Info {
                     _ => return None,
                 };
 
+                // Try to get the process info
                 system
                     .process(Pid::from_u32(*pid))
                     .map(|process| shell::Info {
@@ -133,7 +125,7 @@ impl Info {
             })
             .unwrap_or_default();
 
-        Ok(Self {
+        Self {
             id,
             name,
             path,
@@ -144,54 +136,41 @@ impl Info {
             dependencies,
             env,
             shell,
-        })
+        }
     }
 
     pub fn fetch(&self) -> String {
-        let mut output = String::from("Process Information\n");
-        output.push_str(&"=".repeat(80));
-        output.push('\n');
-
-        // Basic process info
-        output.push_str(&format!("ID          : {}\n", self.id));
-        output.push_str(&format!("Name        : {}\n", self.name));
-        output.push_str(&format!("User        : {}\n", self.user));
-        output.push_str(&format!("Path        : {}\n", self.path.display()));
-        output.push_str(&format!("Working Dir : {}\n", self.cwd.display()));
-
-        // Time information
-        output.push_str("\nTime Information\n");
-        output.push_str(&"-".repeat(40));
-        output.push('\n');
-        output.push_str(&format!("Started     : {}\n", self.time_started));
-        output.push_str(&format!("Running     : {} seconds\n", self.time_running));
-
-        // Shell information
-        output.push_str("\nShell Information\n");
-        output.push_str(&"-".repeat(40));
-        output.push('\n');
-        output.push_str(&format!("ID          : {}\n", self.shell.id));
-        output.push_str(&format!("Name        : {}\n", self.shell.name));
-        output.push_str(&format!("Path        : {}\n", self.shell.path.display()));
-        output.push_str(&format!("Version     : {}\n",
-            self.shell.version.as_deref().unwrap_or("Unknown")));
-
-        // Shell configurations
-        output.push_str("\nShell Configurations:\n");
-        for path in &self.shell.conf {
-            output.push_str(&format!("  - {}\n", path.display()));
-        }
-
-        // Optional: Add dependencies section if needed
-        if !self.dependencies.is_empty() {
-            output.push_str("\nProcess Dependencies\n");
-            output.push_str(&"-".repeat(40));
-            output.push('\n');
-            for (pid, name) in &self.dependencies {
-                output.push_str(&format!("  {} : {}\n", pid, name));
-            }
-        }
-
-        output
+        format!(
+            "Time {{\n\
+            {:>16}: {}\n\
+            {:>16}: {}\n\
+            {:>16}: {}\n\
+            {:>16}: {}\n\
+            {:>16}: {}\n\
+            {:>16}: {}\n\
+            {:>16}: {}\n\
+            {:>16}: {:#?}\n\
+            }}",
+            "Id",
+            self.id,
+            "Name",
+            self.name,
+            "Path",
+            self.path.display(),
+            "CWD",
+            self.cwd.display(),
+            "User",
+            self.user,
+            "Time Started",
+            self.time_started,
+            "Time Running",
+            self.time_running,
+            "Shell",
+            self.shell,
+            // "Dependencies",
+            // self.dependencies,
+            // "Env",
+            // self.env,
+        )
     }
 }

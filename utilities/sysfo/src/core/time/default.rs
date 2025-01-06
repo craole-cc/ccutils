@@ -74,24 +74,35 @@ impl Info {
     }
 
     pub fn fetch(&self) -> String {
-        format!(
-            "Time {{\n\
-            {:>16}: {}\n\
-            {:>16}: {}\n\
-            {:>16}: {}\n\
-            {:>16}: {}\n\
-            {:>16}: {}\n\
-            }}",
-            "Active",
-            self.uptime_fmt(),
-            "Boot",
-            self.boot_fmt(),
-            "Current",
-            self.current_fmt(),
-            "Timezone",
-            self.timezone,
-            "Statement",
-            self.statement()
-        )
+        let mut output = String::from("Time Information\n");
+        output.push_str(&"=".repeat(80));
+        output.push('\n');
+
+        // Time status
+        output.push_str(&format!("Status      : {}\n", self.uptime_fmt()));
+
+        // Time details
+        output.push_str("\nTime Details\n");
+        output.push_str(&"-".repeat(40));
+        output.push('\n');
+        output.push_str(&format!("Current     : {}\n", self.current_fmt()));
+        output.push_str(&format!("Boot Time   : {}\n", self.boot_fmt()));
+        output.push_str(&format!("Time Zone   : {}\n", self.timezone));
+
+        // Format settings
+        output.push_str("\nFormat Settings\n");
+        output.push_str(&"-".repeat(40));
+        output.push('\n');
+        output.push_str(&format!("Date Format : {}\n", self.dtfmt));
+
+        // System statement
+        if !self.statement().is_empty() {
+            output.push_str("\nSystem Status\n");
+            output.push_str(&"-".repeat(40));
+            output.push('\n');
+            output.push_str(&format!("Statement   : {}\n", self.statement()));
+        }
+
+        output
     }
 }
