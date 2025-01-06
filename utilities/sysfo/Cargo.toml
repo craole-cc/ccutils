@@ -10,7 +10,8 @@ homepage = { workspace = true }
 repository = { workspace = true }
 
 [lints]
-workspace = true
+# workspace = true
+
 
 [dependencies]
 logline = { path = "../../libraries/logline" }
@@ -19,6 +20,7 @@ thiserror = { workspace = true }
 battery = { workspace = true }
 chrono = { workspace = true }
 clap = { workspace = true }
+directories = { workspace = true }
 crossterm = { workspace = true }
 iana-time-zone = { workspace = true }
 once_cell = { workspace = true }

@@ -191,6 +191,11 @@
               taplo
               yamlfmt
               nixfmt-rfc-style
+
+              # Shells
+              fish
+              nushell
+              zsh
             ];
 
             shellHook = ''

@@ -6,7 +6,7 @@ use std::{
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Info {
     pub name: Name,
-    pub config_paths: Vec<PathBuf>,
+    pub config: Vec<PathBuf>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -64,13 +64,13 @@ impl Name {
             (Name::CommandPrompt, &["cmd", "cmd.exe"][..], None, vec![]),
         ];
 
-        if let Some((shell_type, process, config_paths)) =
+        if let Some((shell_type, process, config)) =
             Self::detect_shell(system, current_pid, &shells)
         {
             (
                 ShellInfo {
                     shell_type,
-                    config_paths,
+                    config,
                 },
                 process,
             )
@@ -78,7 +78,7 @@ impl Name {
             (
                 ShellInfo {
                     shell_type: Name::Unsupported,
-                    config_paths: vec![],
+                    config: vec![],
                 },
                 Process {
                     id: 0,
@@ -96,14 +96,14 @@ impl Name {
         pid: Pid,
         shell_configs: &[(Shell, &[&str], Option<&str>, Vec<PathBuf>)],
     ) -> Option<(Shell, Process, Vec<PathBuf>)> {
-        for (shell_type, names, version_check, config_paths) in shell_configs {
+        for (shell_type, names, version_check, config) in shell_configs {
             if let Some(process) = find_shell_process(system, pid, names) {
                 if let Some(version_arg) = version_check {
                     if !check_shell_version(version_arg) {
                         continue;
                     }
                 }
-                return Some((*shell_type, process, config_paths.clone()));
+                return Some((*shell_type, process, config.clone()));
             }
         }
         None

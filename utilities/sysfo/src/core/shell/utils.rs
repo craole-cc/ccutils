@@ -1,85 +1,42 @@
-use std::process::{id, Command};
-use sysinfo::{Pid, System};
+use super::Kind;
+use directories::BaseDirs;
+use std::{path::PathBuf, process::Command};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Shell {
-    Bash,
-    Zsh,
-    Fish,
-    CommandPrompt,
-    Powershell,
-    Nushell,
-    Unsupported,
-}
+pub fn get_config_paths(kind: &Kind) -> Vec<PathBuf> {
+    let dirs = match BaseDirs::new() {
+        Some(dirs) => dirs,
+        None => return vec![], // Return an empty vector if base directories cannot be determined.
+    };
 
-impl Shell {
-    pub fn current() -> Self {
-        let system = System::new_all();
-        let current_pid = Pid::from_u32(id());
+    let home = dirs.home_dir();
 
-        // Define shell configurations with their detection logic
-        let shells = [
-            (
-                Shell::Bash,
-                &["bash", "bash.exe"][..],
-                Some("$BASH_VERSION"),
-            ),
-            (Shell::Zsh, &["zsh", "zsh.exe"][..], Some("$ZSH_VERSION")),
-            (Shell::Fish, &["fish", "fish.exe"][..], None),
-            (
-                Shell::Powershell,
-                &["pwsh", "pwsh.exe", "powershell", "powershell.exe"][..],
-                None,
-            ),
-            (Shell::Nushell, &["nu", "nu.exe"][..], None),
-            (Shell::CommandPrompt, &["cmd", "cmd.exe"][..], None),
-        ];
-
-        for (shell, names, version_check) in shells {
-            if is_shell_parent(&system, current_pid, names) {
-                if let Some(version_arg) = version_check {
-                    if !check_shell_version(version_arg) {
-                        continue;
-                    }
-                }
-                return shell;
-            }
+    match kind {
+        Kind::Bash => vec![home.join(".bashrc"), home.join(".bash_profile")],
+        Kind::Zsh => vec![home.join(".zshrc"), home.join(".zprofile")],
+        Kind::Fish => vec![home.join(".config/fish/config.fish")],
+        Kind::PowerShell => {
+            vec![home.join("Documents/PowerShell/Microsoft.PowerShell_profile.ps1")]
         }
-
-        Shell::Unsupported
+        Kind::Nushell => vec![home.join(".config/nushell/config.nu")],
+        _ => vec![],
     }
 }
 
-fn is_shell_parent(system: &System, pid: Pid, shell_names: &[&str]) -> bool {
-    let mut current_pid = pid;
-    while let Some(process) = system.process(current_pid) {
-        let process_name = process.name().to_string_lossy().to_lowercase();
-        if shell_names.iter().any(|&name| process_name == name) {
-            return true;
-        }
-        current_pid = match process.parent() {
-            Some(parent_pid) => parent_pid,
-            None => break,
-        };
-    }
-    false
-}
+pub fn get_version(kind: &Kind) -> Option<String> {
+    let (cmd, args) = match kind {
+        Kind::Bash => ("bash", vec!["--version"]),
+        Kind::Zsh => ("zsh", vec!["--version"]),
+        Kind::Fish => ("fish", vec!["--version"]),
+        Kind::PowerShell => ("pwsh", vec!["-Version"]),
+        Kind::Nushell => ("nu", vec!["--version"]),
+        Kind::CommandPrompt => return None,
+        Kind::Unsupported => return None,
+    };
 
-fn check_shell_version(arg: &str) -> bool {
-    Command::new("echo")
-        .arg(arg)
+    Command::new(cmd)
+        .args(&args)
         .output()
-        .map(|output| output.status.success())
-        .unwrap_or(false)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_shell_detection() {
-        let shell = Shell::current();
-        println!("Detected shell: {:?}", shell);
-    }
+        .ok()
+        .and_then(|output| String::from_utf8(output.stdout).ok())
+        .map(|version| version.lines().next().unwrap_or("").trim().to_string())
 }
