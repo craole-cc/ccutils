@@ -58,9 +58,14 @@ impl Fetcher {
         output.push_str(&"-".repeat(40));
         output.push('\n');
         output.push_str(&format!("Shell        : {}\n", self.process.shell.name));
-        output.push_str(&format!("Version      : {}\n",
-            self.process.shell.version.as_deref().unwrap_or("Unknown")));
-        output.push_str(&format!("Shell Path   : {}\n", self.process.shell.path.display()));
+        output.push_str(&format!(
+            "Version      : {}\n",
+            self.process.shell.version.as_deref().unwrap_or("Unknown")
+        ));
+        output.push_str(&format!(
+            "Shell Path   : {}\n",
+            self.process.shell.path.display()
+        ));
 
         // Shell configurations
         output.push_str("\nConfiguration Files:\n");
@@ -78,23 +83,20 @@ impl Fetcher {
         output.push('\n');
 
         // Time section
-        output.push_str(&term.format_section("Time Details"));
-        output.push_str(&term.format_field("Current Time", &self.time.current_fmt()));
-        output.push_str(&term.format_field("Current Time", &self.time.current_fmt()));
-        output.push_str(&term.format_field("System Uptime", &self.process.time_started.to_string()));
-        output.push_str(
-            &term.format_field("Running", &format!("{} seconds", self.process.time_running)),
-        );
+        output.push_str(&term.format_section("Time"));
+        output.push_str(&term.format_field("Current", &self.time.current_fmt()));
+        output.push_str(&term.format_field("Uptime", &self.time.uptime_fmt()));
+        output.push_str(&term.format_field("Time Zone", &self.time.timezone));
 
-        // Basic process info
-        // let mut output = String::from("Process Information\n");
+        // Process Section
+        output.push_str(&term.format_section("Process"));
         output.push_str(&term.format_field("ID", &self.process.id.to_string()));
         output.push_str(&term.format_field("Name", &self.process.name));
         output.push_str(&term.format_field("User", &self.process.user));
         output.push_str(&term.format_field("Path", &self.process.path.display().to_string()));
         output.push_str(&term.format_field("Working Dir", &self.process.cwd.display().to_string()));
 
-        output.push_str(&term.format_section("Shell Information"));
+        output.push_str(&term.format_section("Shell"));
         output.push_str(&term.format_field("ID", &self.process.shell.id.to_string()));
         output.push_str(&term.format_field("Name", &self.process.shell.name));
         output.push_str(&term.format_field("Path", &self.process.shell.path.display().to_string()));
