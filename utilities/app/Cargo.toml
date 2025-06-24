@@ -6,22 +6,22 @@ edition = { workspace = true }
 authors = { workspace = true }
 license = { workspace = true }
 keywords = [
-    "app",
-    "installer",
-    "winget",
-    "chocolatey",
-    "snap",
-    "flatpak",
-    "apt",
-    "pacman",
-    "brew",
-    "port",
-    "nixos",
-    "nix",
-    "emerge",
-    "apk",
-    "dnf",
-    "zypper",
+  "app",
+  "installer",
+  "winget",
+  "chocolatey",
+  "snap",
+  "flatpak",
+  "apt",
+  "pacman",
+  "brew",
+  "port",
+  "nixos",
+  "nix",
+  "emerge",
+  "apk",
+  "dnf",
+  "zypper",
 ]
 
 [lints]

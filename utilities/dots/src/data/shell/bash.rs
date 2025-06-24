@@ -1,9 +1,9 @@
 use super::name::Name;
 
 pub struct Bash {
-    name: Name,
-    path: Option<PathBuf>,
-    config: Vec<PathBuf>,
+  name: Name,
+  path: Option<PathBuf>,
+  config: Vec<PathBuf>
 }
 
 // impl Default for Bash {

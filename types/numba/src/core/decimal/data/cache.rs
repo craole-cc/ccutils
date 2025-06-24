@@ -8,8 +8,8 @@ pub static CACHE: Lazy<Cache> = Lazy::new(Cache::new);
 
 #[derive(Debug)]
 pub struct Cache {
-	pub for_rust_decimal: DashMap<String, rust_decimal::Decimal>,
+  pub for_rust_decimal: DashMap<String, rust_decimal::Decimal>,
 
-	#[cfg(feature = "big-decimal")]
-	pub for_big_decimal: Mutex<LruCache<String, bigdecimal::BigDecimal>>,
+  #[cfg(feature = "big-decimal")]
+  pub for_big_decimal: Mutex<LruCache<String, bigdecimal::BigDecimal>>
 }

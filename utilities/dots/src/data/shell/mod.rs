@@ -5,5 +5,5 @@
 
 // mod bash;
 pub fn test() {
-    println!("Testing shell");
+  println!("Testing shell");
 }

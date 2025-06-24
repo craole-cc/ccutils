@@ -1,0 +1,16 @@
+[formatter.deno]
+command = "deno"
+includes = ["*.md", "README"]
+options = ["fmt"]
+priority = 1
+
+[formatter.toml]
+command = "taplo"
+includes = ["*.toml"]
+options = ["fmt"]
+priority = 1
+
+[formatter.rust]
+command = "rustfmt"
+includes = ["*.rs"]
+priority = 1

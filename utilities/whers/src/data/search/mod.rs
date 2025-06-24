@@ -1,7 +1,7 @@
 mod config;
 mod error;
-mod utils;
 mod tests;
+mod utils;
 
 pub use config::Search;
 pub use error::Error;

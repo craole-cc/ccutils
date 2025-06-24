@@ -2,8 +2,8 @@
 mod default;
 mod error;
 mod process;
-mod time;
 mod terminal;
+mod time;
 mod traits;
 
 pub use default::*;

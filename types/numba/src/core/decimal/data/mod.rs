@@ -11,4 +11,4 @@ mod error;
 pub use error::Error;
 
 mod cache;
-pub use cache::{Cache, CACHE, CACHE_SIZE};
+pub use cache::{CACHE, CACHE_SIZE, Cache};

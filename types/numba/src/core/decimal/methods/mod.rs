@@ -1,3 +1,3 @@
-mod numeral;
-mod errors;
 mod cache;
+mod errors;
+mod numeral;

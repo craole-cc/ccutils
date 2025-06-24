@@ -1,13 +1,15 @@
 # app
 
-A command-line utility that simplifies package management across different package managers. Currently supports winget, with plans to expand to other package managers.
+A command-line utility that simplifies package management across different
+package managers. Currently supports winget, with plans to expand to other
+package managers.
 
 ## Features
 
-- **Simple Command Structure**: 
+- **Simple Command Structure**:
   - Default behavior is list available packages
   - Clear subcommands for common operations
-- **Smart Package Manager Detection**: 
+- **Smart Package Manager Detection**:
   - Automatically detects available package managers
   - OS-specific defaults:
     - Windows: winget, then chocolatey, then scoop
@@ -67,11 +69,13 @@ app list managers             # Shows available package managers on your system
 ## Configuration
 
 Create a configuration file at `~/.config/app/config.toml` to set:
+
 - Package manager preferences and order
 - Custom package sources
 - Preferred installation options
 
 Example configuration:
+
 ```toml
 [package_managers]
 # Override default order for Windows

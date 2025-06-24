@@ -10,7 +10,7 @@ pub static CACHE: Lazy<Cache> = Lazy::new(Cache::new);
 pub struct Cache {}
 
 impl Cache {
-	pub fn new() -> Self {
-		Self::default()
-	}
+  pub fn new() -> Self {
+    Self::default()
+  }
 }

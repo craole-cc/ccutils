@@ -1,12 +1,15 @@
 # Dots
 
-The purpose of this is to use rust to improve the portability of my dotsrc which essentially is meant to achieve certain things.
+The purpose of this is to use rust to improve the portability of my dotsrc which
+essentially is meant to achieve certain things.
+
 - Reset the environment
 - Establish the script environment variables
 - Ensure DOTS variables are set
 - Conditionally add scripts to PATH
 - Set the interactive shell (starship, oh-my-posh, etc)
-- Update the shell rc files available on the system (powershell, pswh, zsh, bash, fish, nushell, etc)
+- Update the shell rc files available on the system (powershell, pswh, zsh,
+  bash, fish, nushell, etc)
 
 ```sh .dotsrc
 #!/bin/sh

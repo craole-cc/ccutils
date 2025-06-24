@@ -26,7 +26,7 @@ thiserror = { workspace = true }
 logline = { path = "../../libraries/logline" }
 erks = { path = "../../libraries/erks" }
 once_cell = { workspace = true }
-mimalloc = { workspace = true , optional = true }
+mimalloc = { workspace = true, optional = true }
 lru = { workspace = true }
 dashmap = { workspace = true }
 simd-json = { workspace = true }

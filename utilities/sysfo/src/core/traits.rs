@@ -1,4 +1,3 @@
-
 // Formatting helper trait
 pub trait FormatHelpers {
   fn format_section(&self, title: &str) -> String;

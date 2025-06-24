@@ -53,8 +53,8 @@
 // 	/// Display information about rounding.
 // 	pub fn display(&self) {
 // 		println!(
-//             "Value: {}, Direction: {:?}, Unit: {}, Precision: {:?}, Rounded Value: {}",
-//             self.value,
+//             "Value: {}, Direction: {:?}, Unit: {}, Precision: {:?}, Rounded
+// Value: {}",             self.value,
 //             self.direction,
 //             self.unit,
 //             self.precision,
