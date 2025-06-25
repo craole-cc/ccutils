@@ -10,7 +10,8 @@ use std::{
 
 pub struct Workspace {
   pub binary_crates: Vec<String>,
-  pub cargo_bin_dir: PathBuf
+  pub cargo_bin_dir: PathBuf,
+  pub workspace_name: String
 }
 
 impl Workspace {
@@ -20,10 +21,12 @@ impl Workspace {
     let root_toml = Self::find_workspace_toml(&current_dir)?;
     let binary_crates = Self::find_binary_crates(&root_toml)?;
     let cargo_bin_dir = get_cargo_bin_dir()?;
+    let workspace_name = Self::extract_workspace_name(&root_toml)?;
 
     Ok(Self {
       binary_crates,
-      cargo_bin_dir
+      cargo_bin_dir,
+      workspace_name
     })
   }
 
@@ -39,15 +42,26 @@ impl Workspace {
         let builder = Builder::new(&self.cargo_bin_dir);
         builder.build_crates(&target_crates, cli.force, cli.verbose)?;
       }
-      Command::Install { crates } => {
+      Command::Install { crates, mode } => {
         let target_crates = self.filter_target_crates(&crates)?;
-        let installer = Installer::new();
-        installer.install_crates(&target_crates, cli.force)?;
+        let installer = Installer::new(
+          self.workspace_name.clone(),
+          self.cargo_bin_dir.clone()
+        );
+        installer.install_crates(
+          &target_crates,
+          &mode,
+          cli.force,
+          cli.verbose
+        )?;
       }
-      Command::BuildInstall { crates } => {
+      Command::BuildInstall { crates, mode } => {
         let target_crates = self.filter_target_crates(&crates)?;
         let builder = Builder::new(&self.cargo_bin_dir);
-        let installer = Installer::new();
+        let installer = Installer::new(
+          self.workspace_name.clone(),
+          self.cargo_bin_dir.clone()
+        );
 
         let to_rebuild = builder.filter_outdated_crates(
           &target_crates,
@@ -63,7 +77,7 @@ impl Workspace {
         }
 
         builder.build_only(&to_rebuild)?;
-        installer.install_crates(&to_rebuild, cli.force)?;
+        installer.install_crates(&to_rebuild, &mode, cli.force, cli.verbose)?;
       }
     }
 
@@ -80,7 +94,7 @@ impl Workspace {
 
     let mut target_crates = Vec::new();
     for crate_name in specified_crates {
-      //{ Check if the specified crate exists in the workspace }
+      // Check if the specified crate exists in the workspace
       let found = self.binary_crates.iter().any(|member| {
         Path::new(member)
           .file_name()
@@ -97,7 +111,7 @@ impl Workspace {
         );
       }
 
-      //{ Find the full member path for this crate }
+      // Find the full member path for this crate
       let member_path = self
         .binary_crates
         .iter()
@@ -135,8 +149,44 @@ impl Workspace {
     bail!("Could not find workspace root from '{}'", start.display())
   }
 
+  fn extract_workspace_name(cargo_toml: &Path) -> Result<String> {
+    let content = fs::read_to_string(cargo_toml).with_context(|| {
+      format!(
+        "Failed to read workspace Cargo.toml at '{}'",
+        cargo_toml.display()
+      )
+    })?;
+
+    let parsed: toml::Value = content.parse().with_context(|| {
+      format!(
+        "Failed to parse workspace Cargo.toml at '{}'",
+        cargo_toml.display()
+      )
+    })?;
+
+    // Try to get the package name first (if this is also a package)
+    if let Some(package_name) = parsed
+      .get("package")
+      .and_then(|p| p.get("name"))
+      .and_then(|n| n.as_str())
+    {
+      return Ok(package_name.to_string());
+    }
+
+    // Fallback to workspace directory name
+    let workspace_dir = cargo_toml
+      .parent()
+      .context("Failed to get workspace directory")?;
+    let dir_name = workspace_dir
+      .file_name()
+      .and_then(|name| name.to_str())
+      .context("Failed to get workspace directory name")?;
+
+    Ok(dir_name.to_string())
+  }
+
   fn find_binary_crates(cargo_toml: &Path) -> Result<Vec<String>> {
-    //{ Read the main Cargo.toml }
+    // Read the main Cargo.toml
     let content = fs::read_to_string(cargo_toml).with_context(|| {
       format!(
         "Failed to read workspace Cargo.toml at '{}'",
@@ -150,17 +200,17 @@ impl Workspace {
       )
     })?;
 
-    //{ Extract workspace members }
+    // Extract workspace members
     let members = parsed["workspace"]["members"]
       .as_array()
       .context("No `[workspace.members]` array found in workspace Cargo.toml")?
       .iter()
       .filter_map(|m| m.as_str());
 
-    //{ Initialize the list of binary crates }
+    // Initialize the list of binary crates
     let mut binary_crates = Vec::new();
 
-    //{ Update the list of binary crates of the workspace members }
+    // Update the list of binary crates of the workspace members
     for member in members {
       let cargo_path = Path::new(member).join("Cargo.toml");
       if !cargo_path.exists() {
@@ -175,7 +225,7 @@ impl Workspace {
           format!("Failed to parse member Cargo.toml at '{cargo_path:?}'")
         })?;
 
-      //{ Find crates with `[[bin]]` section or a `src/main.rs` file }
+      // Find crates with `[[bin]]` section or a `src/main.rs` file
       let has_explicit_bin_target = member_parsed
         .get("bin")
         .and_then(|v| v.as_array())
