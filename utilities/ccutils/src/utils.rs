@@ -34,11 +34,10 @@ pub fn get_latest_mtime(path: &Path) -> Result<SystemTime> {
         let entry_path = entry.path();
 
         //{ Skip target directories and other build artifacts }
-        if let Some(name) = entry_path.file_name().and_then(|n| n.to_str()) {
-            if name == "target" || name.starts_with('.') {
+        if let Some(name) = entry_path.file_name().and_then(|n| n.to_str())
+            && (name == "target" || name.starts_with('.')) {
                 continue;
             }
-        }
 
         let mtime = if entry_path.is_dir() {
             get_latest_mtime(&entry_path)?

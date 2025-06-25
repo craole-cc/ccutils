@@ -96,7 +96,7 @@ impl Builder {
     }
 
     let binary_mtime = fs::metadata(&installed_binary_path)?.modified()?;
-    let latest_src_mtime = get_latest_mtime(&Path::new(member))?;
+    let latest_src_mtime = get_latest_mtime(Path::new(member))?;
 
     if latest_src_mtime > binary_mtime {
       if verbose {

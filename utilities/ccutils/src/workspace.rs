@@ -33,19 +33,19 @@ impl Workspace {
       return Ok(());
     }
 
-    match &cli.command {
+    match cli.effective_command() {
       Command::Build { crates } => {
-        let target_crates = self.filter_target_crates(crates)?;
+        let target_crates = self.filter_target_crates(&crates)?;
         let builder = Builder::new(&self.cargo_bin_dir);
         builder.build_crates(&target_crates, cli.force, cli.verbose)?;
       }
       Command::Install { crates } => {
-        let target_crates = self.filter_target_crates(crates)?;
+        let target_crates = self.filter_target_crates(&crates)?;
         let installer = Installer::new();
-        installer.install_crates(&target_crates)?;
+        installer.install_crates(&target_crates, cli.force)?;
       }
       Command::BuildInstall { crates } => {
-        let target_crates = self.filter_target_crates(crates)?;
+        let target_crates = self.filter_target_crates(&crates)?;
         let builder = Builder::new(&self.cargo_bin_dir);
         let installer = Installer::new();
 
@@ -63,7 +63,7 @@ impl Workspace {
         }
 
         builder.build_only(&to_rebuild)?;
-        installer.install_crates(&to_rebuild)?;
+        installer.install_crates(&to_rebuild, cli.force)?;
       }
     }
 
@@ -168,11 +168,11 @@ impl Workspace {
       }
 
       let member_toml = fs::read_to_string(&cargo_path).with_context(|| {
-        format!("Failed to read member Cargo.toml at '{:?}'", cargo_path)
+        format!("Failed to read member Cargo.toml at '{cargo_path:?}'")
       })?;
       let member_parsed: toml::Value =
         member_toml.parse().with_context(|| {
-          format!("Failed to parse member Cargo.toml at '{:?}'", cargo_path)
+          format!("Failed to parse member Cargo.toml at '{cargo_path:?}'")
         })?;
 
       //{ Find crates with `[[bin]]` section or a `src/main.rs` file }
