@@ -122,7 +122,7 @@ mod tests {
   #[test]
   fn test_get_current_proc() {
     let result = Process::new().get_current_proc();
-    println!("Current Process: {:#?}", result);
+    println!("Current Process: {result:#?}");
     assert!(result.is_ok(), "Failed to get current process");
   }
 
@@ -130,7 +130,7 @@ mod tests {
   #[test]
   fn test_get_parent_proc() {
     let result = Process::new().get_parent_proc();
-    println!("Parent Process: {:#?}", result);
+    println!("Parent Process: {result:#?}");
     assert!(result.is_ok(), "Failed to get parent process");
   }
 
@@ -140,7 +140,7 @@ mod tests {
     let mut proc = Process::new();
     let current_pid = proc.get_current_proc().unwrap().0;
     let result = proc.get_parent_pid(current_pid);
-    println!("Parent PID: {:#?}", result);
+    println!("Parent PID: {result:#?}");
     assert!(result.is_ok(), "Failed to get parent PID");
   }
 
@@ -150,7 +150,7 @@ mod tests {
     let mut proc = Process::new();
     let current_pid = proc.get_current_proc().unwrap().0;
     let result = proc.get_process_name(current_pid);
-    println!("Process Name: {:#?}", result);
+    println!("Process Name: {result:#?}");
     assert!(result.is_ok(), "Failed to get process name");
   }
 }

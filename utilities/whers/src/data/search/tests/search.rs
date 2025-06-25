@@ -1,4 +1,4 @@
-impl super::Search {
+impl crate::Search {
   pub fn test() {
     let mut result = Self::default();
     result = result
