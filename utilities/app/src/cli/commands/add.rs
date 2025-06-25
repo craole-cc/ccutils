@@ -14,9 +14,8 @@ pub fn add(pkgs: &[String], file: &Option<String>) -> Result<()> {
 
 fn from_file(file_path: &str) -> Result<()> {
   let path = Path::new(file_path);
-  let content = fs::read_to_string(path).with_context(|| {
-    format!("Failed to read package list from {file_path}")
-  })?;
+  let content = fs::read_to_string(path)
+    .with_context(|| format!("Failed to read package list from {file_path}"))?;
 
   let packages: Vec<String> = content
     .lines()

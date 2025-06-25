@@ -8,11 +8,7 @@ impl Installer {
     Self
   }
 
-  pub fn install_crates(
-    &self,
-    crates: &[String],
-    force: bool
-  ) -> Result<()> {
+  pub fn install_crates(&self, crates: &[String], force: bool) -> Result<()> {
     println!("\n--- Installing {} binary crates ---", crates.len());
 
     for member in crates {
