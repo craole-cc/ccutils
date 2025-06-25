@@ -26,7 +26,7 @@ pub struct Command {
 impl Command {
   pub fn execute(&self) -> Result<()> {
     let seconds = self.parse_duration(&self.duration)?;
-    println!("Fetching for {} seconds...", seconds);
+    println!("Fetching for {seconds} seconds...");
     // Implement fetching logic here
     Ok(())
   }

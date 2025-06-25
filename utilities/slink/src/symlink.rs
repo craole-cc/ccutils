@@ -160,14 +160,13 @@ fn ensure_parent_directory_exists(
   path: &Path,
   debug_mode: bool
 ) -> Result<(), SymlinkError> {
-  if let Some(parent) = path.parent() {
-    if !parent.exists() {
+  if let Some(parent) = path.parent()
+    && !parent.exists() {
       debug!("Creating parent directory: {}", parent.display());
       if !debug_mode {
         fs::create_dir_all(parent)?;
       }
     }
-  }
   Ok(())
 }
 

@@ -105,11 +105,10 @@ pub fn to_usize<S: AsRef<str>>(word: S) -> usize {
     let (left, right) = word.split_at(pos);
     let right = &right[1..]; // Skip the hyphen
 
-    if let Some(left_value) = cardinal_map.get(left.trim()) {
-      if let Some(right_value) = ordinal_map.get(right.trim()) {
+    if let Some(left_value) = cardinal_map.get(left.trim())
+      && let Some(right_value) = ordinal_map.get(right.trim()) {
         return left_value + right_value; // Combine the values
       }
-    }
   }
 
   // Split the input to check for combinations of numbers

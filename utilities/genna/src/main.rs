@@ -69,5 +69,5 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn get_env_var(key: &str) -> Result<String, Box<dyn std::error::Error>> {
-  var(key).map_err(|_| format!("{} not set", key).into())
+  var(key).map_err(|_| format!("{key} not set").into())
 }

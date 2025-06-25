@@ -17,13 +17,13 @@ use scraper::{Html, Selector};
 pub async fn html_content(url: &str) -> Result<String> {
   let response = get(url)
     .await
-    .context(format!("Failed to send URL request for: '{}'", url))?;
+    .context(format!("Failed to send URL request for: '{url}'"))?;
   debug!("{:#?}", response);
 
   let content = response
     .text()
     .await
-    .context(format!("Failed to read response text from: '{}'", url))?;
+    .context(format!("Failed to read response text from: '{url}'"))?;
   debug!("{:#?}", content);
 
   Ok(content)

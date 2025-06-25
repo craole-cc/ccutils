@@ -6,7 +6,7 @@ pub fn test() {
     .pow(100);
   let fractional: usize = isize::MAX as usize;
   let sign = "-";
-  let decimal_stringy = format!("{}{}.{}", sign, integer, fractional);
+  let decimal_stringy = format!("{sign}{integer}.{fractional}");
   let decimal_numeric = 1;
 
   match decimal_stringy.to_numeral() {

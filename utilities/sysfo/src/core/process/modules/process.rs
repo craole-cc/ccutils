@@ -191,7 +191,7 @@ impl Info {
       output.push_str(&"-".repeat(40));
       output.push('\n');
       for (pid, name) in &self.dependencies {
-        output.push_str(&format!("  {} : {}\n", pid, name));
+        output.push_str(&format!("  {pid} : {name}\n"));
       }
     }
 

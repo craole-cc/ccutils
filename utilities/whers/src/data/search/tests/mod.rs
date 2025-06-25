@@ -6,7 +6,7 @@ impl super::Search {
       .test_with_patterns()
       .test_with_limit();
 
-    println!("{:#?}", result)
+    println!("{result:#?}")
   }
   pub fn test_with_pattern(mut self) -> Self {
     self = self.with_pattern("pop");
