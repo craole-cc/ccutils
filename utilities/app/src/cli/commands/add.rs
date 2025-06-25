@@ -15,7 +15,7 @@ pub fn add(pkgs: &[String], file: &Option<String>) -> Result<()> {
 fn from_file(file_path: &str) -> Result<()> {
   let path = Path::new(file_path);
   let content = fs::read_to_string(path).with_context(|| {
-    format!("Failed to read package list from {}", file_path)
+    format!("Failed to read package list from {file_path}")
   })?;
 
   let packages: Vec<String> = content
@@ -46,11 +46,11 @@ fn from_list(pkgs: &[String]) -> Result<()> {
   // Try each package manager in order of priority
   for pm in package_managers.iter().filter(|pm| pm.available) {
     debug!("Trying to install with {}", pm.name);
-    return Ok(());
-    // match install_with_manager(pm, pkgs) {
-    //     Ok(_) => return Ok(()),
-    //     Err(e) => info!("Failed to install with {}: {}", pm.name, e),
-    // }
+    // return Ok(());
+    match install_with_manager(pm, pkgs) {
+      Ok(_) => return Ok(()),
+      Err(e) => info!("Failed to install with {}: {}", pm.name, e)
+    }
   }
 
   anyhow::bail!("Failed to install packages with any available package manager")

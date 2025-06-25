@@ -24,7 +24,7 @@ impl std::fmt::Display for Level {
 			Level::ENV => "ENV",
 		};
 
-		write!(f, "{}", level_str)
+		write!(f, "{level_str}")
 	}
 }
 

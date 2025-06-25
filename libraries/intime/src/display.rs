@@ -19,11 +19,11 @@ impl Display for Info {
       if !hide && value > 0 {
         let plural = if value == 1 { "" } else { "s" };
         let value_str = if unit == "second" {
-          format!("{:.3}", value)
+          format!("{value:.3}")
         } else {
-          format!("{}", value)
+          format!("{value}")
         };
-        parts.push(format!("{} {}{}", value_str, unit, plural));
+        parts.push(format!("{value_str} {unit}{plural}"));
       }
     }
 

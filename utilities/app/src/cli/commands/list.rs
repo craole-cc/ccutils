@@ -58,7 +58,7 @@ fn list_installed_for_manager(pm: &PackageManager) -> Result<()> {
   }
 
   let output_str = String::from_utf8_lossy(&output.stdout);
-  println!("{}", output_str);
+  println!("{output_str}");
 
   Ok(())
 }
