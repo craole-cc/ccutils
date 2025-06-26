@@ -1,15 +1,16 @@
 use anyhow::{Context, Result};
 use directories::UserDirs;
 use std::{
-  env, fs,
+  env::var,
+  fs::{metadata, read_dir},
   path::{Path, PathBuf},
   time::SystemTime
 };
 
-pub fn get_cargo_bin_dir() -> Result<PathBuf> {
+pub fn cargo_bin_dir() -> Result<PathBuf> {
   //{ Cargo installs to $CARGO_HOME/bin. If $CARGO_HOME is not set, it defaults
   //{ to ~/.cargo }
-  if let Ok(cargo_home) = env::var("CARGO_HOME") {
+  if let Ok(cargo_home) = var("CARGO_HOME") {
     return Ok(PathBuf::from(cargo_home).join("bin"));
   }
 
@@ -21,20 +22,20 @@ pub fn get_cargo_bin_dir() -> Result<PathBuf> {
 }
 
 /// Recursively finds the most recent modification timestamp in a directory.
-pub fn get_latest_mtime(path: &Path) -> Result<SystemTime> {
-  let mut latest_mtime = SystemTime::UNIX_EPOCH;
+pub fn latest_mtime(path: &Path) -> Result<SystemTime> {
+  let mut system_time = SystemTime::UNIX_EPOCH;
 
   //{ If the path is a file, return its mtime }
   if !path.is_dir() {
     return if path.exists() {
-      Ok(fs::metadata(path)?.modified()?)
+      Ok(metadata(path)?.modified()?)
     } else {
-      Ok(latest_mtime)
+      Ok(system_time)
     };
   }
 
   //{ If it's a directory, recurse }
-  for entry in fs::read_dir(path)? {
+  for entry in read_dir(path)? {
     let entry = entry?;
     let entry_path = entry.path();
 
@@ -45,16 +46,16 @@ pub fn get_latest_mtime(path: &Path) -> Result<SystemTime> {
       continue;
     }
 
-    let mtime = if entry_path.is_dir() {
-      get_latest_mtime(&entry_path)?
+    let modification_time = if entry_path.is_dir() {
+      latest_mtime(&entry_path)?
     } else {
-      fs::metadata(&entry_path)?.modified()?
+      metadata(&entry_path)?.modified()?
     };
 
-    if mtime > latest_mtime {
-      latest_mtime = mtime;
+    if modification_time > system_time {
+      system_time = modification_time;
     }
   }
 
-  Ok(latest_mtime)
+  Ok(system_time)
 }

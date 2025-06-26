@@ -1,10 +1,10 @@
 [package]
 name = "sysfo"
+description = "Displays system information"
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }
 license = { workspace = true }
-description = { workspace = true }
 homepage = { workspace = true }
 repository = { workspace = true }
 

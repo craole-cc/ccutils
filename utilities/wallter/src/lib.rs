@@ -1,3 +1,7 @@
+pub use logline::{
+  DEBUG, ERROR, INFO, TRACE, WARN, debug, error, info, trace, warn
+};
+
 #[macro_use]
 pub mod utils;
 

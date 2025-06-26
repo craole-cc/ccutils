@@ -1,15 +1,5 @@
-use clap::{Parser, Subcommand, ValueEnum};
-
-#[derive(Debug, Clone, ValueEnum, Default)]
-pub enum InstallMode {
-  /// Install with default name only (e.g., 'wallter')
-  Unprefixed,
-  /// Install with workspace-prefixed name only (e.g., 'ccutils-wallter')
-  Prefixed,
-  /// Install both unprefixed and prefixed versions (default)
-  #[default]
-  Both
-}
+use crate::commands::{clean, install};
+use clap::{Parser, Subcommand};
 
 #[derive(Debug, Clone, Subcommand)]
 pub enum Command {
@@ -23,8 +13,8 @@ pub enum Command {
     /// Specific crates to install
     crates: Vec<String>,
     /// Installation mode for binary names
-    #[arg(short, long, value_enum, default_value_t = InstallMode::Both)]
-    mode: InstallMode
+    #[arg(short, long, value_enum, default_value_t = install::Target::Both)]
+    mode: install::Target
   },
   /// Build and install binary crates (default)
   #[command(name = "build-install")]
@@ -32,8 +22,33 @@ pub enum Command {
     /// Specific crates to build and install
     crates: Vec<String>,
     /// Installation mode for binary names
-    #[arg(short, long, value_enum, default_value_t = InstallMode::Both)]
-    mode: InstallMode
+    #[arg(short, long, value_enum, default_value_t = install::Target::Both)]
+    mode: install::Target
+  },
+  /// Clean target directories and/or installed binaries
+  Clean {
+    /// Specific crates to clean (empty = all)
+    crates: Vec<String>,
+    /// What to clean
+    #[arg(short, long, value_enum, default_value_t = clean::Target::Dir)]
+    target: clean::Target
+  },
+  /// Uninstall binary crates
+  Uninstall {
+    /// Specific crates to uninstall
+    crates: Vec<String>,
+  },
+  /// List workspace crates and their status
+  List {
+    /// Show detailed information
+    #[arg(short, long)]
+    detailed: bool,
+    /// Only show binary crates
+    #[arg(short, long)]
+    bins_only: bool,
+    /// Only show library crates
+    #[arg(short, long)]
+    libs_only: bool
   }
 }
 
@@ -53,8 +68,8 @@ pub struct Cli {
   pub verbose: bool,
 
   /// Installation mode for binary names (when no subcommand is provided)
-  #[arg(long, value_enum, default_value_t = InstallMode::Both)]
-  pub install_mode: InstallMode,
+  #[arg(long, value_enum, default_value_t = install::Target::Both)]
+  pub install_mode: install::Target,
 
   /// Specific crates to build and install (when no subcommand is provided)
   pub crates: Vec<String>
@@ -68,12 +83,12 @@ impl Cli {
   /// Get the effective command, defaulting to BuildInstall if no subcommand
   /// provided
   pub fn effective_command(&self) -> Command {
-    match &self.command {
-      Some(cmd) => cmd.clone(),
-      None => Command::BuildInstall {
+    self
+      .command
+      .clone()
+      .unwrap_or_else(|| Command::BuildInstall {
         crates: self.crates.clone(),
         mode: self.install_mode.clone()
-      }
-    }
+      })
   }
 }

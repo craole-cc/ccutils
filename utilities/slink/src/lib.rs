@@ -9,16 +9,18 @@ pub use symlink::process_links;
 #[cfg(test)]
 mod tests {
   use super::*;
-  use std::fs::{self, File};
-  use std::io::Write;
+  use std::{
+    fs::{File, create_dir_all, read_to_string},
+    io::Write
+  };
   use tempfile::tempdir;
 
   fn setup_test_env() -> (tempfile::TempDir, Config) {
     let temp_dir = tempdir().unwrap();
     let src_dir = temp_dir.path().join("src");
     let link_dir = temp_dir.path().join("link");
-    fs::create_dir_all(&src_dir).unwrap();
-    fs::create_dir_all(&link_dir).unwrap();
+    create_dir_all(&src_dir).unwrap();
+    create_dir_all(&link_dir).unwrap();
 
     let config = Config::new(false, false, vec![], link_dir);
 
@@ -37,7 +39,7 @@ mod tests {
     let link_path = config.link_base.join("test_file");
     assert!(link_path.exists());
     assert!(link_path.is_symlink());
-    assert_eq!(fs::read_to_string(link_path)?, "test content");
+    assert_eq!(read_to_string(link_path)?, "test content");
 
     Ok(())
   }

@@ -1,6 +1,7 @@
 [package]
 name = "wallter"
 description = "Redefined dynamic desktop wallpaper manager"
+keywords = ["desktop", "wallpaper", "manager"]
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }

@@ -1,8 +1,10 @@
 use crate::{Config, SymlinkError};
 use chrono::Local;
-use std::fs;
-use std::io::{self, Write};
-use std::path::{Path, PathBuf};
+use std::{
+  fs,
+  io::{self, Write},
+  path::{Path, PathBuf}
+};
 use tracing::{debug, info, warn};
 
 pub fn process_links(config: &Config) -> Result<(), SymlinkError> {

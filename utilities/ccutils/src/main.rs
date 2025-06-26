@@ -1,18 +1,29 @@
-mod builder;
+// --- Imports ---
 mod cli;
-mod installer;
-mod utils;
-mod workspace;
+mod commands;
+mod config;
+mod utilities;
 
-use anyhow::Result;
-use cli::Cli;
-use workspace::Workspace;
+// --- Exports ---
+pub use cli::Cli;
+pub use config::Workspace;
+pub use logline::{debug, error, info, trace, warn};
 
-fn main() -> Result<()> {
+fn main() -> anyhow::Result<()> {
+  //{ Initialize logging }
+  logline::init();
+
+  //{ Parse command line arguments }
   let cli = Cli::parse();
-  let workspace = Workspace::find_current()?;
+  debug!("{:#?}", cli);
 
-  workspace.execute_command(&cli)?;
+  //{ Identify the current configuration }
+  let bin = Workspace::find_current()?;
+  debug!("{:#?}", bin);
 
+  //{ Execute the parsed command }
+  bin.execute_command(&cli)?;
+
+  //{ Finish }
   Ok(())
 }

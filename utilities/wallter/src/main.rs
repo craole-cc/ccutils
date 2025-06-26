@@ -2,6 +2,8 @@ use wallter::{Error, Result};
 
 fn main() -> Result<()> {
   println!("Welcome to {}!", env!("CARGO_PKG_NAME"));
+  logline::init();
+  logline::info!("Hello, world!");
 
   // nightlight::toggle()?;
   // nightlight::enable()

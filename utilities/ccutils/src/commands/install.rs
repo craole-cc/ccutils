@@ -1,17 +1,29 @@
-use crate::cli::InstallMode;
 use anyhow::{Context, Result, bail};
+use clap::ValueEnum;
 use std::{
-  env, fs,
+  env::{consts::EXE_EXTENSION, current_exe},
+  fs::{copy, remove_file},
   path::{Path, PathBuf},
   process::Command
 };
 
-pub struct Installer {
+#[derive(Debug, Clone, ValueEnum, Default)]
+pub enum Target {
+  /// Install with default name only (e.g., 'wallter')
+  Unprefixed,
+  /// Install with workspace-prefixed name only (e.g., 'ccutils-wallter')
+  Prefixed,
+  /// Install both unprefixed and prefixed versions (default)
+  #[default]
+  Both
+}
+
+pub struct Config {
   workspace_name: String,
   cargo_bin_dir: PathBuf
 }
 
-impl Installer {
+impl Config {
   pub fn new(workspace_name: String, cargo_bin_dir: PathBuf) -> Self {
     Self {
       workspace_name,
@@ -22,7 +34,7 @@ impl Installer {
   pub fn install_crates(
     &self,
     crates: &[String],
-    mode: &InstallMode,
+    mode: &Target,
     force: bool,
     verbose: bool
   ) -> Result<()> {
@@ -63,13 +75,13 @@ impl Installer {
     &self,
     member_path: &str,
     binary_name: &str,
-    mode: &InstallMode,
+    mode: &Target,
     force: bool,
     is_self_install: bool,
     verbose: bool
   ) -> Result<()> {
     match mode {
-      InstallMode::Unprefixed => {
+      Target::Unprefixed => {
         self.install_binary(
           member_path,
           binary_name,
@@ -79,7 +91,7 @@ impl Installer {
           verbose
         )?;
       }
-      InstallMode::Prefixed => {
+      Target::Prefixed => {
         let prefixed_name = format!("{}-{}", self.workspace_name, binary_name);
         self.install_binary(
           member_path,
@@ -90,8 +102,8 @@ impl Installer {
           verbose
         )?;
       }
-      InstallMode::Both => {
-        // Install unprefixed version first
+      Target::Both => {
+        //{ Install unprefixed version first }
         self.install_binary(
           member_path,
           binary_name,
@@ -101,7 +113,7 @@ impl Installer {
           verbose
         )?;
 
-        // Then create prefixed alias
+        //{ Create alias for prefixed version }
         let prefixed_name = format!("{}-{}", self.workspace_name, binary_name);
         self.create_alias(binary_name, &prefixed_name, verbose)?;
       }
@@ -189,11 +201,11 @@ impl Installer {
     let src = self
       .cargo_bin_dir
       .join(source_name)
-      .with_extension(env::consts::EXE_EXTENSION);
+      .with_extension(EXE_EXTENSION);
     let alias = self
       .cargo_bin_dir
       .join(alias_name)
-      .with_extension(env::consts::EXE_EXTENSION);
+      .with_extension(EXE_EXTENSION);
 
     if !src.exists() {
       bail!(
@@ -209,7 +221,7 @@ impl Installer {
 
     // Remove the alias if it already exists
     if alias.exists() {
-      fs::remove_file(&alias).with_context(|| {
+      remove_file(&alias).with_context(|| {
         format!("Failed to remove existing alias '{}'", alias.display())
       })?;
     }
@@ -227,14 +239,14 @@ impl Installer {
 
     #[cfg(windows)]
     {
-      // Windows: try symlink first, fallback to copy if not allowed
+      //{ Windows: try symlink first, fallback to copy if not allowed }
       match std::os::windows::fs::symlink_file(&src, &alias) {
         Ok(_) =>
           if verbose {
             println!("Created symlink for '{alias_name}'");
           },
         Err(_) => {
-          fs::copy(&src, &alias).with_context(|| {
+          copy(&src, &alias).with_context(|| {
             format!(
               "Failed to copy '{}' to '{}'",
               src.display(),
@@ -253,7 +265,7 @@ impl Installer {
 
   /// Check if we're trying to install the same binary that's currently running
   fn is_self_install(&self, binary_name: &str) -> Result<bool> {
-    if let Ok(current_exe) = env::current_exe()
+    if let Ok(current_exe) = current_exe()
       && let Some(current_name) =
         current_exe.file_stem().and_then(|n| n.to_str())
     {

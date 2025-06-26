@@ -1,16 +1,17 @@
-use crate::utils::get_latest_mtime;
+use crate::utilities::get::latest_mtime;
 use anyhow::{Context, Result, bail};
 use std::{
-  env, fs,
+  env::consts::EXE_EXTENSION,
+  fs::metadata,
   path::{Path, PathBuf},
   process::Command
 };
 
-pub struct Builder {
+pub struct Config {
   cargo_bin_dir: PathBuf
 }
 
-impl Builder {
+impl Config {
   pub fn new(cargo_bin_dir: &Path) -> Self {
     Self {
       cargo_bin_dir: cargo_bin_dir.to_path_buf()
@@ -86,7 +87,7 @@ impl Builder {
     let installed_binary_path = self
       .cargo_bin_dir
       .join(binary_name)
-      .with_extension(env::consts::EXE_EXTENSION);
+      .with_extension(EXE_EXTENSION);
 
     if !installed_binary_path.exists() {
       if verbose {
@@ -95,8 +96,8 @@ impl Builder {
       return Ok(true);
     }
 
-    let binary_mtime = fs::metadata(&installed_binary_path)?.modified()?;
-    let latest_src_mtime = get_latest_mtime(Path::new(member))?;
+    let binary_mtime = metadata(&installed_binary_path)?.modified()?;
+    let latest_src_mtime = latest_mtime(Path::new(member))?;
 
     if latest_src_mtime > binary_mtime {
       if verbose {
