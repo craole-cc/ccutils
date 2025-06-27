@@ -1,10 +1,10 @@
+use crate::utilities::get::latest_mtime;
 use anyhow::Result;
 use std::{
   env::consts::EXE_EXTENSION,
   fs::{metadata, read_to_string},
   path::{Path, PathBuf}
 };
-use crate::utilities::get::latest_mtime;
 
 #[derive(Debug)]
 pub struct Metadata {
@@ -38,13 +38,13 @@ impl Config {
 
   pub fn list_crates(
     &self,
-    all_members: &[String],
-    binary_crates: &[String],
+    members: &[String],
+    binaries: &[String],
     detailed: bool,
     bins_only: bool,
     libs_only: bool
   ) -> Result<()> {
-    let crate_infos = self.gather_crate_info(all_members, binary_crates)?;
+    let crate_infos = self.gather_crate_info(members, binaries)?;
     let filtered_crates = self.filter_crates(crate_infos, bins_only, libs_only);
 
     if filtered_crates.is_empty() {
@@ -63,19 +63,19 @@ impl Config {
 
   fn gather_crate_info(
     &self,
-    all_members: &[String],
-    binary_crates: &[String]
+    members: &[String],
+    binaries: &[String]
   ) -> Result<Vec<Metadata>> {
     let mut crate_info = Vec::new();
 
-    for member in all_members {
+    for member in members {
       let name = Path::new(member)
         .file_name()
         .and_then(|n| n.to_str())
         .unwrap_or(member)
         .to_string();
 
-      let is_binary = binary_crates.contains(member);
+      let is_binary = binaries.contains(member);
       let crate_type = self.determine_crate_type(member, is_binary)?;
 
       let (is_installed, has_prefixed_install) = if is_binary {
@@ -184,15 +184,9 @@ impl Config {
         if bins_only && libs_only {
           true //? Show all if both flags are set
         } else if bins_only {
-          matches!(
-            info.crate_type,
-            Crate::Binary | Crate::Both
-          )
+          matches!(info.crate_type, Crate::Binary | Crate::Both)
         } else if libs_only {
-          matches!(
-            info.crate_type,
-            Crate::Library | Crate::Both
-          )
+          matches!(info.crate_type, Crate::Library | Crate::Both)
         } else {
           true //? Show all by default
         }
@@ -201,71 +195,106 @@ impl Config {
   }
 
   fn print_simple_list(&self, crates: &[Metadata]) {
-    println!("Workspace Crates:");
-    for info in crates {
-      let type_str = match info.crate_type {
-        Crate::Binary => "bin",
-        Crate::Library => "lib",
-        Crate::Both => "bin+lib"
-      };
+    let rows: Vec<String> = crates
+      .iter()
+      .map(|info| {
+        let built = match info.needs_rebuild {
+          Some(true) => "✗",  // Needs rebuild
+          Some(false) => "✓", // Up-to-date
+          None => "-"         // N/A
+        };
 
-      let status = if matches!(
-        info.crate_type,
-        Crate::Binary | Crate::Both
-      ) {
-        if info.is_installed { " ✓" } else { " ✗" }
-      } else {
-        ""
-      };
+        let installed = match info.crate_type {
+          Crate::Library => "-", // N/A for libraries
+          _ => {
+            // For Binary or Both
+            if info.is_installed {
+              "✓" // Is installed
+            } else {
+              "✗" // Is not installed
+            }
+          }
+        };
 
-      println!("  {} ({}){}", info.name, type_str, status);
-    }
+        let prefixed = match info.crate_type {
+          Crate::Library => "-", // N/A for libraries
+          _ => {
+            // For Binary or Both
+            if info.has_prefixed_install {
+              "✓" // Is prefixed
+            } else {
+              "✗" // Is not prefixed
+            }
+          }
+        };
+
+        format!(
+          " [B:{} I:{} P:{}] {}",
+          built, installed, prefixed, info.path
+        )
+      })
+      .collect();
+
+    println!(
+      "Workspace Crates:\n{}\nB = Built | I = Installed | P = Prefixed\n",
+      rows.join("\n")
+    );
   }
 
   fn print_detailed_list(&self, crates: &[Metadata]) -> Result<()> {
-    println!("Detailed Workspace Crates:");
-    println!(
-      "{:<20} {:<8} {:<12} {:<10} Path",
-      "Name", "Type", "Installed", "Rebuild"
-    );
-    println!("{}", "-".repeat(70));
-
-    for info in crates {
-      let type_str = match info.crate_type {
-        Crate::Binary => "bin",
-        Crate::Library => "lib",
-        Crate::Both => "bin+lib"
-      };
-
-      let install_status = match info.crate_type {
-        Crate::Library => "N/A".to_string(),
-        _ => {
-          let mut status = Vec::new();
-          if info.is_installed {
-            status.push("unprefixed");
-          }
-          if info.has_prefixed_install {
-            status.push("prefixed");
-          }
-          if status.is_empty() {
-            "No".to_string()
-          } else {
-            status.join("+")
-          }
-        }
-      };
-
-      let rebuild_status = match info.needs_rebuild {
-        Some(true) => "Yes",
-        Some(false) => "No",
-        None => "N/A"
-      };
-
-      println!(
-        "{:<20} {:<8} {:<12} {:<10} {}",
-        info.name, type_str, install_status, rebuild_status, info.path
-      );
+    //{ Check if there are any workspace crates }
+    if crates.is_empty() {
+      println!("No workspace crates found");
+      return Ok(());
     }
+
+    let rows: Vec<String> = crates
+      .iter()
+      .map(|info| {
+        let type_str = match info.crate_type {
+          Crate::Binary => "bin",
+          Crate::Library => "lib",
+          Crate::Both => "bin + lib"
+        };
+
+        let install_status = match info.crate_type {
+          Crate::Library => "N/A".to_string(),
+          _ => {
+            let mut status = Vec::new();
+            if info.is_installed {
+              status.push("installed");
+            }
+            if info.has_prefixed_install {
+              status.push("prefixed");
+            }
+            if status.is_empty() {
+              "Not installed".to_string()
+            } else {
+              status.join(" + ")
+            }
+          }
+        };
+
+        let rebuild_status = match info.needs_rebuild {
+          Some(true) => "Yes",
+          Some(false) => "No",
+          None => "N/A"
+        };
+
+        format!(
+          "{:<24} {:<12} {:<8} {:<22} {:<24}",
+          info.name, type_str, rebuild_status, install_status, info.path
+        )
+      })
+      .collect();
+
+    //{ Print the table header and separator line }
+    println!(
+      "{:<24} {:<12} {:<8} {:<22} {:<24}",
+      "Crate", "Type", "Up-to-date", "Status", "Path"
+    );
+    println!("{}", "-".repeat(90));
+    println!("{}", rows.join("\n"));
 
     Ok(())
   }

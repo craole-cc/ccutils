@@ -12,7 +12,7 @@ pub struct Config {
 }
 
 impl Config {
-  pub fn new(cargo_bin_dir: &Path) -> Self {
+  pub fn new(cargo_bin_dir: &Path) -> Self { // No change here.
     Self {
       cargo_bin_dir: cargo_bin_dir.to_path_buf()
     }

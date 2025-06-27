@@ -1,3 +1,4 @@
+use crate::utilities::get::cargo_bin_dir;
 use anyhow::{Context, Result, bail};
 use clap::ValueEnum;
 use std::{
@@ -7,16 +8,16 @@ use std::{
   process::Command
 };
 
-use crate::utilities::get::cargo_bin_dir;
-
-#[derive(Debug, Default, Clone, ValueEnum)]
+#[derive(Debug, Default, Clone, ValueEnum)] // No change here.
 pub enum Target {
   /// Clean only target directories
-  #[default]
   Dir,
+
   /// Clean only installed binaries
   Bin,
+
   /// Clean both target directories and installed binaries
+  #[default]
   All
 }
 
@@ -26,7 +27,7 @@ pub struct Config {
 }
 
 impl Config {
-  pub fn new(workspace_name: String) -> Result<Self> {
+  pub fn new(workspace_name: String) -> Result<Self> { // No change here.
     Ok(Self {
       workspace_name,
       cargo_bin: cargo_bin_dir()?

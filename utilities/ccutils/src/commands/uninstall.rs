@@ -5,7 +5,7 @@ use std::{
   path::{Path, PathBuf}
 };
 
-pub struct Config {
+pub struct Config { // No change here.
   workspace_name: String,
   cargo_bin_dir: PathBuf
 }

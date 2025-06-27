@@ -9,9 +9,9 @@ use std::{
 
 #[derive(Debug, Clone, ValueEnum, Default)]
 pub enum Target {
-  /// Install with default name only (e.g., 'wallter')
+  /// Install with default name only (e.g., 'app')
   Unprefixed,
-  /// Install with workspace-prefixed name only (e.g., 'ccutils-wallter')
+  /// Install with workspace-prefixed name only (e.g., 'ccutils-app')
   Prefixed,
   /// Install both unprefixed and prefixed versions (default)
   #[default]
@@ -46,7 +46,7 @@ impl Config {
         .and_then(|name| name.to_str())
         .unwrap_or(member);
 
-      // Check if we're trying to install ourselves
+      //{ Check if we're trying to install ourselves }
       let is_self_install = self.is_self_install(binary_name)?;
 
       if is_self_install && !force {

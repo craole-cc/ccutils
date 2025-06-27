@@ -36,7 +36,7 @@ pub enum Command {
   /// Uninstall binary crates
   Uninstall {
     /// Specific crates to uninstall
-    crates: Vec<String>,
+    crates: Vec<String>
   },
   /// List workspace crates and their status
   List {
@@ -80,15 +80,20 @@ impl Cli {
     <Self as Parser>::parse()
   }
 
-  /// Get the effective command, defaulting to BuildInstall if no subcommand
-  /// provided
   pub fn effective_command(&self) -> Command {
-    self
-      .command
-      .clone()
-      .unwrap_or_else(|| Command::BuildInstall {
-        crates: self.crates.clone(),
-        mode: self.install_mode.clone()
-      })
+    self.command.clone().unwrap_or(Command::List {
+      detailed: Self::should_be_detailed_by_width(),
+      bins_only: false,
+      libs_only: false
+    })
+  }
+
+  /// Determines if the list should be detailed based on terminal width.
+  /// Defaults to non-detailed if terminal size cannot be determined.
+  fn should_be_detailed_by_width() -> bool {
+    const MIN_WIDTH_FOR_DETAILED: u16 = 100;
+    termsize::get()
+      .map(|size| size.cols >= MIN_WIDTH_FOR_DETAILED)
+      .unwrap_or(false)
   }
 }

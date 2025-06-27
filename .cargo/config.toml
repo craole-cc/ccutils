@@ -74,4 +74,4 @@ quiet = false
 #| Environment Variables
 [env]
 BROWSER = "firefox"
-RUST_LOG = "erks=trace,logline=trace,intime=trace,numba=trace,app=trace,ccutils=trace,dots=trace,colorscheme=trace,embellish=trace,genna=trace,grit=trace,scraps=trace,slink=trace,sysfo=trace,wallter=trace,whers=trace"
+RUST_LOG = "erks=trace,logline=trace,intime=trace,numba=trace,app=trace,ccutils=info,dots=trace,colorscheme=trace,embellish=trace,genna=trace,grit=trace,scraps=trace,slink=trace,sysfo=trace,wallter=trace,whers=trace"

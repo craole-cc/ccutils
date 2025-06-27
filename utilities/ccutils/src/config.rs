@@ -18,7 +18,7 @@ pub struct Workspace {
 }
 
 impl Workspace {
-  pub fn find_current() -> Result<Self> {
+  pub fn define() -> Result<Self> {
     let current_dir = current_dir().context("Failed to get current dir")?;
     let root_toml = Self::find_workspace_toml(&current_dir)?;
     let name = Self::extract_workspace_name(&root_toml)?;

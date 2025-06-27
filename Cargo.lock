@@ -806,6 +806,7 @@ dependencies = [
  "directories",
  "logline",
  "tempfile",
+ "termsize",
  "toml",
 ]
 
@@ -2779,9 +2780,9 @@ dependencies = [
 
 [[package]]
 name = "lru"
-version = "0.14.0"
+version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9f8cc7106155f10bdf99a6f379688f543ad6596a415375b36a59a054ceda1198"
+checksum = "0281c2e25e62316a5c9d98f2d2e9e95a37841afdaf4383c177dbb5c1dfab0568"
 dependencies = [
  "hashbrown 0.15.2",
 ]
@@ -5066,6 +5067,16 @@ dependencies = [
  "futf",
  "mac",
  "utf-8",
+]
+
+[[package]]
+name = "termsize"
+version = "0.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6f11ff5c25c172608d5b85e2fb43ee9a6d683a7f4ab7f96ae07b3d8b590368fd"
+dependencies = [
+ "libc",
+ "winapi",
 ]
 
 [[package]]
