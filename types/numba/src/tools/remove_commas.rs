@@ -13,7 +13,7 @@ use std::simd::prelude::*;
 /// # Example
 ///
 /// ```
-/// let result = remove_commas("1,234,567.89");
+/// let result = numba::remove_commas("1,234,567.89");
 /// assert_eq!(result, "1234567.89");
 /// ```
 pub fn remove_commas(input: &str) -> String {

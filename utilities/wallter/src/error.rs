@@ -30,6 +30,9 @@ pub enum Error {
   ColorMode(String),
 
   #[error("Parse error: {0}")]
-  Parse(#[from] parse::Error) /* #[error("Night Light error: {0}")]
-                               * NightLight(#[from] Box<nightlight::Error>) */
+  Parse(#[from] parse::Error),
+
+  // #[cfg(target_os = "windows")]
+  // #[error("Night Light error: {0}")]
+  // NightLight(#[from] Box<crate::config::color::mode::windows::nightlight::Error>)
 }

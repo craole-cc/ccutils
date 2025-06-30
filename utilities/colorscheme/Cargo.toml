@@ -12,7 +12,7 @@ workspace = true
 
 [dependencies]
 logline = { path = "../../libraries/logline" }
-erks = { path = "../../libraries/erks" }
+erks = { path = "../../types/erks" }
 numba = { path = "../../types/numba" }
 clap = { workspace = true }
 directories = { workspace = true }

@@ -1,4 +1,4 @@
-use erks::{IOError, thiserror};
+use erks::thiserror;
 
 #[derive(thiserror::Error, Debug)]
 pub enum Error {

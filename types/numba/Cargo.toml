@@ -24,7 +24,7 @@ thiserror = { workspace = true }
 
 #| Config
 logline = { path = "../../libraries/logline" }
-erks = { path = "../../libraries/erks" }
+erks = { path = "../../types/erks" }
 once_cell = { workspace = true }
 mimalloc = { workspace = true, optional = true }
 lru = { workspace = true }

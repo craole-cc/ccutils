@@ -1,6 +1,7 @@
 [package]
 name = "slink"
 version = "0.1.0"
+description = "A utility for managing symbolic links agnostic of the OS."
 edition = { workspace = true }
 
 [dependencies]
@@ -8,9 +9,9 @@ chrono = { workspace = true }             # We shouldn't need this, we can use s
 clap = { workspace = true }
 directories = { workspace = true }
 glob = { workspace = true }
-thiserror = { workspace = true }          # We shouldn't need this, error should be in the main config
-tracing = { workspace = true }            # We shouldn't need this, tracing should be in the main config
-tracing-subscriber = { workspace = true } # We shouldn't need this, tracing should be in the main config
+thiserror = { workspace = true }          # TODO: Replace with erks
+tracing = { workspace = true }            # TODO: Replace with logline
+tracing-subscriber = { workspace = true }
 
 [dev-dependencies]
 tempfile = { workspace = true }

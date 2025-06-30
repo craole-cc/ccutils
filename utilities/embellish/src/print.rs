@@ -1,14 +1,24 @@
 // TODO: Make this a global lib, or update embellish
-use std::fmt::{self, Formatter};
+use std::fmt::{self, Display, Formatter};
 
-/// Print a padded key-value field with a custom separator for uniform CLI
-/// output.
+/// Writes a formatted key-value pair to the provided `Formatter`.
 ///
-/// # Example
-/// ```
-/// print_field(f, "Name", "DISPLAY1", 11)?;
-/// ```
-pub fn pout_field<T: fmt::Display>(
+/// The key is left-aligned and padded to the specified width (`pad`),
+/// followed by an equals sign and a pipe character, then the value.
+/// The entire line is indented by the given number of spaces (`indent`).
+///
+/// # Arguments
+///
+/// * `f` - A mutable reference to a `Formatter` where the output is written.
+/// * `key` - The key to be displayed, left-aligned and padded.
+/// * `value` - The value associated with the key.
+/// * `pad` - The width to which the key is padded.
+/// * `indent` - The number of spaces to indent the entire line.
+///
+/// # Returns
+///
+/// * `fmt::Result` - Result indicating success or failure of the write operation.
+pub fn pout_field<T: Display>(
   f: &mut Formatter<'_>,
   key: &str,
   value: T,
@@ -18,7 +28,20 @@ pub fn pout_field<T: fmt::Display>(
   writeln!(f, "{}{key:<pad$}=| {value}", " ".repeat(indent))
 }
 
-/// Print an indented heading.
+/// Writes a heading to the provided `Formatter`.
+///
+/// The heading is indented by the specified number of spaces (`indent`)
+/// and appears as a plain text line.
+///
+/// # Arguments
+///
+/// * `f` - A mutable reference to a `Formatter` where the output is written.
+/// * `text` - The text of the heading to be displayed.
+/// * `indent` - The number of spaces to indent the heading.
+///
+/// # Returns
+///
+/// * `fmt::Result` - Result indicating success or failure of the write operation.
 pub fn pout_heading(
   f: &mut Formatter<'_>,
   text: &str,
