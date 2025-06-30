@@ -1,10 +1,18 @@
 use super::{Color, ColorMode, ConfigType, Monitor, Path, Search, Slideshow};
-use crate::{Error, Result};
+use crate::{Error, Result, prelude::*};
 use serde::{Deserialize, Serialize};
 use std::{
   fmt::{self, Display, Formatter},
   fs::{create_dir_all, read_to_string, write}
 };
+
+pub fn init() -> Result<Config> {
+  let mut path_config = Path::default();
+  let config = Config::init(&mut path_config)?;
+  info!("Initialized config: {}", path_config.config_file.display());
+  trace!("Config: {config}");
+  Ok(config)
+}
 
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Config {
@@ -128,10 +136,4 @@ impl Display for Config {
 
     Ok(())
   }
-}
-
-/// Helper function to initialize the configuration with default path config.
-pub fn init() -> crate::Result<Config> {
-  let mut path_config = Path::default();
-  Config::init(&mut path_config)
 }

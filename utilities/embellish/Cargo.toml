@@ -1,10 +1,10 @@
 [package]
 name = "embellish"
+description = "Utilities for enhancing command-line output with styled text and formatted fields."
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }
 license = { workspace = true }
-description = { workspace = true }
 homepage = { workspace = true }
 repository = { workspace = true }
 

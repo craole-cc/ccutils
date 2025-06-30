@@ -5729,11 +5729,13 @@ dependencies = [
 name = "wallter"
 version = "0.1.0"
 dependencies = [
+ "cfg-if",
  "chrono",
  "clap",
  "config",
  "dark-light",
  "directories",
+ "embellish",
  "image",
  "logline",
  "rand 0.9.1",

@@ -1,12 +1,12 @@
 #[derive(Debug, Default, PartialEq, Clone)]
-pub enum Time {
+pub enum Config {
 	#[default]
 	None,
 	Datetime,
 	Uptime,
 }
 
-impl Time {
+impl Config {
 	pub fn new() -> Self {
 		Self::default()
 	}

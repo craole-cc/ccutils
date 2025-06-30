@@ -13,11 +13,13 @@ repository = { workspace = true }
 workspace = true
 
 [dependencies]
+cfg-if = { workspace = true }
 chrono = { workspace = true }
 clap = { workspace = true }
 config = { workspace = true }
 dark-light = { workspace = true }
 directories = { workspace = true }
+embellish = { path = "../../utilities/embellish" }
 image = { workspace = true }
 logline = { path = "../../libraries/logline" }
 rand = { workspace = true }
@@ -32,5 +34,6 @@ winit = { workspace = true }
 winreg = { workspace = true }
 
 [features]
-default = ["windows-broadcast"]
+default = ["windows-broadcast", "nightlight"]
 windows-broadcast = []
+nightlight = []

@@ -1,15 +1,10 @@
-use wallter::{Error, Result};
+use wallter::prelude::*;
+use wallter::*;
 
 fn main() -> Result<()> {
-  println!("Welcome to {}!", env!("CARGO_PKG_NAME"));
-  logline::init();
-  logline::info!("Hello, world!");
-
-  // nightlight::toggle()?;
-  // nightlight::enable()
-  // let config = wallter::config::Config::default();
-  let config = wallter::config::init()?;
-  println!("Config: {config}");
-
+  log::init()?;
+  cli::init()?;
+  config::init()?;
+  features::init()?;
   Ok(())
 }

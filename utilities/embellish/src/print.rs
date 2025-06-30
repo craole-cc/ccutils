@@ -31,13 +31,13 @@ pub fn pout_heading(
 #[macro_export]
 macro_rules! printf {
   ($f:expr, $key:expr, $value:expr, $pad:expr, $indent:expr) => {
-    $crate::utils::print::pout_field($f, $key, $value, $pad, $indent)
+    $crate::print::pout_field($f, $key, $value, $pad, $indent)
   };
   ($f:expr, $key:expr, $value:expr, $pad:expr) => {
-    $crate::utils::print::pout_field($f, $key, $value, $pad, 4)
+    $crate::print::pout_field($f, $key, $value, $pad, 4)
   };
   ($f:expr, $key:expr, $value:expr) => {
-    $crate::utils::print::pout_field($f, $key, $value, 24, 4)
+    $crate::print::pout_field($f, $key, $value, 24, 4)
   };
 }
 
@@ -45,9 +45,9 @@ macro_rules! printf {
 #[macro_export]
 macro_rules! printh {
   ($f:expr, $text:expr, $indent:expr) => {
-    $crate::utils::print::pout_heading($f, $text, $indent)
+    $crate::print::pout_heading($f, $text, $indent)
   };
   ($f:expr, $text:expr) => {
-    $crate::utils::print::pout_heading($f, $text, 2)
+    $crate::print::pout_heading($f, $text, 2)
   };
 }

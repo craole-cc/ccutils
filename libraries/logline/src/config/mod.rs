@@ -1,9 +1,9 @@
-mod core;
+mod default;
 mod display;
 mod level;
 mod time;
 
-pub use core::Logline;
+pub use default::Config;
 pub use display::Options;
-pub use level::Level;
-pub use time::Time;
+pub use level::Config as Level;
+pub use time::Config as Time;

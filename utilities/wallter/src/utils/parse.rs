@@ -2,7 +2,7 @@ use crate::consts::*;
 use chrono::NaiveTime;
 use thiserror::Error;
 
-/// Errors that can occur when deserializing a [NightlightSettings] struct from
+/// Errors that can occur when deserializing a `NightlightSettings` struct from
 /// a byte slice.
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
@@ -20,14 +20,14 @@ pub enum Error {
   TimeValue
 }
 
-/// Converts a time block's hour and minute values to a [NaiveTime].
+/// Converts a time block's hour and minute values to a `NaiveTime`.
 pub fn time_to_naive_time(hours: u8, minutes: u8) -> Result<NaiveTime, Error> {
   NaiveTime::from_hms_opt(u32::from(hours), u32::from(minutes), 0)
     .ok_or(Error::TimeValue)
 }
 
 /// Converts a Unix timestamp to a 5-byte array using a variable-length encoding
-/// scheme. See [NightlightSettings] for more information about the binary
+/// scheme. See `NightlightSettings`` for more information about the binary
 /// format.
 pub fn timestamp_to_bytes(timestamp: u64) -> [u8; TIMESTAMP_SIZE] {
   let mut bytes: [u8; TIMESTAMP_SIZE] = [0; TIMESTAMP_SIZE];
@@ -40,7 +40,7 @@ pub fn timestamp_to_bytes(timestamp: u64) -> [u8; TIMESTAMP_SIZE] {
 }
 
 /// Converts a 5-byte array to a Unix timestamp using a variable-length decoding
-/// scheme. See [NightlightSettings] for more information about the binary
+/// scheme. See `NightlightSettings`` for more information about the binary
 /// format.
 pub fn timestamp_from_bytes(bytes: [u8; TIMESTAMP_SIZE]) -> u64 {
   let mut timestamp: u64 = 0;
@@ -53,8 +53,7 @@ pub fn timestamp_from_bytes(bytes: [u8; TIMESTAMP_SIZE]) -> u64 {
 }
 
 /// Converts a color temperature in Kelvin to a 2-byte array using a mangled
-/// encoding scheme. See [NightlightSettings] for more information about the
-/// binary format.
+/// encoding scheme.
 pub fn kelvin_to_bytes(color_temperature: u16) -> [u8; 2] {
   let mut bytes: [u8; 2] = [0; 2];
   bytes[0] = ((color_temperature & 0x3F) * 2 + 0x80) as u8;
@@ -63,8 +62,7 @@ pub fn kelvin_to_bytes(color_temperature: u16) -> [u8; 2] {
 }
 
 /// Converts a 2-byte array to a color temperature in Kelvin using a mangled
-/// decoding scheme. See [NightlightSettings] for more information about the
-/// binary format.
+/// decoding scheme.
 pub fn kelvin_from_bytes(bytes: [u8; 2]) -> u16 {
   let mut kelvin: u16 = 0;
   kelvin |= (bytes[1] as u16) << 6;

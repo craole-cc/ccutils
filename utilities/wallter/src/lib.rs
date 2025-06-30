@@ -1,18 +1,24 @@
-pub use logline::{
-  DEBUG, ERROR, INFO, TRACE, WARN, debug, error, info, trace, warn
-};
+// -- Macros --
+#[macro_use]
+extern crate cfg_if;
 
 #[macro_use]
-pub mod utils;
+extern crate embellish;
 
+#[macro_use]
+extern crate logline;
+
+// -- Modules --
+mod utils;
 mod api;
-pub use api::Api;
-
-pub mod consts;
-
-mod error;
-pub use error::Error;
-pub type Result<T> = std::result::Result<T, Error>;
-
+pub mod cli;
 pub mod config;
+mod consts;
+mod error;
+pub mod features;
+
+// -- Exports --
+pub use api::Api;
 pub use config::Config;
+pub use error::{Error, Result};
+pub mod prelude;

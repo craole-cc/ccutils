@@ -1,6 +1,8 @@
 use crate::{config::color::mode::windows::nightlight, utils::parse};
 use std::io;
 
+pub type Result<T> = std::result::Result<T, Error>;
+
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
   #[error("API error: {0}")]

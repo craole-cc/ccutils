@@ -3,6 +3,9 @@
 //! This module centralizes constants used across the crate, particularly for
 //! parsing binary data structures like the Windows Night Light registry value.
 
+pub const APP: &str = env!("CARGO_PKG_NAME");
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 /// Identifies the beginning of the struct
 pub const STRUCT_HEADER_BYTES: [u8; 4] = [0x43, 0x42, 0x01, 0x00];
 /// Identifies the end of the struct
