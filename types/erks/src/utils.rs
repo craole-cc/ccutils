@@ -50,9 +50,8 @@ where
 pub fn log_error(error: &Error) {
   let structured = error.to_structured();
 
-  // TODO: Use logline here for actual logging instead of eprintln
-  eprintln!(
-    "[DEBUG][{}][{}] {}: {} (recoverable: {})",
+  debug!(
+    "[{}][{}] {}: {} (recoverable: {})",
     structured.category.to_uppercase(),
     structured.severity,
     structured.code,
@@ -62,13 +61,13 @@ pub fn log_error(error: &Error) {
 
   if let Some(metadata) = &structured.metadata {
     if let Some(component) = &metadata.component {
-      eprintln!("  component: {component}");
+      debug!("  component: {component}");
     }
     if let Some(operation) = &metadata.operation {
-      eprintln!("  operation: {operation}");
+      debug!("  operation: {operation}");
     }
     if !metadata.context.is_empty() {
-      eprintln!("  context: {:?}", metadata.context);
+      debug!("  context: {:?}", metadata.context);
     }
   }
 }

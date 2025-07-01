@@ -1,8 +1,4 @@
-use erks::{
-  Code, Context as ErksContext, ErksError, ErksSeverity, IoError, Metadata,
-  StructuredError
-};
-use std::collections::HashMap;
+use erks::{Code, Error, Metadata, Severity, StructuredError, io};
 
 #[test]
 fn test_error_code_display() {
@@ -13,10 +9,10 @@ fn test_error_code_display() {
 
 #[test]
 fn test_severity_display() {
-  assert_eq!(format!("{}", ErksSeverity::Info), "INFO");
-  assert_eq!(format!("{}", ErksSeverity::Warning), "WARN");
-  assert_eq!(format!("{}", ErksSeverity::Error), "ERROR");
-  assert_eq!(format!("{}", ErksSeverity::Critical), "CRITICAL");
+  assert_eq!(format!("{}", Severity::Info), "INFO");
+  assert_eq!(format!("{}", Severity::Warning), "WARN");
+  assert_eq!(format!("{}", Severity::Error), "ERROR");
+  assert_eq!(format!("{}", Severity::Critical), "CRITICAL");
 }
 
 #[test]
@@ -37,26 +33,25 @@ fn test_metadata_builder() {
 
 #[test]
 fn test_error_category() {
-  let io_err = ErksError::from(IoError::new("file access failed"));
+  let io_err = Error::from(io::Error::new("file access failed"));
   assert_eq!(io_err.category(), "system");
 
-  let custom_err = ErksError::custom("a custom error");
+  let custom_err = Error::custom("a custom error");
   assert_eq!(custom_err.category(), "custom");
 
   #[cfg(feature = "http")]
   {
-    let http_err =
-      ErksError::from(erks::HttpError::custom("http request failed"));
+    let http_err = Error::from(erks::HttpError::custom("http request failed"));
     assert_eq!(http_err.category(), "http");
   }
 
-  let anyhow_err = ErksError::from(anyhow::anyhow!("generic anyhow error"));
+  let anyhow_err = Error::from(anyhow::anyhow!("generic anyhow error"));
   assert_eq!(anyhow_err.category(), "generic");
 }
 
 #[test]
 fn test_to_structured() {
-  let error = ErksError::from(IoError::file_system_with_path(
+  let error = Error::from(io::Error::file_system_with_path(
     "Could not open file",
     "/tmp/test.txt"
   ));
@@ -65,7 +60,7 @@ fn test_to_structured() {
   assert_eq!(structured.message, "File system error: Could not open file");
   assert_eq!(structured.category, "system");
   assert_eq!(structured.code, Code::IoError);
-  assert_eq!(structured.severity, ErksSeverity::Error);
+  assert_eq!(structured.severity, Severity::Error);
   assert!(structured.recoverable);
 
   let meta = structured.metadata.unwrap();
@@ -75,25 +70,25 @@ fn test_to_structured() {
 
 #[test]
 fn test_error_convenience_constructors() {
-  let custom_err = ErksError::custom("my error");
-  assert!(matches!(custom_err, ErksError::Custom(_)));
+  let custom_err = Error::custom("my error");
+  assert!(matches!(custom_err, Error::Custom(_)));
   assert_eq!(custom_err.to_string(), "Application error: my error");
 
-  let io_err = ErksError::io("disk full");
-  assert!(matches!(io_err, ErksError::System(_)));
+  let io_err = Error::io("disk full");
+  assert!(matches!(io_err, Error::System(_)));
   assert_eq!(io_err.to_string(), "I/O error: disk full");
 
-  let validation_err = ErksError::validation("bad input");
+  let validation_err = Error::validation("bad input");
   assert!(matches!(
     validation_err,
-    ErksError::Custom(erks::CustomError::Validation { .. })
+    Error::Custom(erks::CustomError::Validation { .. })
   ));
   assert_eq!(validation_err.to_string(), "Validation error: bad input");
 
-  let state_err = ErksError::invalid_state("wrong state");
+  let state_err = Error::invalid_state("wrong state");
   assert!(matches!(
     state_err,
-    ErksError::Custom(erks::CustomError::InvalidState { .. })
+    Error::Custom(erks::CustomError::InvalidState { .. })
   ));
   assert_eq!(state_err.to_string(), "Invalid state: wrong state");
 }

@@ -107,8 +107,7 @@ impl Context for Error {
   }
 
   fn metadata(&self) -> Option<Metadata> {
-    let mut metadata =
-      Metadata::new(self.error_code()).with_component("config");
+    let metadata = Metadata::new(self.error_code()).with_component("config");
 
     match self {
       Error::FileNotFound { path } =>

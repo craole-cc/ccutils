@@ -54,6 +54,7 @@ impl Context for Error {
   fn metadata(&self) -> Option<Metadata> {
     let metadata = Metadata::new(self.error_code()).with_component("parse");
     //? No specific metadata for parse errors beyond the message
-    None
+    // None
+    Some(metadata)
   }
 }

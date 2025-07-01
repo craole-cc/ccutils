@@ -1,22 +1,19 @@
-use erks::{
-  Code, Context, CustomError, ErksContext, ErksSeverity, Metadata, custom
-};
+use erks::{Code, Context, Severity, custom::Error};
 use std::collections::HashMap;
 
 #[test]
 fn test_validation_error() {
-  let error = CustomError::validation("Input is required");
+  let error = Error::validation("Input is required");
   assert_eq!(error.to_string(), "Validation error: Input is required");
   assert_eq!(error.error_code(), Code::ValidationError);
-  assert_eq!(error.severity(), ErksSeverity::Warning);
+  assert_eq!(error.severity(), Severity::Warning);
   assert!(error.is_recoverable());
   assert!(error.metadata().is_none());
 }
 
 #[test]
 fn test_validation_field_error() {
-  let error =
-    CustomError::validation_field("Must be a valid email", "email_address");
+  let error = Error::validation_field("Must be a valid email", "email_address");
   assert_eq!(error.to_string(), "Validation error: Must be a valid email");
   assert_eq!(error.error_code(), Code::ValidationError);
   let meta = error.metadata().unwrap();
@@ -26,7 +23,7 @@ fn test_validation_field_error() {
 #[test]
 fn test_validation_detailed_error() {
   let constraints = vec!["maxLength: 10".to_string()];
-  let error = CustomError::validation_detailed(
+  let error = Error::validation_detailed(
     "Too long",
     "username",
     "a_very_long_username",
@@ -41,20 +38,19 @@ fn test_validation_detailed_error() {
 
 #[test]
 fn test_invalid_state_error() {
-  let error =
-    CustomError::invalid_state("Cannot process order in 'shipped' state");
+  let error = Error::invalid_state("Cannot process order in 'shipped' state");
   assert_eq!(
     error.to_string(),
     "Invalid state: Cannot process order in 'shipped' state"
   );
   assert_eq!(error.error_code(), Code::InvalidState);
-  assert_eq!(error.severity(), ErksSeverity::Critical);
+  assert_eq!(error.severity(), Severity::Critical);
   assert!(!error.is_recoverable());
 }
 
 #[test]
 fn test_invalid_state_transition_error() {
-  let error = CustomError::invalid_state_transition(
+  let error = Error::invalid_state_transition(
     "Cannot move from shipped to cancelled",
     "shipped",
     "pending",
@@ -68,18 +64,14 @@ fn test_invalid_state_transition_error() {
 
 #[test]
 fn test_resource_limit_error() {
-  let error = CustomError::resource_limit(
-    "API rate limit exceeded",
-    "api_calls",
-    100,
-    101
-  );
+  let error =
+    Error::resource_limit("API rate limit exceeded", "api_calls", 100, 101);
   assert_eq!(
     error.to_string(),
     "Resource limit exceeded: API rate limit exceeded"
   );
   assert_eq!(error.error_code(), Code::ResourceLimit);
-  assert_eq!(error.severity(), ErksSeverity::Error);
+  assert_eq!(error.severity(), Severity::Error);
   assert!(error.is_recoverable());
   let meta = error.metadata().unwrap();
   assert_eq!(meta.context.get("resource_type").unwrap(), "api_calls");
@@ -89,14 +81,13 @@ fn test_resource_limit_error() {
 
 #[test]
 fn test_business_logic_error() {
-  let error =
-    CustomError::business_logic("User is not eligible for this action");
+  let error = Error::business_logic("User is not eligible for this action");
   assert_eq!(
     error.to_string(),
     "Business logic error: User is not eligible for this action"
   );
   assert_eq!(error.error_code(), Code::BusinessLogic);
-  assert_eq!(error.severity(), ErksSeverity::Error);
+  assert_eq!(error.severity(), Severity::Error);
   assert!(!error.is_recoverable());
 }
 
@@ -104,7 +95,7 @@ fn test_business_logic_error() {
 fn test_business_logic_with_context() {
   let mut context = HashMap::new();
   context.insert("user_id".to_string(), "123".to_string());
-  let error = CustomError::business_logic_with_context(
+  let error = Error::business_logic_with_context(
     "Insufficient funds",
     "process_payment",
     context
@@ -116,7 +107,7 @@ fn test_business_logic_with_context() {
 
 #[test]
 fn test_generic_custom_error() {
-  let error = CustomError::new("Something unexpected happened");
+  let error = Error::new("Something unexpected happened");
   assert_eq!(
     error.to_string(),
     "Application error: Something unexpected happened"

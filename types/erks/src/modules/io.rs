@@ -213,7 +213,7 @@ impl Context for Error {
   }
 
   fn metadata(&self) -> Option<Metadata> {
-    let mut metadata = Metadata::new(self.error_code()).with_component("io");
+    let metadata = Metadata::new(self.error_code()).with_component("io");
 
     match self {
       Error::FileSystem { path: Some(p), .. } =>

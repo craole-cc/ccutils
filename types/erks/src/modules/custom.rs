@@ -248,7 +248,7 @@ impl Context for Error {
   }
 
   fn metadata(&self) -> Option<Metadata> {
-    let mut metadata =
+    let metadata =
       Metadata::new(self.error_code()).with_component("application");
 
     match self {

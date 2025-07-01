@@ -10,27 +10,27 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// Error codes for programmatic error handling
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Code {
-  // System errors
+  //? System errors
   IoError,
   PermissionDenied,
   NotFound,
   NetworkError,
 
-  // Configuration errors
+  //? Configuration errors
   ConfigNotFound,
   ConfigInvalid,
   ConfigMissingKey,
 
-  // Data errors
+  //? Data errors
   ParseError,
   ValidationError,
 
-  // Application errors
+  //? Application errors
   InvalidState,
   ResourceLimit,
   BusinessLogic,
 
-  // Generic
+  //? Generic
   Unknown
 }
 

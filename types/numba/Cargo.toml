@@ -1,10 +1,10 @@
 [package]
 name = "numba"
+description = "Utilities for working with numbers"
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }
 license = { workspace = true }
-description = { workspace = true }
 homepage = { workspace = true }
 repository = { workspace = true }
 

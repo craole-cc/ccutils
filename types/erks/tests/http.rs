@@ -1,17 +1,17 @@
 #[cfg(feature = "http")]
 mod http_tests {
-  use erks::{Code, Context, ErksContext, ErksSeverity, HttpError, Metadata};
+  use erks::{Code, Context,  Severity, http::Error};
 
   #[test]
   fn test_http_custom_error() {
-    let error = HttpError::custom("Failed to connect to endpoint");
+    let error = Error::custom("Failed to connect to endpoint");
     assert_eq!(
       error.to_string(),
       "HTTP error: Failed to connect to endpoint"
     );
     // Custom HTTP errors are not recoverable by default
     assert!(!error.is_recoverable());
-    assert_eq!(error.severity(), ErksSeverity::Error);
+    assert_eq!(error.severity(), Severity::Error);
     assert_eq!(error.error_code(), Code::NetworkError);
     assert!(error.metadata().is_none());
   }
@@ -23,7 +23,7 @@ mod http_tests {
 
   #[test]
   fn test_error_code() {
-    let error = HttpError::custom("test");
+    let error = Error::custom("test");
     assert_eq!(error.error_code(), Code::NetworkError);
   }
 
@@ -35,15 +35,15 @@ mod http_tests {
   #[test]
   fn conceptual_test_is_recoverable() {
     // Simulating a timeout error (conceptually)
-    // let timeout_error = HttpError::from(reqwest::Error::new(...));
+    // let timeout_error = Error::from(reqwest::Error::new(...));
     // assert!(timeout_error.is_recoverable());
 
     // Simulating a 500 server error (conceptually)
-    // let server_error = HttpError::from(reqwest::Error::new(...));
+    // let server_error = Error::from(reqwest::Error::new(...));
     // assert!(server_error.is_recoverable());
 
     // Simulating a 404 client error (conceptually)
-    // let client_error = HttpError::from(reqwest::Error::new(...));
+    // let client_error = Error::from(reqwest::Error::new(...));
     // assert!(!client_error.is_recoverable());
   }
 
