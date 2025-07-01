@@ -127,7 +127,7 @@ We welcome contributions to Embellish! Feel free to open issues or submit pull r
 
 ## License
 
-Embellish is distributed under the Apache License 2.0. See [LICENSE](../../LICENSE.md) for more information.
+Embellish is distributed under the Apache License 2.0. See [LICENSE](../../LICENSE-MIT.md) for more information.
 
 ## Contact
 

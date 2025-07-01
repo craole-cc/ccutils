@@ -216,4 +216,4 @@ and planned milestones for **Wallter**.
 ## License
 
 This project is licensed under the MIT License. See the
-[License](../../LICENSE.md) file for more information.
+[License](../../LICENSE-MIT.md) file for more information.
