@@ -57,7 +57,7 @@ impl State {
         } else {
           io::ErrorKind::PermissionDenied // Common for write failures due to permissions
         };
-        Error::IO(io::Error::new(
+        Error::System(io::Error::new(
           error_kind,
           format!(
             "Failed to open registry key '{NIGHTLIGHT_STATE_REGISTRY_KEY}' with access {access}: {e}"
@@ -69,7 +69,7 @@ impl State {
   /// Reads the nightlight state from the Windows registry
   pub fn read_from_registry() -> Result<Self> {
     let key = Self::open_nightlight_registry_key(KEY_READ).map_err(|e| {
-      Error::IO(io::Error::new(
+      Error::System(io::Error::new(
         io::ErrorKind::NotFound,
         format!(
           "Failed to open registry key '{NIGHTLIGHT_STATE_REGISTRY_KEY}': {e}"
@@ -80,7 +80,7 @@ impl State {
     // Read raw bytes from registry - we need to use get_raw_value for binary
     // data
     let reg_value = key.get_raw_value(NIGHTLIGHT_STATE_REGISTRY_VAL).map_err(|e| {
-        Error::IO(io::Error::new(
+        Error::System(io::Error::new(
           io::ErrorKind::NotFound, // Specific to reading the value
           format!("Failed to read registry value '{NIGHTLIGHT_STATE_REGISTRY_VAL}': {e}"),
         ))
@@ -106,7 +106,7 @@ impl State {
         }
       )
       .map_err(|e| {
-        Error::IO(io::Error::new(
+        Error::System(io::Error::new(
           io::ErrorKind::PermissionDenied, // Specific to writing the value
           format!("Failed to write registry value '{NIGHTLIGHT_STATE_REGISTRY_VAL}': {e}"),
         ))
@@ -550,7 +550,7 @@ mod tests {
         }
         Err(e) => {
           eprintln!("\n{label}: Failed to get Night Light status: {e}");
-          if let Error::IO(io_err) = e
+          if let Error::System(io_err) = e
             && io_err.kind() == std::io::ErrorKind::NotFound
           {
             eprintln!(

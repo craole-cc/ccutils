@@ -5,6 +5,8 @@ extern crate cfg_if;
 extern crate embellish;
 #[macro_use]
 extern crate logline;
+#[macro_use]
+mod macros;
 
 // -- Modules --
 #[cfg(feature = "config")]

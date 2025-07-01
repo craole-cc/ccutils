@@ -11,14 +11,14 @@ use winreg::{
 pub fn read_bytes(hive: HKEY, path: &str, name: &str) -> Result<Vec<u8>> {
   let root = RegKey::predef(hive);
   let key = root.open_subkey_with_flags(path, KEY_READ).map_err(|e| {
-    Error::IO(io::Error::new(
+    Error::System(io::Error::new(
       io::ErrorKind::NotFound,
       format!("Failed to open registry key '{path}': {e}")
     ))
   })?;
 
   let value = key.get_raw_value(name).map_err(|e| {
-    Error::IO(io::Error::new(
+    Error::System(io::Error::new(
       io::ErrorKind::NotFound,
       format!("Failed to read registry value '{name}' from key '{path}': {e}")
     ))
@@ -38,7 +38,7 @@ pub fn write_bytes(
   let key = root
     .open_subkey_with_flags(path, KEY_SET_VALUE)
     .map_err(|e| {
-      Error::IO(io::Error::new(
+      Error::System(io::Error::new(
         io::ErrorKind::PermissionDenied,
         format!("Failed to open registry key '{path}' for writing: {e}")
       ))
@@ -49,7 +49,7 @@ pub fn write_bytes(
     vtype: REG_BINARY
   };
   key.set_raw_value(name, &reg_value).map_err(|e| {
-    Error::IO(io::Error::new(
+    Error::System(io::Error::new(
       io::ErrorKind::PermissionDenied,
       format!("Failed to write registry value '{name}' to key '{path}': {e}")
     ))

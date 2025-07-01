@@ -1,43 +1,25 @@
 # erks
 
-`erks` is a Rust library designed to simplify error handling by providing a
-unified error type that consolidates common error kinds from various sources
-like I/O, configuration, parsing, and HTTP requests. It's built on top of
-popular crates like `anyhow` and `thiserror`, offering a structured and
-extensible approach to error management.
+`erks` is a Rust library designed to simplify error handling by providing a unified error type that consolidates common error kinds from various sources like I/O, configuration, parsing, and HTTP requests. It's built on top of popular crates like `anyhow` and `thiserror`, offering a structured and extensible approach to error management.
 
-The core idea is to wrap different error types into a single, comprehensive
-`erks::Error` enum. This enum is decorated with a `Context` trait, which
-provides additional metadata like severity, error codes, and recoverability
-status, making it easier to log, monitor, and handle errors programmatically.
+The core idea is to wrap different error types into a single, comprehensive `erks::Error` enum. This enum is decorated with a `Context` trait, which provides additional metadata like severity, error codes, and recoverability status, making it easier to log, monitor, and handle errors programmatically.
 
 ## Features
 
-- **Unified Error Type**: A single `erks::Error` to handle errors from different
-  modules.
-- **Structured Metadata**: Each error comes with severity, an error code, and
-  context.
-- **Categorization**: Errors are grouped into categories like `system`,
-  `config`, `http`, `custom`, etc.
-- **Feature-gated**: Functionality is modular and can be enabled via Cargo
-  features (e.g., `http`, `config`, `json`).
-- **Extensible**: Easily define and integrate your own custom
-  application-specific errors.
-- **Helper Utilities**: Includes macros like `error!`, `bail!`, and `ensure!`
-  for ergonomic error creation and propagation, plus a `retry_with_backoff`
-  utility.
+- **Unified Error Type**: A single `erks::Error` to handle errors from different modules.
+- **Structured Metadata**: Each error comes with severity, an error code, and context.
+- **Categorization**: Errors are grouped into categories like `system`, `config`, `http`, `custom`, etc.
+- **Feature-gated**: Functionality is modular and can be enabled via Cargo features (e.g., `http`, `config`, `json`).
+- **Extensible**: Easily define and integrate your own custom application-specific errors.
+- **Helper Utilities**: Includes macros like `error!`, `bail!`, and `ensure!` for ergonomic error creation and propagation, plus a `retry_with_backoff` utility.
 
 ## Core Concepts
 
 - **`erks::Error`**: The main enum that wraps all other specific error types.
-- **`erks::Context`**: A trait implemented by all error types, providing methods
-  like `severity()`, `error_code()`, `is_recoverable()`, and `metadata()`.
-- **`erks::Code`**: An enum of programmatic error codes for reliable error
-  matching.
-- **`erks::Severity`**: An enum (`Info`, `Warning`, `Error`, `Critical`) to
-  classify the impact of an error.
-- **`erks::Metadata`**: A struct for attaching arbitrary key-value context,
-  component, and operation names to an error.
+- **`erks::Context`**: A trait implemented by all error types, providing methods like `severity()`, `error_code()`, `is_recoverable()`, and `metadata()`.
+- **`erks::Code`**: An enum of programmatic error codes for reliable error matching.
+- **`erks::Severity`**: An enum (`Info`, `Warning`, `Error`, `Critical`) to classify the impact of an error.
+- **`erks::Metadata`**: A struct for attaching arbitrary key-value context, component, and operation names to an error.
 
 ## Installation
 
@@ -66,14 +48,14 @@ erks = { version = "0.1.0", features = ["full"] }
 ### Basic Error Handling
 
 ```rust
-use erks::{ErksContext, ErksError, ErksResult};
+use erks::{Context, Error, Result, io, utils};
 use std::fs;
 
-fn read_file(path: &str) -> ErksResult<String> {
+fn read_file(path: &str) -> Result<String> {
     fs::read_to_string(path).map_err(|e| {
         // Convert the std::io::Error into our custom IO error type,
         // then into the main ErksError.
-        erks::IoError::from(e).into()
+        io::Error::from(e).into()
     })
 }
 
@@ -89,7 +71,7 @@ fn main() {
             eprintln!("  Recoverable: {}", e.is_recoverable());
 
             // You can also log the structured version
-            erks::utils::log_error(&e);
+            utils::log_error(&e);
         }
     }
 }
@@ -126,15 +108,13 @@ fn get_user_status(user_id: u32) -> ErksResult<bool> {
 
 ## Testing
 
-The crate includes a comprehensive test suite. To run the tests, ensure you have
-the dev dependencies installed and run:
+The crate includes a comprehensive test suite. To run the tests, ensure you have the dev dependencies installed and run:
 
 ```sh
 cargo test --all-features
 ```
 
-This command will run all unit and integration tests for every module, enabling
-all available features to ensure complete coverage.
+This command will run all unit and integration tests for every module, enabling all available features to ensure complete coverage.
 
 ## License
 

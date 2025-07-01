@@ -1,6 +1,3 @@
-use crate::{config::color::mode::windows::nightlight, utils::parse};
-use std::io;
-
 pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(thiserror::Error, Debug)]
@@ -10,10 +7,11 @@ pub enum Error {
 
   #[error("Configuration error: {0}")]
   Config(String),
+  
+  #[error("I/O error: {0}")]
+  System(#[from] std::io::Error),
 
-  #[error("IO error: {0}")]
-  IO(#[from] io::Error),
-
+  // IO(#[from] erks::SystemError),
   #[error("Network error: {0}")]
   Network(#[from] reqwest::Error),
 
@@ -30,9 +28,11 @@ pub enum Error {
   ColorMode(String),
 
   #[error("Parse error: {0}")]
-  Parse(#[from] parse::Error),
-
-  // #[cfg(target_os = "windows")]
-  // #[error("Night Light error: {0}")]
-  // NightLight(#[from] Box<crate::config::color::mode::windows::nightlight::Error>)
+  Parse(#[from] crate::utils::parse::Error) /* #[cfg(target_os =
+                                             * "windows")]
+                                             * #[error("Night Light error:
+                                             * {0}")]
+                                             * NightLight(
+                                             *   #[from] Box<crate::config::color::mode::windows::nightlight::Error>
+                                             * ) */
 }

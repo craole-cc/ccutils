@@ -20,6 +20,7 @@ config = { workspace = true }
 dark-light = { workspace = true }
 directories = { workspace = true }
 embellish = { path = "../../utilities/embellish" }
+erks = { path = "../../types/erks" }
 image = { workspace = true }
 logline = { path = "../../libraries/logline" }
 rand = { workspace = true }

@@ -5747,6 +5747,7 @@ dependencies = [
  "dark-light",
  "directories",
  "embellish",
+ "erks",
  "image",
  "logline",
  "rand 0.9.1",

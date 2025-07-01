@@ -458,7 +458,7 @@ impl Api {
     }
 
     let bytes = response.bytes().await.map_err(Error::Network)?;
-    tokio::fs::write(path, bytes).await.map_err(Error::IO)?;
+    tokio::fs::write(path, bytes).await.map_err(Error::System)?;
     Ok(())
   }
 }
