@@ -1,5 +1,2 @@
 {
-  "fileinator.ignoredFolders": [
-    "types/error/tests/integration.rs"
-  ]
 }
