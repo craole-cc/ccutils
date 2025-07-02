@@ -1,0 +1,40 @@
+[package]
+name = "wallter"
+description = "Redefined dynamic desktop wallpaper manager"
+keywords = ["desktop", "wallpaper", "manager"]
+version = { workspace = true }
+edition = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+homepage = { workspace = true }
+repository = { workspace = true }
+
+[lints]
+workspace = true
+
+[dependencies]
+cfg-if = { workspace = true }
+chrono = { workspace = true }
+clap = { workspace = true }
+config = { workspace = true }
+dark-light = { workspace = true }
+directories = { workspace = true }
+embellish = { path = "../embellish" }
+erks = { path = "../erks" }
+image = { workspace = true }
+logline = { path = "../logline" }
+rand = { workspace = true }
+reqwest = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true }
+toml = { workspace = true }
+winapi = { workspace = true }
+winit = { workspace = true }
+winreg = { workspace = true }
+
+[features]
+default = ["windows-broadcast", "nightlight"]
+windows-broadcast = []
+nightlight = []

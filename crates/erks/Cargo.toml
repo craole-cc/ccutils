@@ -1,0 +1,82 @@
+[package]
+name = "erks"
+description = "Simplifies error handling while merging common error types into a single type."
+version = { workspace = true }
+edition = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+keywords = ["error", "error-handling", "result", "anyhow", "thiserror"]
+categories = ["rust-patterns", "development-tools"]
+readme = "README.md"
+repository = { workspace = true }
+
+[lints]
+workspace = true
+
+[features]
+default = ["std"]
+
+#| Core features
+std = ["full"]
+full = ["config", "http", "glob", "json", "toml", "retry", "structured-logging"]
+
+#| Format support
+config = ["dep:config"]
+glob = ["dep:glob"]
+json = ["dep:serde_json", "dep:serde"]
+toml = ["dep:toml", "dep:serde"]
+
+#| Network support
+http = ["dep:reqwest"]
+
+#| Utility features
+retry = ["dep:tokio", "std"]
+structured-logging = ["dep:serde", "dep:serde_json"]
+tracing = ["dep:tracing"]
+
+[dependencies]
+#| Core error handling
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+
+#| Utilities
+cfg-if = { workspace = true }
+
+#| Workspace dependencies
+embellish = { path = "../embellish" }
+logline = { path = "../logline" }
+
+#| Optional format dependencies
+config = { workspace = true, optional = true }
+glob = { workspace = true, optional = true }
+serde = { workspace = true, optional = true }
+serde_json = { workspace = true, optional = true }
+toml = { workspace = true, optional = true }
+
+#| Optional network dependencies
+reqwest = { workspace = true, optional = true }
+
+#| Optional utility dependencies
+tokio = { workspace = true, optional = true, features = ["time"] }
+tracing = { workspace = true, optional = true }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt"] }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+
+# [[example]]
+# name = "basic_usage"
+# required-features = ["std"]
+
+# [[example]]
+# name = "http_errors"
+# required-features = ["http"]
+
+# [[example]]
+# name = "config_errors"
+# required-features = ["config"]
+
+# [[example]]
+# name = "retry_with_backoff"
+# required-features = ["retry"]

@@ -1,0 +1,27 @@
+[package]
+name = "sysfo"
+description = "Displays system information"
+version = { workspace = true }
+edition = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+homepage = { workspace = true }
+repository = { workspace = true }
+
+[lints]
+workspace = true
+
+
+[dependencies]
+logline = { path = "../logline" }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+battery = { workspace = true }
+chrono = { workspace = true }
+clap = { workspace = true }
+directories = { workspace = true }
+crossterm = { workspace = true }
+iana-time-zone = { workspace = true }
+once_cell = { workspace = true }
+sysinfo = { workspace = true }
+uom = { workspace = true }

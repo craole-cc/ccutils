@@ -1,0 +1,25 @@
+[package]
+name = "whers"
+description = "Locate files or commands"
+version = { workspace = true }
+edition = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+keywords = ["search", "find", "file", "filesystem", "tool"]
+
+[lints]
+workspace = true
+
+[dependencies]
+logline = { path = "../logline" }
+# erks = { path = "../erks" }
+numba = { path = "../numba" }
+clap = { workspace = true }
+directories = { workspace = true }
+regex = { workspace = true }
+which = { workspace = true }
+# criterion = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+[dev-dependencies]

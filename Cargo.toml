@@ -14,22 +14,22 @@ categories = [
 
 [workspace]
 members = [
-  "libraries/logline",
-  "libraries/intime",
-  "types/erks",
-  "types/numba",
-  "utilities/app",
-  "utilities/ccutils",
-  "utilities/dots",
-  "utilities/colorscheme",
-  "utilities/embellish",
-  "utilities/genna",
-  "utilities/grit",
-  "utilities/scraps",
-  "utilities/slink",
-  "utilities/sysfo",
-  "utilities/wallter",
-  "utilities/whers",
+  "crates/ccutils",
+  "crates/colorscheme",
+  "crates/dots",
+  "crates/embellish",
+  "crates/erks",
+  "crates/genna",
+  "crates/grit",
+  "crates/intime",
+  "crates/logline",
+  "crates/numba",
+  "crates/pankage",
+  "crates/scraps",
+  "crates/slink",
+  "crates/sysfo",
+  "crates/wallter",
+  "crates/whers",
 ]
 resolver = "2"
 

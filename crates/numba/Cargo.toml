@@ -1,0 +1,48 @@
+[package]
+name = "numba"
+description = "Utilities for working with numbers"
+version = { workspace = true }
+edition = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+homepage = { workspace = true }
+repository = { workspace = true }
+
+[lints]
+workspace = true
+
+[dependencies]
+#| Types
+bigdecimal = { workspace = true, optional = true }
+rust_decimal = { workspace = true }
+num = { workspace = true }
+# num2words = { workspace = true }
+# num-bigfloat = { workspace = true }
+
+#| Error Handling
+thiserror = { workspace = true }
+
+#| Config
+logline = { path = "../logline" }
+erks = { path = "../erks" }
+once_cell = { workspace = true }
+mimalloc = { workspace = true, optional = true }
+lru = { workspace = true }
+dashmap = { workspace = true }
+simd-json = { workspace = true }
+cfg-if = { workspace = true }
+
+#| Frontend
+clap = { workspace = true }
+
+[dev-dependencies]
+criterion = { workspace = true }
+proptest = { workspace = true }
+test-case = { workspace = true }
+
+[features]
+default = ["std-alloc", "big-decimal", "mi-alloc", "simd"]
+big-decimal = ["dep:bigdecimal"]
+std-alloc = []
+mi-alloc = ["dep:mimalloc"]
+simd = []
