@@ -8,8 +8,7 @@ homepage = "https://craole.cc/utils"
 repository = "https://github.com/craole-cc/ccutils"
 categories = [
   "command-line-utilities",
-  "development-tools",
-  "number conversion",
+  "development-tools",   
 ]
 
 [workspace]
