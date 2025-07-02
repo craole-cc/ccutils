@@ -1,13 +1,13 @@
 [package]
 name = "ccutils"
 default-run = "ccutils"
-description = "Manages binary crates of the ccutils workspace"
-version = { workspace = true }
-edition = { workspace = true }
+description = "Manages the ccutils workspace crates"
 authors = { workspace = true }
-license = { workspace = true }
+edition = { workspace = true }
 homepage = { workspace = true }
+license = { workspace = true }
 repository = { workspace = true }
+version = { workspace = true }
 
 [dependencies]
 anyhow = { workspace = true }

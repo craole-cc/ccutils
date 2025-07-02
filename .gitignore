@@ -16,7 +16,7 @@
 # ============================
 #> Version Control
 # ============================
-!.git*
+!.git
 !.gitignore
 !.gitattributes
 !.github/
@@ -50,7 +50,7 @@ out/
 # ============================
 #> Logs & Temp Files
 # ============================
-[lL]og*/
+[lL]og/
 *.log
 [aA]rchive/
 [tT]emp/
