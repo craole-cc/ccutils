@@ -1,6 +1,6 @@
 [package]
 name = "logline"
-description = "manages tracing and debug messages internally"
+description = "Manages tracing/log messages internally"
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }

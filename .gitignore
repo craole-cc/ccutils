@@ -16,10 +16,10 @@
 # ============================
 #> Version Control
 # ============================
-!.git
-!.gitignore
-!.gitattributes
-!.github/
+!.git*
+# !.gitignore
+# !.gitattributes
+# !.github/
 
 # ============================
 #> Development Environment

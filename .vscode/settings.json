@@ -1,0 +1,8 @@
+{
+  "fileinator.ignoredFolders": [
+    ".jj",
+    ".vscode",
+    "target",
+    "archive"
+  ]
+}

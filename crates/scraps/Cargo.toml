@@ -1,10 +1,10 @@
 [package]
 name = "scraps"
+description = "Implementation of a web scraper"
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }
 license = { workspace = true }
-description = { workspace = true }
 homepage = { workspace = true }
 repository = { workspace = true }
 

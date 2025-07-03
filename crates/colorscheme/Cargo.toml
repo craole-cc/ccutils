@@ -1,6 +1,6 @@
 [package]
 name = "colorscheme"
-description = "Get or set the desktop color scheme"
+description = "Manage the desktop color scheme"
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }

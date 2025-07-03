@@ -1,6 +1,6 @@
 [package]
 name = "pankage"
-description = "Installs applications using various package managers"
+description = "Manages applications using available package manager"
 version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }

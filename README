@@ -23,31 +23,57 @@ This project is organized as a Cargo workspace with individual crates, each repr
 
 ```sh
 ccutils
-├─ .gitignore
-├─ Cargo.lock
-├─ Cargo.toml             # Workspace manifest
-├─ configuration          # Crate for managing configurations
-│  ├─ config.toml         # Example configuration file
-│  ├─ src
-│  │  ├─ config           # Configuration-related logic
-│  │  └─ project          # Project-specific utilities
-├─ documentation          # Documentation for API, code, and utilities
-│  ├─ api                 # API references
-│  └─ utilities           # Documentation for each utility
-├─ LICENSE-APACHE
-├─ LICENSE-MIT
-├─ README.md              # The document you're reading
-└─ utilities              # Individual utilities as separate crates
+├── .cargo
+│   └── config.toml
+├── .gitattributes
+├── .gitignore
+├── .rust-analyzer.toml
+├── .rustfmt.toml
+├── .treefmt.toml
+├── Cargo.toml
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── crates
+│   ├── ccutils
+│   ├── colorscheme
+│   ├── dots
+│   ├── embellish
+│   ├── erks
+│   ├── genna
+│   ├── grit
+│   ├── intime
+│   ├── logline
+│   ├── numba
+│   ├── pankage
+│   ├── scraps
+│   ├── slink
+│   ├── sysfo
+│   ├── wallter
+│   └── whers
+├── LICENSE-APACHE-2.0
+├── LICENSE-MIT
+├── README
+├── rust-toolchain.toml
+└── SECURITY
 ```
 
 ### Utilities
 
-- \[ \] **[embellish](utilities/embellish)**: Formatting text in various ways.
-- \[ \] **[geet](utilities/geet)**: Simplifies common Git operations to enhance workflow.
-- \[x\] **[intime](./libraries/intime)**: Displays time in natural language.
-- \[ \] **[pathof](utilities/pathof)**: Resolves and normalizes file paths, handling symbolic links, redundant paths, and more.
-- \[ \] **[slink](utilities/slink)**: Simplifies common tasks related to symlink creation.
-- \[ \] **[sysfo](utilities/sysfo)**: Displays system information, such as hardware, software, username, hostname, battery status, and more.
+- [ ] **[ccutils](crates/ccutils)**: Manages the ccutils workspace crates.
+- [ ] **[colorscheme](crates/colorscheme)**: Manages the desktop color scheme.
+- [ ] **[dots](crates/dots)**: Establishes dotfiles.
+- [ ] **[embellish](crates/embellish)**: Formatting text in various ways.
+- [ ] **[grit](crates/grit)**: Simplifies common Git operations to enhance workflow.
+- [x] **[erks](./crates/erks)**: Simplifies error handling throughout the project.
+- [x] **[intime](./crates/intime)**: Displays time in natural language.
+- [x] **[logline](./crates/logline)**: Manages tracing/log messages internally.
+- [ ] **[numba](crates/numba)**: Utilities for working with numbers.
+- [ ] **[pankage](crates/pankage)**: Manages applications using available package manager.
+- [ ] **[scraps](crates/scraps)**: Implementation of a web scraper.
+- [ ] **[slink](crates/slink)**: Simplifies common tasks related to symlink management.
+- [ ] **[sysfo](crates/sysfo)**: Displays system information.
+- [ ] **[wallter](crates/wallter)**: Redefined dynamic desktop wallpaper manager.
+- [ ] **[whers](crates/whers)**: Locate files or commands available locally.
 
 ### Configuration Management
 
@@ -94,3 +120,9 @@ nix develop
 ## Contributing
 
 This project is still a work in progress. Contributions are welcome as I continue to convert more of my shell scripts to Rust.
+
+## License
+
+This project is dual-licensed under the [Apache License 2.0](./LICENSE-APACHE-2.0) and [MIT License](./LICENSE-MIT).
+
+All contributions submitted for inclusion in this project will be dual-licensed under both licenses mentioned above, unless explicitly specified otherwise. This dual-licensing approach ensures maximum flexibility and compatibility with other open-source projects.
