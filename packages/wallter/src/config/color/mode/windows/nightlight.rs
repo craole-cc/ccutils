@@ -194,8 +194,8 @@ impl State {
     }
     pos = end;
 
-    println!(
-      "[DEBUG] State::deserialize_from_bytes: Parsed state: timestamp={timestamp}, is_enabled={is_enabled}"
+    debug!(
+      "State::deserialize_from_bytes: Parsed state: timestamp={timestamp}, is_enabled={is_enabled}"
     );
     Ok(Self {
       timestamp,
@@ -208,7 +208,7 @@ impl State {
   /// See [State] for more information about the binary format.
   pub fn serialize_to_bytes(&self) -> Vec<u8> {
     let mut bytes: Vec<u8> = Vec::new();
-    println!("[DEBUG] State::serialize_to_bytes: Serializing state: {self:?}");
+    trace!("State::serialize_to_bytes: Serializing state: {self:#?}");
 
     bytes.extend_from_slice(&STRUCT_HEADER_BYTES);
     bytes.extend_from_slice(&TIMESTAMP_HEADER_BYTES);
@@ -248,8 +248,8 @@ impl State {
   /// Returns true if a change was made (i.e. the nightlight was previously
   /// disabled).
   pub fn enable(&mut self) -> bool {
-    println!(
-      "[DEBUG] State::enable: Called. Current state is_enabled={}",
+    debug!(
+      "State::enable: Called. Current state is_enabled={}",
       self.is_enabled
     );
     if !self.is_enabled {
@@ -265,8 +265,8 @@ impl State {
   /// Returns true if a change was made (i.e. the nightlight was previously
   /// enabled).
   pub fn disable(&mut self) -> bool {
-    println!(
-      "[DEBUG] State::disable: Called. Current state is_enabled={}",
+    debug!(
+      "State::disable: Called. Current state is_enabled={}",
       self.is_enabled
     );
     if self.is_enabled {
@@ -496,11 +496,10 @@ mod tests {
     // key exists, which Windows creates on first use.
     let hkcu = RegKey::predef(HKEY_CURRENT_USER);
     if hkcu.open_subkey(NIGHTLIGHT_STATE_REGISTRY_KEY).is_err() {
-      eprintln!(
-        // Keep eprintln! for test-specific output
+      warn!(
         "Skipping test: Night Light registry key not found at '{NIGHTLIGHT_STATE_REGISTRY_KEY}'."
       );
-      println!(
+      warn!(
         "To run this test, please toggle Night Light once in Windows Settings to initialize it."
       );
       return;
@@ -534,7 +533,7 @@ mod tests {
   fn test_standalone_nightlight_operations() -> Result<()> {
     // This test checks the Night Light module's public API in a standalone
     // manner. Using eprintln! for test-specific output.
-    eprintln!("Starting standalone Night Light module test...");
+    warn!("Starting standalone Night Light module test...");
 
     // Helper function for pretty printing the current status
     fn print_status(label: &str) -> bool {
@@ -553,10 +552,10 @@ mod tests {
           if let Error::System(io_err) = e
             && io_err.kind() == std::io::ErrorKind::NotFound
           {
-            eprintln!(
+            warn!(
               "\nHint: This error is common if Night Light has never been used on this system."
             );
-            eprintln!(
+            warn!(
               "Please toggle it on and off once in Windows Settings to create the necessary registry key."
             );
           }
@@ -571,39 +570,35 @@ mod tests {
     }
 
     // 2. Test enabling (set based on bool: true, or mode: Dark)
-    eprintln!("\n--> Attempting to ENABLE Night Light (as for Dark Mode)...");
+    debug!("\n--> Attempting to ENABLE Night Light (as for Dark Mode)...");
     match enable() {
       Ok(changed) =>
         if changed {
-          println!("   [SUCCESS] State was changed. Night Light is now ON.");
+          info!("State was changed. Night Light is now ON.");
         } else {
-          println!(
-            "   [SKIPPED] No change needed. Night Light was already ON."
-          );
+          info!("No change needed. Night Light was already ON.");
         },
-      Err(e) => eprintln!("[ERROR] Failed to enable Night Light: {e}")
+      Err(e) => error!("Failed to enable Night Light: {e}")
     }
     print_status("After Enable");
 
     // 3. Test disabling (set based on bool: false, or mode: Light)
-    eprintln!("\n--> Attempting to DISABLE Night Light (as for Light Mode)...");
+    debug!("\n--> Attempting to DISABLE Night Light (as for Light Mode)...");
     match disable() {
       Ok(changed) =>
         if changed {
-          println!("   [SUCCESS] State was changed. Night Light is now OFF.");
+          info!("State was changed. Night Light is now OFF.");
         } else {
-          println!(
-            "   [SKIPPED] No change needed. Night Light was already OFF."
-          );
+          info!("No change needed. Night Light was already OFF.");
         },
-      Err(e) => eprintln!("[ERROR] Failed to disable Night Light: {e}")
+      Err(e) => error!("Failed to disable Night Light: {e}")
     }
     print_status("After Disable");
 
     // The toggle test from the previous setup already covers toggling
     // functionality.
 
-    eprintln!("\nStandalone Night Light module test completed.");
+    error!("\nStandalone Night Light module test completed.");
     Ok(())
   }
 }

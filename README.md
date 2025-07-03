@@ -50,6 +50,7 @@ ccutils
 │   ├── sysfo
 │   ├── wallter
 │   └── whers
+├── flake.nix
 ├── LICENSE-APACHE-2.0
 ├── LICENSE-MIT
 ├── README

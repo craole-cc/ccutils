@@ -35,6 +35,6 @@ winit = { workspace = true }
 winreg = { workspace = true }
 
 [features]
-default = ["windows-broadcast", "nightlight"]
+default = ["windows-broadcast"]
 windows-broadcast = []
 nightlight = []

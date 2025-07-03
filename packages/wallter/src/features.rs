@@ -9,8 +9,8 @@ pub fn init() -> Result<()> {
 pub fn nightlight() -> Result<()> {
   #[cfg(all(target_os = "windows", feature = "nightlight"))]
   {
-    if nightlight::enable()? {
-      trace!("Activating the {APP} nightlight feature");
+    if crate::config::color::mode::nightlight::enable()? {
+      info!("Activating the {APP} nightlight feature");
     } else {
       trace!("Skipping activation of the {APP} nightlight feature.");
     }
