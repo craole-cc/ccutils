@@ -6,29 +6,26 @@ license = "MIT"
 description = "Various utilities for development."
 homepage = "https://craole.cc/utils"
 repository = "https://github.com/craole-cc/ccutils"
-categories = [
-  "command-line-utilities",
-  "development-tools",   
-]
+categories = ["command-line-utilities", "development-tools"]
 
 [workspace]
 members = [
-  "crates/ccutils",
-  "crates/colorscheme",
-  "crates/dots",
-  "crates/embellish",
-  "crates/erks",
-  "crates/genna",
-  "crates/grit",
-  "crates/intime",
-  "crates/logline",
-  "crates/numba",
-  "crates/pankage",
-  "crates/scraps",
-  "crates/slink",
-  "crates/sysfo",
-  "crates/wallter",
-  "crates/whers",
+  "packages/ccutils",
+  "packages/colorscheme",
+  "packages/dots",
+  "packages/embellish",
+  "packages/erks",
+  "packages/genna",
+  "packages/grit",
+  "packages/intime",
+  "packages/logline",
+  "packages/numba",
+  "packages/pankage",
+  "packages/scraps",
+  "packages/slink",
+  "packages/sysfo",
+  "packages/wallter",
+  "packages/whers",
 ]
 resolver = "2"
 
