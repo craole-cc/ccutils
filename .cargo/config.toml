@@ -1,5 +1,5 @@
 # Cargo config file.
-# See: https://doc.rust-lang.org/cargo/reference/config.html
+# https://doc.rust-lang.org/cargo/reference/config.html
 
 #| Aliases
 [alias]
@@ -61,6 +61,12 @@ rq-intime = "rqp intime"
 wr-intime = "wrp rrp intime"
 w-intime = "wq rq-intime"
 
+#> wallter
+rr-wallter = "rrp wallter"
+rq-wallter = "rqp wallter"
+wr-wallter = "wq rr-wallter"
+wq-wallter = "wq rq-wallter"
+
 #> whers
 rr-whers = "rrp whers"
 rq-whers = "rqp whers"
@@ -73,5 +79,5 @@ quiet = false
 
 #| Environment Variables
 [env]
-BROWSER = "firefox"
+# BROWSER = "firefox"
 RUST_LOG = "erks=trace,logline=trace,intime=trace,numba=trace,app=trace,ccutils=info,dots=trace,colorscheme=trace,embellish=trace,genna=trace,grit=trace,scraps=trace,slink=trace,sysfo=trace,wallter=trace,whers=trace"

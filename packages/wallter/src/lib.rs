@@ -17,10 +17,12 @@ mod utils;
 
 // -- Exports --
 pub mod prelude {
-  pub use crate::api::Api;
-  pub use crate::config::Config;
-  pub use crate::consts::*;
-  pub use crate::error::{Error, Result};
-  pub use crate::utils::*;
+  pub use crate::{
+    api::Api,
+    config::Config,
+    consts::*,
+    error::{Error, Result},
+    utils::*
+  };
 }
 pub use prelude::{Api, Config, Error, Result};

@@ -1,5 +1,0 @@
-default:
-    echo 'Hello, world!'
-
-watch-number:
-    cargo watch --quiet --clear --exec 'run --quiet --package number -- 90'
