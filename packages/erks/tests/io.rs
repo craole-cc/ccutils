@@ -11,8 +11,7 @@ fn test_file_system_error() {
 
 #[test]
 fn test_file_system_with_path() {
-  let error =
-    Error::file_system_with_path("Cannot write", "/var/log/app.log");
+  let error = Error::file_system_with_path("Cannot write", "/var/log/app.log");
   let meta = error.metadata().unwrap();
   assert_eq!(meta.component.unwrap(), "io");
   assert_eq!(meta.context.get("path").unwrap(), "/var/log/app.log");

@@ -1,6 +1,6 @@
 #[cfg(feature = "http")]
 mod http_tests {
-  use erks::{Code, Context,  Severity, http::Error};
+  use erks::{Code, Context, Severity, http::Error};
 
   #[test]
   fn test_http_custom_error() {

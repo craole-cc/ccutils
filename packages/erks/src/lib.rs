@@ -25,11 +25,11 @@ pub use modules::http::{
 #[cfg(any(feature = "json", feature = "toml"))]
 pub use modules::parse::{self, Error as ParseError};
 pub use modules::{
-  custom::{self, Error as CustomError},
   core::{
     Context as ErksContext, Error as ErksError, Result as ErksResult,
     Severity as ErksSeverity, *
   },
+  custom::{self, Error as CustomError},
   io::{self, Error as IoError, Error as IOError, Error as SystemError}
 };
 pub use thiserror::{self, Error as ThisError};

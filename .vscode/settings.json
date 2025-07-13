@@ -4,5 +4,6 @@
     ".vscode",
     "target",
     "archive"
-  ]
+  ],
+  "git.enabled": false // Jujitsu is being used for version control
 }

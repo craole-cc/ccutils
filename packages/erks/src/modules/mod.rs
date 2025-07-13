@@ -1,7 +1,7 @@
 #[cfg(feature = "config")]
 pub mod config;
-pub mod custom;
 pub mod core;
+pub mod custom;
 #[cfg(feature = "glob")]
 pub mod glob;
 #[cfg(feature = "http")]

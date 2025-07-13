@@ -5,7 +5,8 @@ use std::{
   path::{Path, PathBuf}
 };
 
-pub struct Config { // No change here.
+pub struct Config {
+  // No change here.
   workspace_name: String,
   cargo_bin_dir: PathBuf
 }
@@ -73,15 +74,14 @@ impl Config {
 
     // Check for existence of the path itself (symlink or file), not its target,
     // to ensure broken symlinks can also be removed.
-    let binary_path =
-      if path_with_ext.symlink_metadata().is_ok() {
-        Some(path_with_ext)
-      } else if path_without_ext.symlink_metadata().is_ok() {
-        // Only check path_without_ext if path_with_ext didn't exist
-        Some(path_without_ext)
-      } else {
-        None
-      };
+    let binary_path = if path_with_ext.symlink_metadata().is_ok() {
+      Some(path_with_ext)
+    } else if path_without_ext.symlink_metadata().is_ok() {
+      // Only check path_without_ext if path_with_ext didn't exist
+      Some(path_without_ext)
+    } else {
+      None
+    };
 
     if let Some(path) = binary_path {
       if verbose {

@@ -27,7 +27,8 @@ pub struct Config {
 }
 
 impl Config {
-  pub fn new(workspace_name: String) -> Result<Self> { // No change here.
+  pub fn new(workspace_name: String) -> Result<Self> {
+    // No change here.
     Ok(Self {
       workspace_name,
       cargo_bin: cargo_bin_dir()?

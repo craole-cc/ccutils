@@ -17,7 +17,8 @@ use std::fmt::{self, Display, Formatter};
 ///
 /// # Returns
 ///
-/// * `fmt::Result` - Result indicating success or failure of the write operation.
+/// * `fmt::Result` - Result indicating success or failure of the write
+///   operation.
 pub fn pout_field<T: Display>(
   f: &mut Formatter<'_>,
   key: &str,
@@ -41,7 +42,8 @@ pub fn pout_field<T: Display>(
 ///
 /// # Returns
 ///
-/// * `fmt::Result` - Result indicating success or failure of the write operation.
+/// * `fmt::Result` - Result indicating success or failure of the write
+///   operation.
 pub fn pout_heading(
   f: &mut Formatter<'_>,
   text: &str,

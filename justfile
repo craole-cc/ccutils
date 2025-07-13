@@ -2,26 +2,32 @@ set windows-shell := ["C:\\Program Files\\Git\\bin\\sh.exe", "-c"]
 set unstable := true
 set fallback := true
 
-#~@ Format all justfiles with just and other files with treefmt
+# ~@ Format all justfiles with just and other files with treefmt
 fmt:
-  find . -name "justfile" -o -name "*.justfile" -o -name ".justfile" | \
-  while read -r file; do echo "Formatting $file"; \
-  just --fmt --unstable --justfile "$file" || \
-  echo "Failed to format $file"; \
-  done
-  treefmt --clear-cache --fail-on-change
+    if command -v fmtree >/dev/null 2>&1; then \
+        fmtree; \
+    else \
+        find . -name "justfile" -o -name "*.justfile" -o -name ".justfile" | \
+          while read -r file; do echo "Formatting $file"; \
+            just --fmt --unstable --justfile "$file" || \
+            printf "[ERROR] Failed to format: %s\n" "$file"; \
+          done; \
+        command -v treefmt  >/dev/null 2>&1 && \
+          treefmt --allow-missing-formatter --clear-cache --fail-on-change; \
+    fi
 
-#~@ Quick commit with message
+
+# ~@ Quick commit with message
 commit MESSAGE:
-  jj describe --message "{{ MESSAGE }}"
-  jj bookmark set main --revision=@
-  jj git push
+    jj describe --message "{{ MESSAGE }}"
+    jj bookmark set main --revision=@
+    jj git push
 
-#~@ Interactive describe commit
+# ~@ Interactive describe commit
 commit-interactive:
-  jj describe
-  jj bookmark set main --revision=@
-  jj git push
+    jj describe
+    jj bookmark set main --revision=@
+    jj git push
 
 wq-wallter:
-  cargo-watch --quiet --clear --exec 'run --package wallter --quiet'
+    cargo-watch --quiet --clear --exec 'run --package wallter --quiet'

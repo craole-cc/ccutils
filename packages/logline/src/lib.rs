@@ -11,5 +11,4 @@ pub use tracing::{self, debug, error, info, trace, warn};
 pub use tracing_subscriber;
 pub use utils::*;
 
-
 //TODO Use embellish printf macro for the display
