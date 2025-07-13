@@ -21,7 +21,7 @@ pub struct PaginatedResponse {
 
 /// Represents the top-level structure for a single wallpaper details response.
 #[derive(Debug, Deserialize)]
-pub struct WallpaperDetailsResponse {
+pub struct DetailedResponse {
   pub data: Wallpaper
 }
 
@@ -88,6 +88,7 @@ pub struct Meta {
 
 /// Categories for filtering wallpapers.
 #[derive(Debug, Deserialize, Clone, Copy, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
 pub enum Category {
   General = 0,
   Anime = 1,
@@ -96,6 +97,7 @@ pub enum Category {
 
 /// Purity levels for filtering wallpapers.
 #[derive(Debug, Deserialize, Clone, Copy, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
 pub enum Purity {
   Sfw = 0,
   Sketchy = 1,
@@ -185,7 +187,7 @@ impl fmt::Display for ToplistRange {
 /// Represents the parameters for a Wallhaven API search.
 /// Use the builder methods to construct a search query.
 #[derive(Debug, Default, Clone)]
-pub struct SearchParams {
+pub struct Params {
   pub query: Option<String>,
   pub categories: Option<(bool, bool, bool)>,
   pub purity: Option<(bool, bool, bool)>,
@@ -193,15 +195,15 @@ pub struct SearchParams {
   pub order: Option<Order>,
   pub top_range: Option<ToplistRange>,
   pub atleast: Option<String>,
-  pub resolutions: Option<String>,
+  pub resolutions: Option<Vec<String>>,
   pub ratios: Option<String>,
   pub colors: Option<String>,
   pub page: Option<u32>,
   pub seed: Option<String>
 }
 
-impl SearchParams {
-  /// Creates a new, empty `SearchParams` instance.
+impl Params {
+  /// Creates a new, empty `Params` instance.
   pub fn new() -> Self {
     Self::default()
   }
@@ -215,8 +217,8 @@ impl SearchParams {
 
   /// Sets the categories to search. Tuple is (General, Anime, People).
   /// Example: `(true, true, false)` for General and Anime.
-  pub fn with_categories(mut self, cats: (bool, bool, bool)) -> Self {
-    self.categories = Some(cats);
+  pub fn with_categories(mut self, catefories: (bool, bool, bool)) -> Self {
+    self.categories = Some(catefories);
     self
   }
 
@@ -253,8 +255,17 @@ impl SearchParams {
   }
 
   /// Sets a list of exact resolutions. Example: `"1920x1080,2560x1440"`.
-  pub fn with_resolutions(mut self, resolutions: impl Into<String>) -> Self {
-    self.resolutions = Some(resolutions.into());
+  pub fn with_resolutions<Res, Str>(mut self, resolutions: Res) -> Self
+  where
+    Res: IntoIterator<Item = Str>,
+    Str: AsRef<str>
+  {
+    self.resolutions = Some(
+      resolutions
+        .into_iter()
+        .map(|s| s.as_ref().to_string())
+        .collect::<Vec<_>>()
+    );
     self
   }
 
@@ -284,28 +295,38 @@ impl SearchParams {
 }
 
 /// The main Wallhaven API client.
+#[derive(Debug)]
 pub struct Api {
   client: Client,
-  base_url: String,
-  api_key: Option<String>
+  url: String,
+  key: Option<String>
+}
+
+impl Default for Api {
+  fn default() -> Self {
+    Self {
+      client: Client::new(),
+      url: String::from("https://wallhaven.cc/api/v1"),
+      key: None
+    }
+  }
 }
 
 impl Api {
   /// Creates a new Wallhaven API client.
   ///
   /// # Arguments
-  /// * `api_key` - An optional API key for authenticated requests.
-  pub fn new(api_key: Option<String>) -> Self {
+  /// * `key` - An optional API key for authenticated requests.
+  pub fn new(key: Option<String>) -> Self {
     Self {
-      client: Client::new(),
-      base_url: "https://wallhaven.cc/api/v1".to_string(),
-      api_key
+      key,
+      ..Default::default()
     }
   }
 
   /// Checks if an API key is configured.
-  fn has_api_key(&self) -> bool {
-    self.api_key.is_some()
+  fn has_key(&self) -> bool {
+    self.key.is_some()
   }
 
   /// Sends a request, handling authentication and error responses.
@@ -319,7 +340,7 @@ impl Api {
     // Add API key to header if available.
     // The API also allows it as a query param `?apikey=...`, but header is
     // cleaner.
-    if let Some(key) = &self.api_key {
+    if let Some(key) = &self.key {
       request = request.header("X-API-Key", key);
     }
 
@@ -331,7 +352,7 @@ impl Api {
         .text()
         .await
         .unwrap_or_else(|_| "Could not read error body.".to_string());
-      return Err(Error::API(format!(
+      return Err(Error::Api(format!(
         "API request failed with status {status}: {error_text}"
       )));
     }
@@ -339,16 +360,13 @@ impl Api {
     response
       .json::<T>()
       .await
-      .map_err(|e| Error::API(e.to_string()))
+      .map_err(|e| Error::Api(e.to_string()))
   }
 
   /// Searches for wallpapers on Wallhaven.
   /// Returns a `PaginatedResponse` containing the wallpapers and metadata.
-  pub async fn search(
-    &self,
-    params: &SearchParams
-  ) -> Result<PaginatedResponse> {
-    let url = format!("{}/search", self.base_url);
+  pub async fn search(&self, params: &Params) -> Result<PaginatedResponse> {
+    let url = format!("{}/search", self.url);
     let mut query_params = Vec::new();
 
     if let Some(q) = &params.query {
@@ -366,7 +384,7 @@ impl Api {
     }
 
     if let Some(mut purities) = params.purity {
-      if purities.2 && !self.has_api_key() {
+      if purities.2 && !self.has_key() {
         eprintln!(
           "Warning: NSFW purity filter requires an API key. Disabling NSFW for this search."
         );
@@ -403,7 +421,7 @@ impl Api {
     }
 
     if let Some(resolutions) = &params.resolutions {
-      query_params.push(("resolutions", resolutions.clone()));
+      query_params.push(("resolutions", format!("{:?}", resolutions.clone())));
     }
 
     if let Some(ratios) = &params.ratios {
@@ -428,9 +446,8 @@ impl Api {
   /// Retrieves details for a specific wallpaper by its ID.
   /// An API key is required to view NSFW wallpapers.
   pub async fn get_wallpaper_details(&self, id: &str) -> Result<Wallpaper> {
-    let url = format!("{}/w/{}", self.base_url, id);
-    let response: WallpaperDetailsResponse =
-      self.send_request(url, &[]).await?;
+    let url = format!("{}/w/{}", self.url, id);
+    let response: DetailedResponse = self.send_request(url, &[]).await?;
     Ok(response.data)
   }
 
@@ -452,7 +469,7 @@ impl Api {
 
     if !response.status().is_success() {
       let status = response.status();
-      return Err(Error::API(format!(
+      return Err(Error::Api(format!(
         "Failed to download wallpaper: Status {status}"
       )));
     }
@@ -469,7 +486,7 @@ mod tests {
 
   #[test]
   fn test_search_params_builder() {
-    let params = SearchParams::new()
+    let params = Params::new()
       .with_query("nature")
       .with_categories((true, false, false))
       .with_purity((true, false, false))
@@ -478,6 +495,7 @@ mod tests {
       .with_atleast("1920x1080")
       .with_page(1);
 
+    eprintln!("{params:#?}");
     assert_eq!(params.query, Some("nature".to_string()));
     assert_eq!(params.categories, Some((true, false, false)));
     assert_eq!(params.purity, Some((true, false, false)));
@@ -517,9 +535,9 @@ mod tests {
   #[test]
   fn test_api_initialization() {
     let api = Api::new(None);
-    assert!(!api.has_api_key());
+    assert!(!api.has_key());
 
     let api_with_key = Api::new(Some("test_key".to_string()));
-    assert!(api_with_key.has_api_key());
+    assert!(api_with_key.has_key());
   }
 }

@@ -1,4 +1,4 @@
-use super::{Source, wallhaven::Params as Wallhaven};
+use super::{providers::wallhaven, source::Source};
 use crate::api::wallhaven::Sorting;
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display, Formatter};
@@ -43,7 +43,7 @@ impl Default for Config {
       //? base_url is not used by our new API client, so it's empty.
       base_url: "".into(),
       requires_api_key: false,
-      wallhaven: Some(Wallhaven {
+      wallhaven: Some(wallhaven::Params {
         categories: Some((true, true, false)), // General & Anime
         purity: Some((true, true, false)),     // SFW & Sketchy
         sorting: Some(Sorting::Random),

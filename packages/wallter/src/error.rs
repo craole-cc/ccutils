@@ -3,7 +3,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
   #[error("API error: {0}")]
-  API(String),
+  Api(String),
 
   #[error("Configuration error: {0}")]
   Config(String),

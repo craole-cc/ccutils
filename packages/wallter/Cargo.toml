@@ -17,9 +17,11 @@ cfg-if = { workspace = true }
 chrono = { workspace = true }
 clap = { workspace = true }
 config = { workspace = true }
+colored = { workspace = true }
 dark-light = { workspace = true }
 directories = { workspace = true }
 embellish = { path = "../embellish" }
+enumflags2 = { workspace = true }
 erks = { path = "../erks" }
 image = { workspace = true }
 logline = { path = "../logline" }
@@ -30,6 +32,7 @@ serde_json = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true }
 toml = { workspace = true }
+urlencoding = { workspace = true }
 winapi = { workspace = true }
 winit = { workspace = true }
 winreg = { workspace = true }

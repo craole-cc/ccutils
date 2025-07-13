@@ -1,4 +1,4 @@
-use super::wallhaven::Params as Wallhaven;
+use super::providers::wallhaven;
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display, Formatter};
 
@@ -14,12 +14,16 @@ pub struct Source {
 
   /// Wallhaven-specific default parameters.
   #[serde(skip_serializing_if = "Option::is_none")]
-  pub wallhaven: Option<Wallhaven>
+  pub wallhaven: Option<wallhaven::Params>
 }
 
 impl Source {
   /// Creates a new `Source` instance with essential fields.
-  pub fn new(name: impl Into<String>, base_url: impl Into<String>, requires_api_key: bool) -> Self {
+  pub fn new(
+    name: impl Into<String>,
+    base_url: impl Into<String>,
+    requires_api_key: bool
+  ) -> Self {
     let mut s = Self {
       name: name.into(),
       base_url: base_url.into(),
@@ -39,7 +43,7 @@ impl Source {
   }
 
   /// Sets the Wallhaven-specific parameters.
-  pub fn with_wallhaven_params(mut self, params: Wallhaven) -> Self {
+  pub fn with_wallhaven_params(mut self, params: wallhaven::Params) -> Self {
     self.wallhaven = Some(params);
     self
   }

@@ -4,8 +4,8 @@ pub use default::*;
 pub mod color;
 pub use color::{Config as Color, Mode as ColorMode};
 
-pub mod search;
-pub use search::Config as Search;
+// pub mod search;
+// pub use search::Config as Search;
 
 pub mod monitor;
 pub use monitor::Config as Monitor;

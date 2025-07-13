@@ -19,7 +19,7 @@ impl Config {
     }
   }
 
-  /// Calculates the ratio (width / height).
+  /// Calculates the ratio (width / height as a decimal. Eg. 1.777778).
   pub fn ratio(&self) -> f32 {
     if self.height > 0 {
       self.width as f32 / self.height as f32
@@ -28,8 +28,8 @@ impl Config {
     }
   }
 
-  /// Calculates the ratio (width / height).
-  pub fn ratio_str(&self) -> &'static str {
+  /// Calculates the ratio (width / height as a string. Eg. 1.78).
+  pub fn ratio_rounded(&self) -> &'static str {
     if self.height > 0 {
       let ratio = self.width as f32 / self.height as f32;
       let formatted = format!("{ratio:.2}");
@@ -38,6 +38,31 @@ impl Config {
     } else {
       "0" // No trailing zero needed
     }
+  }
+
+  /// Returns the ratio as a string (Eg. 16x9)
+  pub fn ratio_str(&self) -> &'static str {
+    if self.height == 0 {
+      return "0x0";
+    }
+
+    let gcd = {
+      let mut a = self.width;
+      let mut b = self.height;
+      while b != 0 {
+        let temp = b;
+        b = a % b;
+        a = temp;
+      }
+      a
+    };
+
+    let simplified_width = self.width / gcd;
+    let simplified_height = self.height / gcd;
+
+    Box::leak(
+      format!("{simplified_width}x{simplified_height}").into_boxed_str()
+    )
   }
 
   /// Returns the resolution as a Resolution struct.
@@ -65,7 +90,7 @@ impl Display for Config {
       f,
       "{} [{}] - {}",
       self.resolution_str(),
-      self.ratio_str(),
+      self.ratio_rounded(),
       self.orientation()
     )?;
     Ok(())

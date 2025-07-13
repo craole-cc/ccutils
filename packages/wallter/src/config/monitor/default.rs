@@ -47,7 +47,11 @@ impl Display for Config {
     printf!(f, "Width", self.size.width)?;
     printf!(f, "Resolution", self.size.resolution_str())?;
     printf!(f, "Orientation", &self.size.orientation())?;
-    printf!(f, "Ratio", self.size.ratio_str())?;
+    printf!(
+      f,
+      "Ratio",
+      format!("{} ({})", self.size.ratio_str(), self.size.ratio_rounded())
+    )?;
     printf!(f, "Scale", format!("{:.1}x", self.scale))?;
     printf!(f, "Position", &self.position)?;
     printf!(f, "Primary", self.primary)?;

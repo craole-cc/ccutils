@@ -1,4 +1,4 @@
-use super::{Color, ColorMode, ConfigType, Monitor, Path, Search, Slideshow};
+use super::{Color, ColorMode, ConfigType, Monitor, Path, Slideshow};
 use crate::{Error, Result};
 use serde::{Deserialize, Serialize};
 use std::{
@@ -19,8 +19,7 @@ pub struct Config {
   pub path: Path,
   pub monitors: Vec<Monitor>,
   pub color: Color,
-  pub slideshow: Slideshow,
-  pub source: Search
+  pub slideshow: Slideshow // pub source: Search
 }
 
 impl Config {
@@ -119,12 +118,12 @@ impl Display for Config {
     writeln!(f, "  Colors:\n{}", self.color)?;
 
     //|-> Source Section
-    if self.source.sources.is_empty() {
-      writeln!(f, "  Search: No sources configured")?;
-    } else {
-      writeln!(f, "  Search:")?;
-      writeln!(f, "{}", self.source)?;
-    }
+    // if self.source.sources.is_empty() {
+    //   writeln!(f, "  Search: No sources configured")?;
+    // } else {
+    //   writeln!(f, "  Search:")?;
+    //   writeln!(f, "{}", self.source)?;
+    // }
 
     //|-> Slideshow Section
     if self.slideshow.sources.is_empty() {

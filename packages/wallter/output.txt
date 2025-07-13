@@ -1,0 +1,131 @@
+  [35mTRACE[0m  [35mLogline 
+Config {
+    level: ENV,
+    time: None,
+    display: Options {
+        file: false,
+        target: false,
+        line: false,
+        level: true,
+        thread: false,
+        thread_id: false,
+        time: false,
+        uptime: false,
+        pretty: true,
+    },
+}[0m
+    [2;3mat[0m packages\wallter\src\utils\log.rs:15
+
+  [32m INFO[0m  [32mInitialized logging for wallter v.0.1.0[0m
+    [2;3mat[0m packages\wallter\src\utils\log.rs:16
+
+  [35mTRACE[0m  [35mHello, world from the CLI![0m
+    [2;3mat[0m packages\wallter\src\cli\default.rs:4
+
+  [32m INFO[0m  [32mInitialized config: C:\Users\Administrator\Pictures\Wallter\config.toml[0m
+    [2;3mat[0m packages\wallter\src\config\default.rs:12
+
+  [35mTRACE[0m  [35mConfig: Configuration:
+  Paths:
+    Home Directory          =| C:\Users\Administrator\Pictures\Wallter
+    Downloads Directory     =| C:\Users\Administrator\Pictures\Wallter\downloads
+    Favorites Directory     =| C:\Users\Administrator\Pictures\Wallter\favorites
+    Wallpaper Directory     =| C:\Users\Administrator\Pictures\Wallter\wallpaper
+    Config File             =| C:\Users\Administrator\Pictures\Wallter\config.toml
+
+  Monitors:
+    Id                      =| 0
+    Name                    =| DISPLAY1
+    Height                  =| 1080
+    Width                   =| 1920
+    Resolution              =| 1920x1080
+    Orientation             =| Landscape
+    Ratio                   =| 1.78
+    Scale                   =| 1.0x
+    Position                =| (0, 0)
+    Primary                 =| true
+    Wallpapers:
+      Available             =| C:\Users\Administrator\Pictures\Wallter\downloads\1.78\1920x1080
+      Activated             =| C:\Users\Administrator\Pictures\Wallter\wallpaper\DISPLAY1.png
+
+    Id                      =| 1
+    Name                    =| DISPLAY2
+    Height                  =| 900
+    Width                   =| 1600
+    Resolution              =| 1600x900
+    Orientation             =| Landscape
+    Ratio                   =| 1.78
+    Scale                   =| 1.0x
+    Position                =| (214, 1080)
+    Primary                 =| false
+    Wallpapers:
+      Available             =| C:\Users\Administrator\Pictures\Wallter\downloads\1.78\1600x900
+      Activated             =| C:\Users\Administrator\Pictures\Wallter\wallpaper\DISPLAY2.png
+
+  Colors:
+    Mode                    =| Auto
+    Colors                  =| #660000, #996633, #999999, #ffff00, #cccc33
+
+  Search:
+    Rank                    =| 1
+    Source Name             =| wallhaven
+    Enabled (User)          =| false
+    Valid (Runtime)         =| false
+    Requires API Key        =| false
+    API Key                 =| [Not Set]
+    API Parameters:
+      Default Query         =| [None]
+      Categories            =| G:✓ A:✓ P:✗
+      Purity                =| SFW:✓ Sketchy:✓ NSFW:✗
+      Sorting               =| Random
+
+
+    Rank                    =| 2
+    Source Name             =| unsplash
+    Base URL                =| https://api.unsplash.com/
+    Enabled (User)          =| false
+    Valid (Runtime)         =| false
+    Requires API Key        =| true
+    API Key                 =| [Not Set]
+
+    Rank                    =| 3
+    Source Name             =| pixabay
+    Base URL                =| https://pixabay.com/api/
+    Enabled (User)          =| false
+    Valid (Runtime)         =| false
+    Requires API Key        =| true
+    API Key                 =| [Not Set]
+
+
+  Slideshow: No wallpaper sources configured
+[0m
+    [2;3mat[0m packages\wallter\src\config\default.rs:13
+
+Wallhaven Search Params: SearchParams {
+    query: None,
+    categories: Some(
+        (
+            true,
+            true,
+            false,
+        ),
+    ),
+    purity: Some(
+        (
+            true,
+            true,
+            false,
+        ),
+    ),
+    sorting: Some(
+        Random,
+    ),
+    order: None,
+    top_range: None,
+    atleast: None,
+    resolutions: None,
+    ratios: None,
+    colors: None,
+    page: None,
+    seed: None,
+}

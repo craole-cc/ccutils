@@ -1,7 +1,7 @@
-mod default;
-pub use default::Config;
-
+//|-> Modules
+mod config;
+mod providers;
 mod source;
-pub use source::Source;
 
-pub mod wallhaven;
+//|-> Exports
+pub use config::Config;
