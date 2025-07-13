@@ -1,7 +1,7 @@
 #[derive(Default, Debug, Clone, PartialEq)]
 pub struct Roman {
-  numeric: usize, /* The positive integer value represented by the Roman
-                   * numeral */
+  numeric: usize,   /* The positive integer value represented by the Roman
+                     * numeral */
   symbolic: String // The string representation of the Roman numeral
 }
 

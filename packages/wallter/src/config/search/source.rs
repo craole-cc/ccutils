@@ -19,11 +19,7 @@ pub struct Source {
 
 impl Source {
   /// Creates a new `Source` instance with essential fields.
-  pub fn new(
-    name: impl Into<String>,
-    base_url: impl Into<String>,
-    requires_api_key: bool
-  ) -> Self {
+  pub fn new(name: impl Into<String>, base_url: impl Into<String>, requires_api_key: bool) -> Self {
     let mut s = Self {
       name: name.into(),
       base_url: base_url.into(),

@@ -67,10 +67,8 @@ impl Config {
 
     //{ Parse the contents of the config file based on the defined format }
     match path_config.config_type {
-      ConfigType::Toml =>
-        toml::from_str(&content).map_err(|e| Error::Config(e.to_string())),
-      ConfigType::Json =>
-        serde_json::from_str(&content).map_err(|e| Error::Config(e.to_string())),
+      ConfigType::Toml => toml::from_str(&content).map_err(|e| Error::Config(e.to_string())),
+      ConfigType::Json => serde_json::from_str(&content).map_err(|e| Error::Config(e.to_string()))
     }
   }
 
@@ -78,10 +76,8 @@ impl Config {
   pub fn save(&self, path_config: &Path) -> Result<()> {
     //{ Serialize to appropriate format }
     let contents = match path_config.config_type {
-      ConfigType::Toml =>
-        toml::to_string(self).map_err(|e| Error::Config(e.to_string()))?,
-      ConfigType::Json => serde_json::to_string_pretty(self)
-        .map_err(|e| Error::Config(e.to_string()))?
+      ConfigType::Toml => toml::to_string(self).map_err(|e| Error::Config(e.to_string()))?,
+      ConfigType::Json => serde_json::to_string_pretty(self).map_err(|e| Error::Config(e.to_string()))?
     };
 
     //{ Update the configuration file }

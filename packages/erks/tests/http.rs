@@ -5,10 +5,7 @@ mod http_tests {
   #[test]
   fn test_http_custom_error() {
     let error = Error::custom("Failed to connect to endpoint");
-    assert_eq!(
-      error.to_string(),
-      "HTTP error: Failed to connect to endpoint"
-    );
+    assert_eq!(error.to_string(), "HTTP error: Failed to connect to endpoint");
     // Custom HTTP errors are not recoverable by default
     assert!(!error.is_recoverable());
     assert_eq!(error.severity(), Severity::Error);

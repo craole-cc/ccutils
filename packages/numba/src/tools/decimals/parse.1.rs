@@ -5,9 +5,7 @@ use std::str::FromStr;
 
 /// Try to parse as a regular decimal first, fall back to BigDecimal if needed
 #[inline]
-pub fn parse_number<T: ToStringRef>(
-  input: T
-) -> Result<BigDecimal, Error<'static>> {
+pub fn parse_number<T: ToStringRef>(input: T) -> Result<BigDecimal, Error<'static>> {
   let input_cow = input.to_string_ref();
   let trimmed = input_cow.trim();
 
@@ -36,27 +34,17 @@ pub fn parse_number<T: ToStringRef>(
 #[inline]
 fn parse_big_decimal(input: &str) -> Result<BigDecimal, Error<'static>> {
   BigDecimal::from_str(input).map_err(|err| match err {
-    ParseBigDecimalError::Empty =>
-      Error::InvalidBigDecimal(err, input.to_owned().into()),
-    ParseBigDecimalError::ParseDecimal(float_err) => {
+    ParseBigDecimalError::Empty => Error::InvalidBigDecimal(err, input.to_owned().into()),
+    ParseBigDecimalError::ParseDecimal(float_err) =>
       if input.contains(['e', 'E']) {
         Error::InvalidScientificNotation(float_err, input.to_owned().into())
       } else {
-        Error::InvalidBigDecimal(
-          ParseBigDecimalError::ParseDecimal(float_err),
-          input.to_owned().into()
-        )
-      }
-    }
-    ParseBigDecimalError::ParseInt(int_err) => Error::InvalidMantissa(
-      ParseBigDecimalError::ParseInt(int_err),
-      input.to_owned().into()
-    ),
-    ParseBigDecimalError::ParseBigInt(bigint_err) =>
-      Error::InvalidBigInt(bigint_err, input.to_owned().into()),
-    ParseBigDecimalError::Other(err_msg) => Error::InvalidBigDecimal(
-      ParseBigDecimalError::Other(err_msg),
-      input.to_owned().into()
-    )
+        Error::InvalidBigDecimal(ParseBigDecimalError::ParseDecimal(float_err), input.to_owned().into())
+      },
+    ParseBigDecimalError::ParseInt(int_err) =>
+      Error::InvalidMantissa(ParseBigDecimalError::ParseInt(int_err), input.to_owned().into()),
+    ParseBigDecimalError::ParseBigInt(bigint_err) => Error::InvalidBigInt(bigint_err, input.to_owned().into()),
+    ParseBigDecimalError::Other(err_msg) =>
+      Error::InvalidBigDecimal(ParseBigDecimalError::Other(err_msg), input.to_owned().into()),
   })
 }

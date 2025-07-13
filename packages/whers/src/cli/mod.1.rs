@@ -12,8 +12,7 @@ pub fn init() {
     Ok(locations) =>
       for location in locations {
         match location {
-          CommandLocation::Executable(path) =>
-            println!("{} is an executable at {}", command, path.display()),
+          CommandLocation::Executable(path) => println!("{} is an executable at {}", command, path.display()),
           CommandLocation::ShellBuiltin => {
             println!("{} is a shell builtin", command)
           }

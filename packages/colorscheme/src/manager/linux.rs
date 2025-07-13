@@ -23,10 +23,7 @@ impl Linux {
 impl Manager for Linux {
   fn get(&self) -> Option<Mode> {
     if self.is_kde() {
-      if let Ok(output) = Command::new("plasma-apply-colorscheme")
-        .arg("--current")
-        .output()
-      {
+      if let Ok(output) = Command::new("plasma-apply-colorscheme").arg("--current").output() {
         let stdout = String::from_utf8_lossy(&output.stdout);
         return Some(if stdout.contains("Light") {
           Mode::Light
@@ -56,21 +53,14 @@ impl Manager for Linux {
         Mode::Dark => "BreezeDark",
         Mode::Light => "BreezeLight"
       };
-      Command::new("plasma-apply-colorscheme")
-        .arg(theme_name)
-        .output()?;
+      Command::new("plasma-apply-colorscheme").arg(theme_name).output()?;
     } else if self.is_gnome() {
       let theme_name = match theme {
         Theme::Dark => "Adwaita-dark",
         Theme::Light => "Adwaita-light"
       };
       Command::new("gsettings")
-        .args([
-          "set",
-          "org.gnome.desktop.interface",
-          "gtk-theme",
-          theme_name
-        ])
+        .args(["set", "org.gnome.desktop.interface", "gtk-theme", theme_name])
         .output()?;
     } else if let Some(desktop) = &self.desktop {
       eprintln!("Unsupported Linux desktop environment: {}", desktop);

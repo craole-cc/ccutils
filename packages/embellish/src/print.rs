@@ -17,15 +17,8 @@ use std::fmt::{self, Display, Formatter};
 ///
 /// # Returns
 ///
-/// * `fmt::Result` - Result indicating success or failure of the write
-///   operation.
-pub fn pout_field<T: Display>(
-  f: &mut Formatter<'_>,
-  key: &str,
-  value: T,
-  pad: usize,
-  indent: usize
-) -> fmt::Result {
+/// * `fmt::Result` - Result indicating success or failure of the write operation.
+pub fn pout_field<T: Display>(f: &mut Formatter<'_>, key: &str, value: T, pad: usize, indent: usize) -> fmt::Result {
   writeln!(f, "{}{key:<pad$}=| {value}", " ".repeat(indent))
 }
 
@@ -42,13 +35,8 @@ pub fn pout_field<T: Display>(
 ///
 /// # Returns
 ///
-/// * `fmt::Result` - Result indicating success or failure of the write
-///   operation.
-pub fn pout_heading(
-  f: &mut Formatter<'_>,
-  text: &str,
-  indent: usize
-) -> fmt::Result {
+/// * `fmt::Result` - Result indicating success or failure of the write operation.
+pub fn pout_heading(f: &mut Formatter<'_>, text: &str, indent: usize) -> fmt::Result {
   writeln!(f, "{}{}", " ".repeat(indent), text)
 }
 

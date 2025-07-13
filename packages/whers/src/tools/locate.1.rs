@@ -48,9 +48,8 @@ pub fn search_in_path(command: &str) -> Vec<PathBuf> {
 pub fn get_shell_builtin_commands() -> Vec<String> {
   // This list is not exhaustive and may vary depending on the shell
   vec![
-    "alias", "bg", "cd", "command", "echo", "eval", "exec", "exit", "export",
-    "fg", "jobs", "kill", "pwd", "read", "set", "source", "type", "umask",
-    "unalias", "wait",
+    "alias", "bg", "cd", "command", "echo", "eval", "exec", "exit", "export", "fg", "jobs", "kill", "pwd", "read",
+    "set", "source", "type", "umask", "unalias", "wait",
   ]
   .into_iter()
   .map(String::from)
@@ -62,8 +61,8 @@ pub fn get_shell_builtin_commands() -> Vec<String> {
   // This list is not exhaustive and may vary depending on the shell (cmd.exe or
   // PowerShell)
   vec![
-    "cd", "chdir", "cls", "copy", "del", "dir", "echo", "exit", "md", "mkdir",
-    "move", "path", "ren", "rename", "rmdir", "set", "type",
+    "cd", "chdir", "cls", "copy", "del", "dir", "echo", "exit", "md", "mkdir", "move", "path", "ren", "rename",
+    "rmdir", "set", "type",
   ]
   .into_iter()
   .map(String::from)
@@ -84,8 +83,6 @@ pub fn is_executable(path: &Path) -> bool {
   use std::path::Path;
 
   path.extension().map_or(false, |ext| {
-    ext.eq_ignore_ascii_case("exe")
-      || ext.eq_ignore_ascii_case("cmd")
-      || ext.eq_ignore_ascii_case("bat")
+    ext.eq_ignore_ascii_case("exe") || ext.eq_ignore_ascii_case("cmd") || ext.eq_ignore_ascii_case("bat")
   })
 }

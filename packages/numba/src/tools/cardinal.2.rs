@@ -4,9 +4,7 @@ use num_bigfloat::BigFloat;
 
 use crate::error::cardinal::Error;
 
-const ONES: [&str; 9] = [
-  "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"
-];
+const ONES: [&str; 9] = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
 const TEENS: [&str; 10] = [
   "ten",
@@ -22,8 +20,7 @@ const TEENS: [&str; 10] = [
 ];
 
 const TENS: [&str; 9] = [
-  "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty",
-  "ninety"
+  "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"
 ];
 
 const HUGE: [&str; 21] = [

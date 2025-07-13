@@ -16,7 +16,6 @@ fmt:
           treefmt --allow-missing-formatter --clear-cache --fail-on-change; \
     fi
 
-
 # ~@ Quick commit with message
 commit MESSAGE:
     jj describe --message "{{ MESSAGE }}"

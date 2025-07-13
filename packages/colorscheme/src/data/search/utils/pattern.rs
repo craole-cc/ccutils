@@ -3,8 +3,7 @@ impl crate::Search {
   ///
   /// # Arguments
   ///
-  /// * `pattern` - The pattern to add. This can be any type that can be
-  ///   converted into a String.
+  /// * `pattern` - The pattern to add. This can be any type that can be converted into a String.
   ///
   /// # Returns
   ///
@@ -18,8 +17,7 @@ impl crate::Search {
   ///
   /// # Arguments
   ///
-  /// * `patterns` - An iterator of patterns to add. Each pattern can be any
-  ///   type that can be converted into a String.
+  /// * `patterns` - An iterator of patterns to add. Each pattern can be any type that can be converted into a String.
   ///
   /// # Returns
   ///

@@ -31,11 +31,7 @@ impl Name {
         Name::Bash,
         &["bash", "bash.exe"][..],
         Some("$BASH_VERSION"),
-        vec![
-          home.join(".bashrc"),
-          home.join(".bash_profile"),
-          home.join(".profile"),
-        ]
+        vec![home.join(".bashrc"), home.join(".bash_profile"), home.join(".profile")]
       ),
       (
         Name::Zsh,
@@ -53,9 +49,7 @@ impl Name {
         Name::Powershell,
         &["pwsh", "pwsh.exe", "powershell", "powershell.exe"][..],
         None,
-        vec![
-          home.join("Documents/PowerShell/Microsoft.PowerShell_profile.ps1"),
-        ]
+        vec![home.join("Documents/PowerShell/Microsoft.PowerShell_profile.ps1")]
       ),
       (
         Name::Nushell,
@@ -66,9 +60,7 @@ impl Name {
       (Name::CommandPrompt, &["cmd", "cmd.exe"][..], None, vec![])
     ];
 
-    if let Some((shell_type, process, config)) =
-      Self::detect_shell(system, current_pid, &shells)
-    {
+    if let Some((shell_type, process, config)) = Self::detect_shell(system, current_pid, &shells) {
       (ShellInfo { shell_type, config }, process)
     } else {
       (
@@ -106,11 +98,7 @@ impl Name {
   }
 }
 
-fn find_shell_process(
-  system: &System,
-  pid: Pid,
-  shell_names: &[&str]
-) -> Option<Process> {
+fn find_shell_process(system: &System, pid: Pid, shell_names: &[&str]) -> Option<Process> {
   let mut current_pid = pid;
   while let Some(process) = system.process(current_pid) {
     let process_name = process.name().to_lowercase();

@@ -28,21 +28,13 @@ pub fn test() {
   info!("{:?} | {:#?} | {}", decimal, decimal, decimal);
   info!("{:>24} => {}", "Is Integer", decimal.is_integer());
   info!("{:>24} => {}", "Digits", decimal.digits());
-  info!(
-    "{:>24} => {}",
-    "Fractional Digits",
-    decimal.fractional_digit_count()
-  );
+  info!("{:>24} => {}", "Fractional Digits", decimal.fractional_digit_count());
   info!(
     "{:>24} => {:?}",
     "BigInt and Exponent",
     decimal.as_bigint_and_exponent()
   );
-  info!(
-    "{:>24} => {}",
-    "Scientific Notation",
-    decimal.to_scientific_notation()
-  );
+  info!("{:>24} => {}", "Scientific Notation", decimal.to_scientific_notation());
   info!(
     "{:>24} => {}",
     "Engineering Notation",

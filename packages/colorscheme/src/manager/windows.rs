@@ -27,9 +27,7 @@ impl Manager for Windows {
   }
 
   fn set(&self, theme: &Mode) -> Result<(), Box<dyn std::error::Error>> {
-    let key = self
-      .hkcu
-      .open_subkey_with_flags(self.path, KEY_ALL_ACCESS)?;
+    let key = self.hkcu.open_subkey_with_flags(self.path, KEY_ALL_ACCESS)?;
     let value = match theme {
       Mode::Dark => 0u32,
       Mode::Light => 1u32

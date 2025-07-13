@@ -9,9 +9,7 @@
 // use super::NightlightState;
 use crate::{
   Error, Result,
-  config::color::mode::{
-    Config as Mode, Manager as ModeManager, windows::nightlight
-  },
+  config::color::mode::{Config as Mode, Manager as ModeManager, windows::nightlight},
   utils::registry
 };
 use std::{io, process::Command};
@@ -39,20 +37,14 @@ impl Default for Strategy {
       HKEY_CURRENT_USER,
       r"Software\Microsoft\Windows\CurrentVersion\Run",
       "AutoDarkMode"
-    ) || registry::key_exists(
-      HKEY_CURRENT_USER,
-      r"Software\AutoDarkMode\Installed"
-    ) || registry::key_exists(HKEY_LOCAL_MACHINE, r"SOFTWARE\AutoDarkMode")
+    ) || registry::key_exists(HKEY_CURRENT_USER, r"Software\AutoDarkMode\Installed")
+      || registry::key_exists(HKEY_LOCAL_MACHINE, r"SOFTWARE\AutoDarkMode")
     {
-      eprintln!(
-        "[DEBUG] Default Strategy: Auto Dark Mode detected, setting to Nightlight."
-      );
+      eprintln!("[DEBUG] Default Strategy: Auto Dark Mode detected, setting to Nightlight.");
 
       Self::Nightlight
     } else {
-      eprintln!(
-        "[DEBUG] Default Strategy: Auto Dark Mode not detected, setting to SystemComponents."
-      );
+      eprintln!("[DEBUG] Default Strategy: Auto Dark Mode not detected, setting to SystemComponents.");
       Self::SystemComponents
     }
   }
@@ -65,8 +57,7 @@ pub struct Manager {
 
 impl Manager {
   /// Primary registry paths
-  const REGISTRY_PATH: &str =
-    r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
+  const REGISTRY_PATH: &str = r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
   const DWM_PATH: &str = r"Software\Microsoft\Windows\DWM";
 
   /// Registry key names
@@ -134,18 +125,14 @@ impl Manager {
       })?;
 
     // Set application theme
-    key.set_value(Self::APPS_THEME_KEY, &value).map_err(|e| {
-      Error::ColorMode(format!(
-        "Windows: Failed to set application theme registry value: {e}"
-      ))
-    })?;
+    key
+      .set_value(Self::APPS_THEME_KEY, &value)
+      .map_err(|e| Error::ColorMode(format!("Windows: Failed to set application theme registry value: {e}")))?;
 
     // Set system theme
-    key.set_value(Self::SYSTEM_THEME_KEY, &value).map_err(|e| {
-      Error::ColorMode(format!(
-        "Windows: Failed to set system theme registry value: {e}"
-      ))
-    })?;
+    key
+      .set_value(Self::SYSTEM_THEME_KEY, &value)
+      .map_err(|e| Error::ColorMode(format!("Windows: Failed to set system theme registry value: {e}")))?;
 
     Ok(())
   }
@@ -155,18 +142,14 @@ impl Manager {
     let hkcu = RegKey::predef(HKEY_CURRENT_USER);
 
     // Try to set additional keys in the personalize section
-    if let Ok(key) =
-      hkcu.open_subkey_with_flags(Self::REGISTRY_PATH, KEY_ALL_ACCESS)
-    {
+    if let Ok(key) = hkcu.open_subkey_with_flags(Self::REGISTRY_PATH, KEY_ALL_ACCESS) {
       // These might help with accent colors and transparency effects
       let _ = key.set_value(Self::COLORPREVALENCE_KEY, &0u32);
       let _ = key.set_value(Self::ENABLETRANSPARENCY_KEY, &1u32);
     }
 
     // Try to set DWM colorization keys
-    if let Ok(dwm_key) =
-      hkcu.open_subkey_with_flags(Self::DWM_PATH, KEY_ALL_ACCESS)
-    {
+    if let Ok(dwm_key) = hkcu.open_subkey_with_flags(Self::DWM_PATH, KEY_ALL_ACCESS) {
       let dwm_color = match config {
         Mode::Light => Self::LIGHT_DWM_COLOR,
         Mode::Dark => Self::DARK_DWM_COLOR,
@@ -188,8 +171,7 @@ impl Manager {
       use std::ffi::CString;
       use std::ptr;
       use winapi::um::winuser::{
-        HWND_BROADCAST, SMTO_ABORTIFHUNG, SendMessageTimeoutW,
-        WM_DWMCOLORIZATIONCOLORCHANGED, WM_SETTINGCHANGE
+        HWND_BROADCAST, SMTO_ABORTIFHUNG, SendMessageTimeoutW, WM_DWMCOLORIZATIONCOLORCHANGED, WM_SETTINGCHANGE
       };
 
       // Optimized message sequence - most important first
@@ -280,8 +262,7 @@ impl Manager {
     ];
 
     for path in &console_paths {
-      if let Ok(console_key) = hkcu.open_subkey_with_flags(path, KEY_ALL_ACCESS)
-      {
+      if let Ok(console_key) = hkcu.open_subkey_with_flags(path, KEY_ALL_ACCESS) {
         // Set console color scheme based on theme
         let color_table = match config {
           Mode::Light => 0x00F0F0F0u32, // Light background
@@ -289,8 +270,7 @@ impl Manager {
           Mode::Auto => unreachable!()
         };
         let _ = console_key.set_value("ColorTable00", &color_table);
-        let _ =
-          console_key.set_value("ColorTable07", &(!color_table & 0x00FFFFFF));
+        let _ = console_key.set_value("ColorTable07", &(!color_table & 0x00FFFFFF));
       }
     }
 
@@ -331,9 +311,7 @@ impl Manager {
     {
       use std::ffi::CString;
       use std::ptr;
-      use winapi::um::winuser::{
-        HWND_BROADCAST, SMTO_ABORTIFHUNG, SendMessageTimeoutW, WM_SETTINGCHANGE
-      };
+      use winapi::um::winuser::{HWND_BROADCAST, SMTO_ABORTIFHUNG, SendMessageTimeoutW, WM_SETTINGCHANGE};
 
       // System-specific notification messages
       let system_messages = ["Environment", "Policy", "Windows", "ShellState"];
@@ -364,13 +342,14 @@ impl Manager {
   fn refresh_taskbar(&self) -> Result<()> {
     // Method 1: Refresh taskbar specifically
     let _ = Command::new("powershell")
-            .args(["-Command", "Stop-Process -Name explorer -Force; Start-Sleep 1; Start-Process explorer"])
-            .output();
+      .args([
+        "-Command",
+        "Stop-Process -Name explorer -Force; Start-Sleep 1; Start-Process explorer"
+      ])
+      .output();
 
     // Method 2: Alternative taskbar refresh
-    let _ = Command::new("taskkill")
-      .args(["/f", "/im", "explorer.exe"])
-      .output();
+    let _ = Command::new("taskkill").args(["/f", "/im", "explorer.exe"]).output();
 
     std::thread::sleep(std::time::Duration::from_millis(500));
 
@@ -407,8 +386,7 @@ impl Manager {
       use std::ffi::CString;
       use std::ptr;
       use winapi::um::winuser::{
-        HWND_BROADCAST, SMTO_ABORTIFHUNG, SendMessageTimeoutW,
-        WM_DWMCOLORIZATIONCOLORCHANGED, WM_SETTINGCHANGE
+        HWND_BROADCAST, SMTO_ABORTIFHUNG, SendMessageTimeoutW, WM_DWMCOLORIZATIONCOLORCHANGED, WM_SETTINGCHANGE
       };
 
       // Just the essential messages
@@ -465,9 +443,7 @@ impl Manager {
     std::thread::sleep(std::time::Duration::from_millis(1000));
 
     // Force explorer restart (this will cause temporary desktop disruption)
-    let _ = Command::new("taskkill")
-      .args(["/f", "/im", "explorer.exe"])
-      .output();
+    let _ = Command::new("taskkill").args(["/f", "/im", "explorer.exe"]).output();
 
     std::thread::sleep(std::time::Duration::from_millis(2000));
 
@@ -482,9 +458,9 @@ impl Manager {
   /// Check current theme state
   pub fn get_current_theme(&self) -> Result<Mode> {
     let hkcu = RegKey::predef(HKEY_CURRENT_USER);
-    let key = hkcu.open_subkey(Self::REGISTRY_PATH).map_err(|e| {
-      Error::ColorMode(format!("Failed to read theme state: {e}"))
-    })?;
+    let key = hkcu
+      .open_subkey(Self::REGISTRY_PATH)
+      .map_err(|e| Error::ColorMode(format!("Failed to read theme state: {e}")))?;
 
     let system_light: u32 = key
       .get_value(Self::SYSTEM_THEME_KEY)
@@ -498,11 +474,7 @@ impl Manager {
   }
 
   /// Wait for theme change to take effect (polling method)
-  pub fn wait_for_theme_change(
-    &self,
-    expected: Mode,
-    timeout_ms: u64
-  ) -> Result<bool> {
+  pub fn wait_for_theme_change(&self, expected: Mode, timeout_ms: u64) -> Result<bool> {
     let start = std::time::Instant::now();
     let timeout = std::time::Duration::from_millis(timeout_ms);
 

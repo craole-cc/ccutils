@@ -21,10 +21,7 @@ mod tests {
     // Negative integers
     assert_eq!(numeric_to_worded("minus one").unwrap(), -1.0);
     assert_eq!(numeric_to_worded("negative two").unwrap(), -2.0);
-    assert_eq!(
-      numeric_to_worded("minus one hundred twenty-three").unwrap(),
-      -123.0
-    );
+    assert_eq!(numeric_to_worded("minus one hundred twenty-three").unwrap(), -123.0);
 
     // Fractions
     assert_eq!(numeric_to_worded("one point five").unwrap(), 1.5);
@@ -34,10 +31,7 @@ mod tests {
 
     // Mixed numbers
     assert_eq!(numeric_to_worded("four hundred twenty-one").unwrap(), 421.0);
-    assert_eq!(
-      numeric_to_worded("seven thousand one hundred").unwrap(),
-      7100.0
-    );
+    assert_eq!(numeric_to_worded("seven thousand one hundred").unwrap(), 7100.0);
     assert_eq!(
       numeric_to_worded("eleven thousand two hundred thirty-four").unwrap(),
       11234.0
@@ -48,9 +42,7 @@ mod tests {
     assert!(numeric_to_worded("minus").is_err());
     assert!(numeric_to_worded("three hundred and").is_err());
     assert!(numeric_to_worded("three hundred and fourteen point").is_err());
-    assert!(
-      numeric_to_worded("one hundred twenty-three point forty-five").is_ok()
-    );
+    assert!(numeric_to_worded("one hundred twenty-three point forty-five").is_ok());
   }
 
   #[test]
@@ -63,17 +55,11 @@ mod tests {
     assert_eq!(worded_from_numeric(100.0).unwrap(), "one hundred");
     assert_eq!(worded_from_numeric(1000.0).unwrap(), "one thousand");
     assert_eq!(worded_from_numeric(1_000_000.0).unwrap(), "one million");
-    assert_eq!(
-      worded_from_numeric(3_000_000_000.0).unwrap(),
-      "three billion"
-    );
+    assert_eq!(worded_from_numeric(3_000_000_000.0).unwrap(), "three billion");
 
     // Negative integers
     assert_eq!(worded_from_numeric(-1.0).unwrap(), "minus one");
-    assert_eq!(
-      worded_from_numeric(-123.0).unwrap(),
-      "minus one hundred twenty-three"
-    );
+    assert_eq!(worded_from_numeric(-123.0).unwrap(), "minus one hundred twenty-three");
 
     // Fractions
     assert_eq!(worded_from_numeric(1.5).unwrap(), "one point five");
@@ -81,14 +67,8 @@ mod tests {
     assert_eq!(worded_from_numeric(-2.5).unwrap(), "minus two point five");
 
     // Mixed numbers
-    assert_eq!(
-      worded_from_numeric(421.0).unwrap(),
-      "four hundred twenty-one"
-    );
-    assert_eq!(
-      worded_from_numeric(7100.0).unwrap(),
-      "seven thousand one hundred"
-    );
+    assert_eq!(worded_from_numeric(421.0).unwrap(), "four hundred twenty-one");
+    assert_eq!(worded_from_numeric(7100.0).unwrap(), "seven thousand one hundred");
     assert_eq!(
       worded_from_numeric(11234.0).unwrap(),
       "eleven thousand two hundred thirty-four"

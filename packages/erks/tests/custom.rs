@@ -23,12 +23,7 @@ fn test_validation_field_error() {
 #[test]
 fn test_validation_detailed_error() {
   let constraints = vec!["maxLength: 10".to_string()];
-  let error = Error::validation_detailed(
-    "Too long",
-    "username",
-    "a_very_long_username",
-    constraints
-  );
+  let error = Error::validation_detailed("Too long", "username", "a_very_long_username", constraints);
   assert_eq!(error.to_string(), "Validation error: Too long");
   let meta = error.metadata().unwrap();
   assert_eq!(meta.context.get("field").unwrap(), "username");
@@ -64,12 +59,8 @@ fn test_invalid_state_transition_error() {
 
 #[test]
 fn test_resource_limit_error() {
-  let error =
-    Error::resource_limit("API rate limit exceeded", "api_calls", 100, 101);
-  assert_eq!(
-    error.to_string(),
-    "Resource limit exceeded: API rate limit exceeded"
-  );
+  let error = Error::resource_limit("API rate limit exceeded", "api_calls", 100, 101);
+  assert_eq!(error.to_string(), "Resource limit exceeded: API rate limit exceeded");
   assert_eq!(error.error_code(), Code::ResourceLimit);
   assert_eq!(error.severity(), Severity::Error);
   assert!(error.is_recoverable());
@@ -95,11 +86,7 @@ fn test_business_logic_error() {
 fn test_business_logic_with_context() {
   let mut context = HashMap::new();
   context.insert("user_id".to_string(), "123".to_string());
-  let error = Error::business_logic_with_context(
-    "Insufficient funds",
-    "process_payment",
-    context
-  );
+  let error = Error::business_logic_with_context("Insufficient funds", "process_payment", context);
   let meta = error.metadata().unwrap();
   assert_eq!(meta.operation.unwrap(), "process_payment");
   assert_eq!(meta.context.get("user_id").unwrap(), "123");
@@ -108,10 +95,7 @@ fn test_business_logic_with_context() {
 #[test]
 fn test_generic_custom_error() {
   let error = Error::new("Something unexpected happened");
-  assert_eq!(
-    error.to_string(),
-    "Application error: Something unexpected happened"
-  );
+  assert_eq!(error.to_string(), "Application error: Something unexpected happened");
   assert_eq!(error.error_code(), Code::Unknown);
   assert!(!error.is_recoverable());
 }

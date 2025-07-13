@@ -59,7 +59,7 @@ impl std::ops::Neg for Cardinal {
 
   fn neg(self) -> Self::Output {
     Cardinal {
-      numeric: -self.numeric, // Negate the numeric value
+      numeric: -self.numeric,                   // Negate the numeric value
       worded: format!("minus {}", self.worded)  // Prefix with "minus"
     }
   }

@@ -1,10 +1,7 @@
 impl crate::Search {
   pub fn test() {
     let mut result = Self::default();
-    result = result
-      .test_with_pattern()
-      .test_with_patterns()
-      .test_with_limit();
+    result = result.test_with_pattern().test_with_patterns().test_with_limit();
 
     println!("{result:#?}")
   }
@@ -17,8 +14,7 @@ impl crate::Search {
 
   pub fn test_with_patterns(mut self) -> Self {
     self = self.with_patterns(vec!["stop", "lol", "love"]);
-    self =
-      self.with_patterns(vec!["dress", "rehearsal", &String::from("funny")]);
+    self = self.with_patterns(vec!["dress", "rehearsal", &String::from("funny")]);
 
     self
   }

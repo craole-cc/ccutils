@@ -16,13 +16,12 @@ impl Numeral {
       Value::Integer(value) => {
         numeral.input = input;
       }
-      Value::Words(ref words) => {
+      Value::Words(ref words) =>
         if let Some(value) = Self::parse_words_to_f64(words) {
           numeral.input = input;
         } else {
           return Err(Error::InvalidWordRepresentation);
-        }
-      }
+        },
     }
 
     Ok(numeral)

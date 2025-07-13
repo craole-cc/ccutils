@@ -22,8 +22,7 @@ pub enum Error {
 
 /// Converts a time block's hour and minute values to a `NaiveTime`.
 pub fn time_to_naive_time(hours: u8, minutes: u8) -> Result<NaiveTime, Error> {
-  NaiveTime::from_hms_opt(u32::from(hours), u32::from(minutes), 0)
-    .ok_or(Error::TimeValue)
+  NaiveTime::from_hms_opt(u32::from(hours), u32::from(minutes), 0).ok_or(Error::TimeValue)
 }
 
 /// Converts a Unix timestamp to a 5-byte array using a variable-length encoding
@@ -71,10 +70,7 @@ pub fn kelvin_from_bytes(bytes: [u8; 2]) -> u16 {
 }
 
 /// Parses the last-modified timestamp block.
-pub fn last_modified_timestamp_block(
-  data: &[u8],
-  start_from: usize
-) -> Result<(u64, usize), Error> {
+pub fn last_modified_timestamp_block(data: &[u8], start_from: usize) -> Result<(u64, usize), Error> {
   let mut pos: usize = start_from;
   // Check timestamp header bytes
   if data[pos..pos + TIMESTAMP_HEADER_BYTES.len()] != TIMESTAMP_HEADER_BYTES {

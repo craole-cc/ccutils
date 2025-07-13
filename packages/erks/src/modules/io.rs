@@ -58,10 +58,7 @@ impl Error {
   }
 
   /// Create a file system error with path context
-  pub fn file_system_with_path<T: Into<String>, P: Into<String>>(
-    msg: T,
-    path: P
-  ) -> Self {
+  pub fn file_system_with_path<T: Into<String>, P: Into<String>>(msg: T, path: P) -> Self {
     Self::FileSystem {
       message: msg.into(),
       path: Some(path.into()),
@@ -80,11 +77,7 @@ impl Error {
   }
 
   /// Create a network error with host/port context
-  pub fn network_with_endpoint<T: Into<String>, H: Into<String>>(
-    msg: T,
-    host: H,
-    port: Option<u16>
-  ) -> Self {
+  pub fn network_with_endpoint<T: Into<String>, H: Into<String>>(msg: T, host: H, port: Option<u16>) -> Self {
     Self::Network {
       message: msg.into(),
       host: Some(host.into()),
@@ -104,11 +97,7 @@ impl Error {
   }
 
   /// Create a permission error with resource context
-  pub fn permission_denied<
-    T: Into<String>,
-    R: Into<String>,
-    P: Into<String>
-  >(
+  pub fn permission_denied<T: Into<String>, R: Into<String>, P: Into<String>>(
     msg: T,
     resource: R,
     permission: P
@@ -132,11 +121,7 @@ impl Error {
   }
 
   /// Create a not found error with search context
-  pub fn not_found_with_paths<T: Into<String>, R: Into<String>>(
-    msg: T,
-    resource_type: R,
-    paths: Vec<String>
-  ) -> Self {
+  pub fn not_found_with_paths<T: Into<String>, R: Into<String>>(msg: T, resource_type: R, paths: Vec<String>) -> Self {
     Self::NotFound {
       message: msg.into(),
       resource_type: Some(resource_type.into()),
@@ -162,20 +147,15 @@ impl Context for Error {
       Error::NotFound { .. } => true,
       Error::Network { .. } => true,
       Error::FileSystem {
-        source: Some(io_err),
-        ..
+        source: Some(io_err), ..
       } => !matches!(
         io_err.kind(),
-        std::io::ErrorKind::PermissionDenied
-          | std::io::ErrorKind::OutOfMemory
-          | std::io::ErrorKind::InvalidData
+        std::io::ErrorKind::PermissionDenied | std::io::ErrorKind::OutOfMemory | std::io::ErrorKind::InvalidData
       ),
       Error::FileSystem { .. } => true,
       Error::Generic(e) => !matches!(
         e.kind(),
-        std::io::ErrorKind::PermissionDenied
-          | std::io::ErrorKind::OutOfMemory
-          | std::io::ErrorKind::InvalidData
+        std::io::ErrorKind::PermissionDenied | std::io::ErrorKind::OutOfMemory | std::io::ErrorKind::InvalidData
       )
     }
   }
@@ -186,8 +166,7 @@ impl Context for Error {
       Error::NotFound { .. } => Severity::Warning,
       Error::Network { .. } => Severity::Error,
       Error::FileSystem {
-        source: Some(io_err),
-        ..
+        source: Some(io_err), ..
       } => match io_err.kind() {
         std::io::ErrorKind::OutOfMemory => Severity::Critical,
         std::io::ErrorKind::PermissionDenied => Severity::Critical,
@@ -216,8 +195,7 @@ impl Context for Error {
     let metadata = Metadata::new(self.error_code()).with_component("io");
 
     match self {
-      Error::FileSystem { path: Some(p), .. } =>
-        Some(metadata.with_context("path", p.clone())),
+      Error::FileSystem { path: Some(p), .. } => Some(metadata.with_context("path", p.clone())),
       Error::Network {
         host: Some(h),
         port: Some(p),
@@ -227,8 +205,7 @@ impl Context for Error {
           .with_context("host", h.clone())
           .with_context("port", p.to_string())
       ),
-      Error::Network { host: Some(h), .. } =>
-        Some(metadata.with_context("host", h.clone())),
+      Error::Network { host: Some(h), .. } => Some(metadata.with_context("host", h.clone())),
       Error::Permission {
         resource: Some(r),
         required_permission: Some(p),
@@ -245,10 +222,7 @@ impl Context for Error {
       } if !searched_paths.is_empty() => {
         let mut meta = metadata
           .with_context("resource_type", rt.clone())
-          .with_context(
-            "searched_paths_count",
-            searched_paths.len().to_string()
-          );
+          .with_context("searched_paths_count", searched_paths.len().to_string());
 
         // Add first few paths to avoid overwhelming the context
         for (i, path) in searched_paths.iter().take(3).enumerate() {

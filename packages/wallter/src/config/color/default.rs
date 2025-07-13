@@ -11,18 +11,15 @@ const DEFAULT_RANDOM_COLOR_COUNT: usize = 5;
 
 /// Predefined set of allowed color values in hex format
 pub const ALLOWED_COLORS: &[&str] = &[
-  "#660000", "#990000", "#cc0000", "#cc3333", "#ea4c88", "#993399", "#663399",
-  "#333399", "#0066cc", "#0099cc", "#66cccc", "#77cc33", "#669900", "#336600",
-  "#666600", "#999900", "#cccc33", "#ffff00", "#ffcc33", "#ff9900", "#ff6600",
-  "#cc6633", "#996633", "#663300", "#000000", "#999999", "#cccccc", "#ffffff",
-  "#424153"
+  "#660000", "#990000", "#cc0000", "#cc3333", "#ea4c88", "#993399", "#663399", "#333399", "#0066cc", "#0099cc",
+  "#66cccc", "#77cc33", "#669900", "#336600", "#666600", "#999900", "#cccc33", "#ffff00", "#ffcc33", "#ff9900",
+  "#ff6600", "#cc6633", "#996633", "#663300", "#000000", "#999999", "#cccccc", "#ffffff", "#424153"
 ];
 
 /// Holds user-defined color preferences, including system mode and color tags.
 ///
 /// This configuration manages:
-/// 1. The desired system color mode (Light/Dark), which can be applied
-///    system-wide.
+/// 1. The desired system color mode (Light/Dark), which can be applied system-wide.
 /// 2. A list of color names or tags for filtering/tagging wallpapers.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
@@ -98,11 +95,7 @@ impl Config {
     // For selecting multiple unique items, we need to shuffle and take
     let mut colors = ALLOWED_COLORS.to_vec();
     colors.shuffle(&mut rng);
-    colors
-      .into_iter()
-      .take(count)
-      .map(ToString::to_string)
-      .collect()
+    colors.into_iter().take(count).map(ToString::to_string).collect()
   }
 }
 

@@ -6,35 +6,26 @@ use tracing_subscriber::{EnvFilter, FmtSubscriber};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
   let matches = command!()
-        .about("Creates symbolic links for configuration files")
-        .arg(
-            arg!(-s --src <PATTERN> "Source file(s) or directory to link (supports glob patterns)")
-                .value_parser(value_parser!(String))
-                .required(true)
-                .action(ArgAction::Append),
-        )
-        .arg(
-            arg!(-l --link <PATH> "Base directory for links (defaults to XDG config home)")
-                .value_parser(value_parser!(std::path::PathBuf)),
-        )
-        .arg(
-            arg!(-f --force "Overwrite destination if it exists without prompting")
-                .action(ArgAction::SetTrue),
-        )
-        .arg(
-            arg!(-v --verbose "Increase verbosity (can be used multiple times)")
-                .action(ArgAction::Count),
-        )
-        .arg(
-            arg!(-q --quiet "Suppress all output except errors")
-                .action(ArgAction::SetTrue)
-                .conflicts_with("verbose"),
-        )
-        .arg(
-            arg!(-d --debug "Debug mode: simulate operations and show additional info")
-                .action(ArgAction::SetTrue),
-        )
-        .get_matches();
+    .about("Creates symbolic links for configuration files")
+    .arg(
+      arg!(-s --src <PATTERN> "Source file(s) or directory to link (supports glob patterns)")
+        .value_parser(value_parser!(String))
+        .required(true)
+        .action(ArgAction::Append)
+    )
+    .arg(
+      arg!(-l --link <PATH> "Base directory for links (defaults to XDG config home)")
+        .value_parser(value_parser!(std::path::PathBuf))
+    )
+    .arg(arg!(-f --force "Overwrite destination if it exists without prompting").action(ArgAction::SetTrue))
+    .arg(arg!(-v --verbose "Increase verbosity (can be used multiple times)").action(ArgAction::Count))
+    .arg(
+      arg!(-q --quiet "Suppress all output except errors")
+        .action(ArgAction::SetTrue)
+        .conflicts_with("verbose")
+    )
+    .arg(arg!(-d --debug "Debug mode: simulate operations and show additional info").action(ArgAction::SetTrue))
+    .get_matches();
 
   // Set up tracing
   let filter = if matches.get_flag("quiet") {
@@ -53,8 +44,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     .without_time()
     .finish();
 
-  tracing::subscriber::set_global_default(subscriber)
-    .expect("Failed to set tracing subscriber");
+  tracing::subscriber::set_global_default(subscriber).expect("Failed to set tracing subscriber");
 
   let mut sources = Vec::new();
   for pattern in matches.get_many::<String>("src").unwrap() {

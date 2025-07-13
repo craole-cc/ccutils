@@ -1,7 +1,4 @@
-use crate::{
-  Config, DEBUG, ERROR, INFO, Level, TRACE, WARN, debug, error, info, trace,
-  warn
-};
+use crate::{Config, DEBUG, ERROR, INFO, Level, TRACE, WARN, debug, error, info, trace, warn};
 
 pub fn init() {
   Config::default().init();

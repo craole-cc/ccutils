@@ -3,8 +3,7 @@ use erks::{Code, Context, Severity, glob::Error};
 
 #[test]
 fn test_glob_pattern_error() {
-  let pattern_err =
-    glob::Pattern::new("[").expect_err("Should be a pattern error");
+  let pattern_err = glob::Pattern::new("[").expect_err("Should be a pattern error");
   let error = Error::from(pattern_err);
 
   assert!(error.to_string().contains("Invalid glob pattern"));
@@ -28,8 +27,5 @@ fn test_glob_iteration_error() {
 
   let meta = error.metadata().unwrap();
   assert_eq!(meta.component.unwrap(), "glob");
-  assert_eq!(
-    meta.context.get("message").unwrap(),
-    "Failed to read directory entry"
-  );
+  assert_eq!(meta.context.get("message").unwrap(), "Failed to read directory entry");
 }

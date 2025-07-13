@@ -57,10 +57,8 @@ impl Process {
   /// Retrieves the current process's PID and name.
   ///
   /// # Returns
-  /// - `Ok((u32, String))`: A tuple containing the current process's PID and
-  ///   name.
-  /// - `Err(Error::ProcessNotFound)`: If the current process could not be
-  ///   found.
+  /// - `Ok((u32, String))`: A tuple containing the current process's PID and name.
+  /// - `Err(Error::ProcessNotFound)`: If the current process could not be found.
   pub fn get_current_proc(&mut self) -> Result<(u32, String), Error> {
     let id = process::id();
     let name = self.get_process_name(id)?;
@@ -70,8 +68,7 @@ impl Process {
   /// Retrieves the parent process's PID and name.
   ///
   /// # Returns
-  /// - `Ok((u32, String))`: A tuple containing the parent process's PID and
-  ///   name.
+  /// - `Ok((u32, String))`: A tuple containing the parent process's PID and name.
   /// - `Err(Error::ParentNotFound)`: If the parent process could not be found.
   pub fn get_parent_proc(&mut self) -> Result<(u32, String), Error> {
     let current_pid = self.get_current_proc()?.0;

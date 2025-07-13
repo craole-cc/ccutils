@@ -137,8 +137,7 @@ pub fn numeric_from_worded(input: &str) -> Result<f64, Error> {
       let value = i128::try_from(value).map_err(|_| Error::InvalidScale)?;
 
       if is_fractional {
-        fractional_part =
-          fractional_part * 10 + u64::try_from(value).unwrap_or(0);
+        fractional_part = fractional_part * 10 + u64::try_from(value).unwrap_or(0);
         fractional_digits += 1;
       } else {
         // Check if it's a large number (thousand or greater)
@@ -146,11 +145,7 @@ pub fn numeric_from_worded(input: &str) -> Result<f64, Error> {
           let scale = value;
 
           // If current_number is 0, use 1 as the multiplier
-          let multiplier = if current_number == 0 {
-            1
-          } else {
-            current_number
-          };
+          let multiplier = if current_number == 0 { 1 } else { current_number };
 
           // Add the scaled value to result
           result += multiplier * scale;
@@ -161,11 +156,8 @@ pub fn numeric_from_worded(input: &str) -> Result<f64, Error> {
         } else {
           // Handle compound numbers (like twenty-one)
           if i + 1 < words.len() && words[i + 1].to_lowercase() != "hundred" {
-            if let Some(next_value) =
-              word_to_value(&words[i + 1].to_lowercase())
-            {
-              let next_value =
-                i128::try_from(next_value).map_err(|_| Error::InvalidScale)?;
+            if let Some(next_value) = word_to_value(&words[i + 1].to_lowercase()) {
+              let next_value = i128::try_from(next_value).map_err(|_| Error::InvalidScale)?;
               if next_value < 10 {
                 current_number += value + next_value;
                 i += 1;
@@ -190,14 +182,9 @@ pub fn numeric_from_worded(input: &str) -> Result<f64, Error> {
   // Add any remaining current_number to result
   result += current_number;
 
-  let final_result =
-    result as f64 + (fractional_part as f64 / 10f64.powi(fractional_digits));
+  let final_result = result as f64 + (fractional_part as f64 / 10f64.powi(fractional_digits));
 
-  Ok(if is_negative {
-    -final_result
-  } else {
-    final_result
-  })
+  Ok(if is_negative { -final_result } else { final_result })
 }
 
 fn word_to_value(word: &str) -> Option<u128> {
@@ -332,9 +319,7 @@ pub fn worded_from_int(value: i128) -> Result<String, Error> {
         group_str.push_str(if group_index <= LARGE.len() {
           LARGE.get(group_index - 1).ok_or(Error::InvalidScale)?
         } else {
-          MASSIVE
-            .get(group_index - 1 - LARGE.len())
-            .ok_or(Error::InvalidScale)?
+          MASSIVE.get(group_index - 1 - LARGE.len()).ok_or(Error::InvalidScale)?
         });
       }
       result.push(group_str);
@@ -346,11 +331,7 @@ pub fn worded_from_int(value: i128) -> Result<String, Error> {
   result.reverse();
   let words = result.join(" ");
 
-  Ok(if is_negative {
-    format!("minus {}", words)
-  } else {
-    words
-  })
+  Ok(if is_negative { format!("minus {}", words) } else { words })
 }
 
 fn triplets_from_int(value: isize) -> Result<String, Error> {
@@ -378,22 +359,12 @@ fn triplets_from_int(value: isize) -> Result<String, Error> {
 
 pub fn tens_and_ones(value: isize) -> Result<String, Error> {
   match value {
-    0..=20 => Ok(
-      SMALL
-        .get(value as usize)
-        .ok_or(Error::InvalidScale)?
-        .to_string()
-    ),
+    0..=20 => Ok(SMALL.get(value as usize).ok_or(Error::InvalidScale)?.to_string()),
     21..=99 => {
       let tens = value / 10;
       let ones = value % 10;
       if ones == 0 {
-        Ok(
-          MEDIUM
-            .get(tens as usize - 2)
-            .ok_or(Error::InvalidScale)?
-            .to_string()
-        )
+        Ok(MEDIUM.get(tens as usize - 2).ok_or(Error::InvalidScale)?.to_string())
       } else {
         Ok(format!(
           "{}-{}",

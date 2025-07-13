@@ -18,18 +18,11 @@ pub fn process_links(config: &Config) -> Result<(), SymlinkError> {
 
     let link_path = config.resolve_link_path(src)?;
 
-    debug!(
-      "Processing: Source: {}, Link: {}",
-      src.display(),
-      link_path.display()
-    );
+    debug!("Processing: Source: {}, Link: {}", src.display(), link_path.display());
 
     if link_path.exists() {
       if is_correct_symlink(&link_path, src)? {
-        info!(
-          "Symlink already exists and is correct: {}",
-          link_path.display()
-        );
+        info!("Symlink already exists and is correct: {}", link_path.display());
         continue;
       }
       handle_existing_link(&link_path, config)?;
@@ -51,10 +44,7 @@ pub fn process_links(config: &Config) -> Result<(), SymlinkError> {
   Ok(())
 }
 
-fn is_correct_symlink(
-  link_path: &Path,
-  src: &Path
-) -> Result<bool, SymlinkError> {
+fn is_correct_symlink(link_path: &Path, src: &Path) -> Result<bool, SymlinkError> {
   match fs::read_link(link_path) {
     Ok(target) => Ok(target == src),
     Err(e) => {
@@ -68,10 +58,7 @@ fn is_correct_symlink(
   }
 }
 
-fn handle_existing_link(
-  link_path: &Path,
-  config: &Config
-) -> Result<(), SymlinkError> {
+fn handle_existing_link(link_path: &Path, config: &Config) -> Result<(), SymlinkError> {
   if config.force {
     backup_existing_path(link_path, config, None)?;
   } else {
@@ -95,11 +82,7 @@ fn handle_existing_link(
   Ok(())
 }
 
-fn backup_existing_path(
-  link_path: &Path,
-  config: &Config,
-  backup_name: Option<String>
-) -> Result<(), SymlinkError> {
+fn backup_existing_path(link_path: &Path, config: &Config, backup_name: Option<String>) -> Result<(), SymlinkError> {
   if config.debug {
     return Ok(());
   }
@@ -123,19 +106,14 @@ fn backup_existing_path(
   Ok(())
 }
 
-fn generate_backup_path(
-  original_path: &Path,
-  backup_name: Option<String>
-) -> Result<PathBuf, SymlinkError> {
-  let parent = original_path.parent().ok_or_else(|| {
-    SymlinkError::PathError(
-      "Cannot determine parent directory for backup".to_string()
-    )
-  })?;
+fn generate_backup_path(original_path: &Path, backup_name: Option<String>) -> Result<PathBuf, SymlinkError> {
+  let parent = original_path
+    .parent()
+    .ok_or_else(|| SymlinkError::PathError("Cannot determine parent directory for backup".to_string()))?;
 
-  let original_name = original_path.file_name().ok_or_else(|| {
-    SymlinkError::PathError("Cannot determine file name for backup".to_string())
-  })?;
+  let original_name = original_path
+    .file_name()
+    .ok_or_else(|| SymlinkError::PathError("Cannot determine file name for backup".to_string()))?;
 
   let backup_name = match backup_name {
     Some(name) => name,
@@ -158,10 +136,7 @@ fn prompt_user_for_overwrite() -> Result<bool, SymlinkError> {
   Ok(input.trim().eq_ignore_ascii_case("y"))
 }
 
-fn ensure_parent_directory_exists(
-  path: &Path,
-  debug_mode: bool
-) -> Result<(), SymlinkError> {
+fn ensure_parent_directory_exists(path: &Path, debug_mode: bool) -> Result<(), SymlinkError> {
   if let Some(parent) = path.parent()
     && !parent.exists()
   {
@@ -188,8 +163,7 @@ fn create_symlink(src: &Path, dst: &Path) -> Result<(), SymlinkError> {
 
   match result {
     Ok(_) => Ok(()),
-    Err(e) if e.raw_os_error() == Some(1314) =>
-      Err(SymlinkError::InsufficientPrivileges),
+    Err(e) if e.raw_os_error() == Some(1314) => Err(SymlinkError::InsufficientPrivileges),
     Err(e) => Err(SymlinkError::Io(e))
   }
 }

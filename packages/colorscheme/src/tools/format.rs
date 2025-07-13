@@ -17,11 +17,7 @@ pub fn output(command: &str, format: &Format) -> Result<String, Error> {
       .collect::<Vec<_>>()
       .join("\n"),
     Format::Verbose => {
-      let mut output = format!(
-        "Command '{}' found in {} location(s):",
-        command,
-        locations.len()
-      );
+      let mut output = format!("Command '{}' found in {} location(s):", command, locations.len());
       for location in locations {
         output.push_str(&format!("\n  {:#}", location));
       }

@@ -31,9 +31,7 @@ impl Shell {
 
   fn from_combined_checks() -> Option<Self> {
     // Check for MINGW/Git Bash first
-    let is_mingw = var("MSYSTEM")
-      .map(|ms| ms.contains("MINGW"))
-      .unwrap_or(false);
+    let is_mingw = var("MSYSTEM").map(|ms| ms.contains("MINGW")).unwrap_or(false);
     let term_program = var("TERM_PROGRAM").unwrap_or_default();
 
     if is_mingw || term_program == "mintty" {
@@ -94,15 +92,12 @@ impl Shell {
   fn from_parent_process() -> Option<Self> {
     let ppid = get_parent_pid();
     let process_name = get_process_name(ppid).to_lowercase();
-    let is_mingw = var("MSYSTEM")
-      .map(|ms| ms.contains("MINGW"))
-      .unwrap_or(false);
+    let is_mingw = var("MSYSTEM").map(|ms| ms.contains("MINGW")).unwrap_or(false);
 
     match process_name.as_str().trim() {
       name if name.contains("mintty") && is_mingw => Some(Shell::GitBash),
       name if name.contains("cmd.exe") => Some(Shell::Cmd),
-      name if name.contains("powershell") || name.contains("pwsh") =>
-        Some(Shell::PowerShell),
+      name if name.contains("powershell") || name.contains("pwsh") => Some(Shell::PowerShell),
       name if name.contains("fish") => Some(Shell::Fish),
       name if name.contains("zsh") => Some(Shell::Zsh),
       name if name.contains("bash") && !is_mingw => Some(Shell::Bash),
@@ -112,9 +107,7 @@ impl Shell {
   }
 
   fn from_shell_env() -> Option<Self> {
-    let is_mingw = var("MSYSTEM")
-      .map(|ms| ms.contains("MINGW"))
-      .unwrap_or(false);
+    let is_mingw = var("MSYSTEM").map(|ms| ms.contains("MINGW")).unwrap_or(false);
 
     if is_mingw {
       return Some(Shell::GitBash);

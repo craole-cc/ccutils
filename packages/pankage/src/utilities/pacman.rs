@@ -27,26 +27,17 @@ pub fn get_default_managers() -> HashMap<String, Vec<String>> {
   // Various Linux distros
   defaults.insert(
     "ubuntu".to_string(),
-    vec!["apt", "flatpak", "snap"]
-      .into_iter()
-      .map(String::from)
-      .collect()
+    vec!["apt", "flatpak", "snap"].into_iter().map(String::from).collect()
   );
 
   defaults.insert(
     "debian".to_string(),
-    vec!["apt", "flatpak", "snap"]
-      .into_iter()
-      .map(String::from)
-      .collect()
+    vec!["apt", "flatpak", "snap"].into_iter().map(String::from).collect()
   );
 
   defaults.insert(
     "fedora".to_string(),
-    vec!["dnf", "flatpak", "snap"]
-      .into_iter()
-      .map(String::from)
-      .collect()
+    vec!["dnf", "flatpak", "snap"].into_iter().map(String::from).collect()
   );
 
   defaults.insert(
@@ -75,18 +66,12 @@ pub fn get_default_managers() -> HashMap<String, Vec<String>> {
 
   defaults.insert(
     "centos".to_string(),
-    vec!["dnf", "flatpak", "snap"]
-      .into_iter()
-      .map(String::from)
-      .collect()
+    vec!["dnf", "flatpak", "snap"].into_iter().map(String::from).collect()
   );
 
   defaults.insert(
     "rhel".to_string(),
-    vec!["dnf", "flatpak", "snap"]
-      .into_iter()
-      .map(String::from)
-      .collect()
+    vec!["dnf", "flatpak", "snap"].into_iter().map(String::from).collect()
   );
 
   defaults

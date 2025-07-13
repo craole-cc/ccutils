@@ -43,12 +43,10 @@ impl Display for Hardware {
     let header = "Hardware {";
     let hostname = format!("{:>16}: {}", "Hostname", self.hostname);
     let arch = format!("{:>16}: {}", "Architecture", self.arch);
-    let cores =
-      format!("{:>16}: {} [{} Threads]", "Cores", self.cores, self.threads);
+    let cores = format!("{:>16}: {} [{} Threads]", "Cores", self.cores, self.threads);
     let memory = format!("{:>16}: {:.2} GB", "Memory", self.memory);
     // let battery = format!("{:>16}: {}", "Battery", self.battery);
-    let battery =
-      format!("{:>16}: {}", "Battery", "BatteryInfo::default().model");
+    let battery = format!("{:>16}: {}", "Battery", "BatteryInfo::default().model");
     let footer = "}";
 
     write!(

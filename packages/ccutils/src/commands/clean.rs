@@ -35,12 +35,7 @@ impl Config {
     })
   }
 
-  pub fn clean_crates(
-    &self,
-    crates: &[String],
-    target: &Target,
-    verbose: bool
-  ) -> Result<()> {
+  pub fn clean_crates(&self, crates: &[String], target: &Target, verbose: bool) -> Result<()> {
     match target {
       Target::Dir => self.clean_target_dirs(crates, verbose)?,
       Target::Bin => self.clean_installed_binaries(crates, verbose)?,
@@ -80,11 +75,7 @@ impl Config {
     Ok(())
   }
 
-  fn clean_installed_binaries(
-    &self,
-    crates: &[String],
-    verbose: bool
-  ) -> Result<()> {
+  fn clean_installed_binaries(&self, crates: &[String], verbose: bool) -> Result<()> {
     println!("Cleaning installed binaries for {} crates...", crates.len());
 
     for crate_path in crates {
@@ -98,27 +89,20 @@ impl Config {
     Ok(())
   }
 
-  fn remove_binary_variants(
-    &self,
-    binary_name: &str,
-    verbose: bool
-  ) -> Result<()> {
+  fn remove_binary_variants(&self, binary_name: &str, verbose: bool) -> Result<()> {
     let variants = [
       binary_name.to_string(),
       format!("{}-{}", self.workspace_name, binary_name)
     ];
 
     for variant in &variants {
-      let binary_path =
-        self.cargo_bin.join(variant).with_extension(EXE_EXTENSION);
+      let binary_path = self.cargo_bin.join(variant).with_extension(EXE_EXTENSION);
 
       if binary_path.exists() {
         if verbose {
           println!("Removing '{}'", binary_path.display());
         }
-        remove_file(&binary_path).with_context(|| {
-          format!("Failed to remove binary '{}'", binary_path.display())
-        })?;
+        remove_file(&binary_path).with_context(|| format!("Failed to remove binary '{}'", binary_path.display()))?;
       }
     }
     Ok(())

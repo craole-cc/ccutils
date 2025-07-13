@@ -28,18 +28,12 @@ pub fn numeral<S: AsRef<str>>(words: S) -> Option<(f64, String)> {
 
   // Attempt to parse as a fraction (worded)
   if let Some((numerator, denominator)) = fraction_worded(words_ref) {
-    return Some((
-      numerator as f64 / denominator as f64,
-      "fraction".to_string()
-    ));
+    return Some((numerator as f64 / denominator as f64, "fraction".to_string()));
   }
 
   // Attempt to parse as a fraction (symbol)
   if let Some((numerator, denominator)) = fraction_symbolic(words_ref) {
-    return Some((
-      numerator as f64 / denominator as f64,
-      "fraction_symbol".to_string()
-    ));
+    return Some((numerator as f64 / denominator as f64, "fraction_symbol".to_string()));
   }
 
   // Attempt to parse as a percentage (worded)

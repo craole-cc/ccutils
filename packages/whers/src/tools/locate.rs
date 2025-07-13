@@ -35,9 +35,7 @@ pub fn is_executable(path: &Path) -> bool {
 #[cfg(windows)]
 pub fn is_executable(path: &Path) -> bool {
   path.extension().map_or(false, |ext| {
-    ext.eq_ignore_ascii_case("exe")
-      || ext.eq_ignore_ascii_case("cmd")
-      || ext.eq_ignore_ascii_case("bat")
+    ext.eq_ignore_ascii_case("exe") || ext.eq_ignore_ascii_case("cmd") || ext.eq_ignore_ascii_case("bat")
   })
 }
 
@@ -47,9 +45,7 @@ fn locate_dirs(name: &str, dir: &Path) -> Vec<PathBuf> {
   if let Ok(entries) = fs::read_dir(dir) {
     for entry in entries.filter_map(Result::ok) {
       let path = entry.path();
-      if path.is_dir()
-        && path.file_name().and_then(|n| n.to_str()) == Some(name)
-      {
+      if path.is_dir() && path.file_name().and_then(|n| n.to_str()) == Some(name) {
         results.push(path);
       }
     }
@@ -64,9 +60,7 @@ fn locate_files(name: &str, dir: &Path) -> Vec<PathBuf> {
   if let Ok(entries) = fs::read_dir(dir) {
     for entry in entries.filter_map(Result::ok) {
       let path = entry.path();
-      if path.is_file()
-        && path.file_name().and_then(|n| n.to_str()) == Some(name)
-      {
+      if path.is_file() && path.file_name().and_then(|n| n.to_str()) == Some(name) {
         results.push(path);
       }
     }
@@ -93,11 +87,7 @@ pub fn locate_exes(name: &str) -> Vec<PathBuf> {
   }
 
   // Search in PATH
-  results.extend(
-    search_in_path(name)
-      .into_iter()
-      .filter(|path| is_executable(path))
-  );
+  results.extend(search_in_path(name).into_iter().filter(|path| is_executable(path)));
 
   // Search downward and upward
   let current_dir = env::current_dir().unwrap_or_else(|_| PathBuf::from("."));

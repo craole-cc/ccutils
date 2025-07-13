@@ -8,8 +8,7 @@ pub struct Fraction {
 impl Fraction {
   // Constructor to initialize from numeric value with precision
   pub fn from_numeric(numeric: f64, precision: usize) -> Self {
-    let (numerator, denominator) =
-      Self::numeric_to_fraction(numeric, precision);
+    let (numerator, denominator) = Self::numeric_to_fraction(numeric, precision);
     let symbolic = format!("{}/{}", numerator, denominator);
     let worded = Self::fraction_to_words(numerator, denominator);
     Fraction {
@@ -40,9 +39,9 @@ impl Fraction {
       "one half" => (1, 2),
       "three fourths" => (3, 4),
       "one over nine" => (1, 9),
-      "one and a half" => (3, 2), // 1.5 as fraction
+      "one and a half" => (3, 2),          // 1.5 as fraction
       "three and one over 11" => (34, 11), // 3 + 1/11
-      _ => (1, 1)                 // Default fallback
+      _ => (1, 1)                          // Default fallback
     }
   }
 

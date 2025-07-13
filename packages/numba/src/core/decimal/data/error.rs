@@ -21,9 +21,7 @@ pub enum Error<'a> {
   /// - `fractional`: The fractional part that caused the overflow.
   /// - `difference`: The number of digits by which it exceeds the allowed size.
   /// - `max`: The maximum allowed size in digits for the fractional part.
-  #[error(
-    "The fractional part provided ('{0}') exceeds the allowed size by {1} digits (Allowed: {2})."
-  )]
+  #[error("The fractional part provided ('{0}') exceeds the allowed size by {1} digits (Allowed: {2}).")]
   FractionalOverflow(Cow<'a, str>, usize, usize),
 
   /// Indicates that the fractional part is problematic due to its size.
@@ -60,9 +58,7 @@ pub enum Error<'a> {
   /// # Parameters
   /// - `ParseIntError`: The underlying error from the parsing attempt.
   /// - `input`: The original input string that caused the error.
-  #[error(
-    "Failed to parse valid fractional from '{1}'\nInvalidFractional: {0}"
-  )]
+  #[error("Failed to parse valid fractional from '{1}'\nInvalidFractional: {0}")]
   InvalidFractional(ParseIntError, Cow<'a, str>),
 
   #[cfg(feature = "big-decimal")]
@@ -76,9 +72,7 @@ pub enum Error<'a> {
   #[error("Failed to parse BigDecimal from '{1}'\nParseIntError: {0}")]
   InvalidBigDecimal(ParseBigDecimalError, Cow<'a, str>),
 
-  #[error(
-    "Failed to parse scientific notation from '{1}'\nParseFloatError: {0}"
-  )]
+  #[error("Failed to parse scientific notation from '{1}'\nParseFloatError: {0}")]
   InvalidScientificNotation(std::num::ParseFloatError, Cow<'a, str>),
   #[error("Invalid decimal format: {0}")]
   InvalidFormat(&'a str),

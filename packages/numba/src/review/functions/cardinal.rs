@@ -36,21 +36,13 @@ fn cardinal_words_from_isize(value: isize) -> String {
       if ones == 0 {
         TENS[tens as usize - 2].to_string()
       } else {
-        format!(
-          "{}-{}",
-          TENS[tens as usize - 2],
-          SMALL_NUMBERS[ones as usize]
-        )
+        format!("{}-{}", TENS[tens as usize - 2], SMALL_NUMBERS[ones as usize])
       }
     }
     _ => abs_value.to_string() // Fallback for larger numbers
   };
 
-  if value < 0 {
-    format!("minus {}", words)
-  } else {
-    words
-  }
+  if value < 0 { format!("minus {}", words) } else { words }
 }
 
 fn cardinal_words_from_digit(digit: char) -> String {
@@ -95,12 +87,7 @@ fn word_to_digit(word: &str) -> Option<u8> {
     .iter()
     .position(|&w| w == word)
     .map(|i| i as u8)
-    .or_else(|| {
-      TENS
-        .iter()
-        .position(|&w| w == word)
-        .map(|i| (i + 2) as u8 * 10)
-    })
+    .or_else(|| TENS.iter().position(|&w| w == word).map(|i| (i + 2) as u8 * 10))
 }
 
 const SMALL_NUMBERS: [&str; 21] = [

@@ -61,11 +61,7 @@ impl Config {
     Ok(())
   }
 
-  fn gather_crate_info(
-    &self,
-    members: &[String],
-    binaries: &[String]
-  ) -> Result<Vec<Metadata>> {
+  fn gather_crate_info(&self, members: &[String], binaries: &[String]) -> Result<Vec<Metadata>> {
     let mut crate_info = Vec::new();
 
     for member in members {
@@ -103,16 +99,11 @@ impl Config {
     Ok(crate_info)
   }
 
-  fn determine_crate_type(
-    &self,
-    member_path: &str,
-    is_binary: bool
-  ) -> Result<Crate> {
+  fn determine_crate_type(&self, member_path: &str, is_binary: bool) -> Result<Crate> {
     let cargo_toml_path = Path::new(member_path).join("Cargo.toml");
     let lib_rs_path = Path::new(member_path).join("src/lib.rs");
 
-    let has_lib =
-      lib_rs_path.exists() || self.has_lib_target(&cargo_toml_path)?;
+    let has_lib = lib_rs_path.exists() || self.has_lib_target(&cargo_toml_path)?;
 
     match (is_binary, has_lib) {
       (true, true) => Ok(Crate::Both),
@@ -134,33 +125,17 @@ impl Config {
     Ok(parsed.get("lib").is_some())
   }
 
-  fn check_installation_status(
-    &self,
-    binary_name: &str
-  ) -> Result<(bool, bool)> {
-    let unprefixed_path = self
-      .cargo_bin
-      .join(binary_name)
-      .with_extension(EXE_EXTENSION);
+  fn check_installation_status(&self, binary_name: &str) -> Result<(bool, bool)> {
+    let unprefixed_path = self.cargo_bin.join(binary_name).with_extension(EXE_EXTENSION);
 
     let prefixed_name = format!("{}-{}", self.workspace_name, binary_name);
-    let prefixed_path = self
-      .cargo_bin
-      .join(&prefixed_name)
-      .with_extension(EXE_EXTENSION);
+    let prefixed_path = self.cargo_bin.join(&prefixed_name).with_extension(EXE_EXTENSION);
 
     Ok((unprefixed_path.exists(), prefixed_path.exists()))
   }
 
-  fn needs_rebuild(
-    &self,
-    member_path: &str,
-    binary_name: &str
-  ) -> Result<bool> {
-    let binary_path = self
-      .cargo_bin
-      .join(binary_name)
-      .with_extension(EXE_EXTENSION);
+  fn needs_rebuild(&self, member_path: &str, binary_name: &str) -> Result<bool> {
+    let binary_path = self.cargo_bin.join(binary_name).with_extension(EXE_EXTENSION);
 
     if !binary_path.exists() {
       return Ok(true);
@@ -172,12 +147,7 @@ impl Config {
     Ok(latest_src_mtime > binary_mtime)
   }
 
-  fn filter_crates(
-    &self,
-    crates: Vec<Metadata>,
-    bins_only: bool,
-    libs_only: bool
-  ) -> Vec<Metadata> {
+  fn filter_crates(&self, crates: Vec<Metadata>, bins_only: bool, libs_only: bool) -> Vec<Metadata> {
     crates
       .into_iter()
       .filter(|info| {
@@ -228,10 +198,7 @@ impl Config {
           }
         };
 
-        format!(
-          " [B:{} I:{} P:{}] {}",
-          built, installed, prefixed, info.path
-        )
+        format!(" [B:{} I:{} P:{}] {}", built, installed, prefixed, info.path)
       })
       .collect();
 

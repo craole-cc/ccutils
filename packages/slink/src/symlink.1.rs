@@ -14,18 +14,13 @@ pub fn process_links(config: &Config) -> Result<(), SymlinkError> {
 
     let link_path = config.resolve_link_path(src)?;
 
-    debug!(
-      "Processing: Source: {}, Link: {}",
-      src.display(),
-      link_path.display()
-    );
+    debug!("Processing: Source: {}, Link: {}", src.display(), link_path.display());
 
     if link_path.exists() {
       if config.force {
         info!("Removing existing link: {}", link_path.display());
         if !config.debug {
-          fs::remove_file(&link_path)
-            .or_else(|_| fs::remove_dir(&link_path))?;
+          fs::remove_file(&link_path).or_else(|_| fs::remove_dir(&link_path))?;
         }
       } else {
         info!("Link already exists: {}", link_path.display());
@@ -34,8 +29,7 @@ pub fn process_links(config: &Config) -> Result<(), SymlinkError> {
           continue;
         }
         if !config.debug {
-          fs::remove_file(&link_path)
-            .or_else(|_| fs::remove_dir(&link_path))?;
+          fs::remove_file(&link_path).or_else(|_| fs::remove_dir(&link_path))?;
         }
       }
     }
@@ -93,10 +87,7 @@ fn prompt_user_for_backup() -> Result<Option<String>, SymlinkError> {
 
 // ...
 
-fn ensure_parent_directory_exists(
-  path: &Path,
-  debug_mode: bool
-) -> Result<(), SymlinkError> {
+fn ensure_parent_directory_exists(path: &Path, debug_mode: bool) -> Result<(), SymlinkError> {
   if let Some(parent) = path.parent() {
     if !parent.exists() {
       debug!("Creating parent directory: {}", parent.display());

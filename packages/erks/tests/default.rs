@@ -25,10 +25,7 @@ fn test_metadata_builder() {
   assert_eq!(meta.error_code, Code::NetworkError);
   assert_eq!(meta.component, Some("networking".to_string()));
   assert_eq!(meta.operation, Some("fetch_data".to_string()));
-  assert_eq!(
-    meta.context.get("url"),
-    Some(&"http://example.com".to_string())
-  );
+  assert_eq!(meta.context.get("url"), Some(&"http://example.com".to_string()));
 }
 
 #[test]
@@ -51,10 +48,7 @@ fn test_error_category() {
 
 #[test]
 fn test_to_structured() {
-  let error = Error::from(io::Error::file_system_with_path(
-    "Could not open file",
-    "/tmp/test.txt"
-  ));
+  let error = Error::from(io::Error::file_system_with_path("Could not open file", "/tmp/test.txt"));
   let structured: StructuredError = error.to_structured();
 
   assert_eq!(structured.message, "File system error: Could not open file");

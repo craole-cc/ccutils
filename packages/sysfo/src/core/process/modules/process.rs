@@ -91,10 +91,7 @@ impl Info {
     while let Some(current_process) = system.process(pid) {
       if let Some(parent_pid) = current_process.parent() {
         if let Some(parent_process) = system.process(parent_pid) {
-          dependencies.insert(
-            parent_pid.as_u32(),
-            parent_process.name().to_string_lossy().to_string()
-          );
+          dependencies.insert(parent_pid.as_u32(), parent_process.name().to_string_lossy().to_string());
         }
         pid = parent_pid;
 
@@ -112,8 +109,7 @@ impl Info {
       .find_map(|(pid, name)| {
         let name = name.to_lowercase();
         let kind = match name.as_str() {
-          n if n.contains("pwsh") || n.contains("powershell") =>
-            shell::Kind::PowerShell,
+          n if n.contains("pwsh") || n.contains("powershell") => shell::Kind::PowerShell,
           n if n.contains("bash") => shell::Kind::Bash,
           n if n.contains("zsh") => shell::Kind::Zsh,
           n if n.contains("fish") => shell::Kind::Fish,
@@ -122,15 +118,13 @@ impl Info {
           _ => return None
         };
 
-        system
-          .process(Pid::from_u32(*pid))
-          .map(|process| shell::Info {
-            id: *pid,
-            name: process.name().to_string_lossy().to_string(),
-            path: process.exe().map_or_else(PathBuf::new, |p| p.to_path_buf()),
-            conf: shell::get_config_paths(&kind),
-            version: shell::get_version(&kind)
-          })
+        system.process(Pid::from_u32(*pid)).map(|process| shell::Info {
+          id: *pid,
+          name: process.name().to_string_lossy().to_string(),
+          path: process.exe().map_or_else(PathBuf::new, |p| p.to_path_buf()),
+          conf: shell::get_config_paths(&kind),
+          version: shell::get_version(&kind)
+        })
       })
       .unwrap_or_default();
 

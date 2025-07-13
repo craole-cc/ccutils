@@ -3,8 +3,7 @@ impl crate::Search {
   ///
   /// # Arguments
   ///
-  /// * `case_sensitive` - A boolean value indicating whether the search should
-  ///   be case sensitive.
+  /// * `case_sensitive` - A boolean value indicating whether the search should be case sensitive.
   ///
   /// # Returns
   ///

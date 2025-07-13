@@ -43,11 +43,7 @@ impl Info {
   pub fn fetch(&self) -> String {
     format!(
       "{:?} -> {:?} -> {:?} ({:?}) [configs: {:?}]",
-      self.current,
-      self.parent,
-      self.shell_info.1,
-      self.shell_info.0.shell_type,
-      self.shell_info.0.config_paths
+      self.current, self.parent, self.shell_info.1, self.shell_info.0.shell_type, self.shell_info.0.config_paths
     )
   }
 }

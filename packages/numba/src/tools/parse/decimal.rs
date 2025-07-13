@@ -1,7 +1,4 @@
-use crate::{
-  cache::PARSE_CACHE, error::decimal::Error, simd::remove_commas_simd,
-  types::Decimal
-};
+use crate::{cache::PARSE_CACHE, error::decimal::Error, simd::remove_commas_simd, types::Decimal};
 #[cfg(feature = "big-decimal")]
 use bigdecimal::BigDecimal;
 use rust_decimal::Decimal as SmallDecimal;
@@ -9,19 +6,14 @@ use std::str::FromStr;
 
 /// Convert BigDecimal to Decimal safely
 #[cfg(feature = "big-decimal")]
-fn convert_big_decimal_to_decimal(
-  bd: BigDecimal
-) -> Result<SmallDecimal, Error<'static>> {
+fn convert_big_decimal_to_decimal(bd: BigDecimal) -> Result<SmallDecimal, Error<'static>> {
   // Convert through string representation as a safe fallback
-  SmallDecimal::from_str(&bd.to_string())
-    .map_err(|_| Error::Overflow("Number too large for Decimal"))
+  SmallDecimal::from_str(&bd.to_string()).map_err(|_| Error::Overflow("Number too large for Decimal"))
 }
 
 /// Fast path for parsing common numeric types
 #[inline]
-fn parse_rust_decimal<T: ToString>(
-  input: T
-) -> Result<SmallDecimal, Error<'static>> {
+fn parse_rust_decimal<T: ToString>(input: T) -> Result<SmallDecimal, Error<'static>> {
   let input_str = input.to_string();
 
   // Check cache first
@@ -161,9 +153,7 @@ mod tests {
   #[test]
   pub fn test_big_decimal() {
     // Initialize test values
-    let integer = <num::BigInt as num::FromPrimitive>::from_u64(10)
-      .unwrap()
-      .pow(100);
+    let integer = <num::BigInt as num::FromPrimitive>::from_u64(10).unwrap().pow(100);
     let fractional: usize = isize::MAX as usize;
     let sign = "-";
     let input = format!("{}{}.{}", sign, integer, fractional);

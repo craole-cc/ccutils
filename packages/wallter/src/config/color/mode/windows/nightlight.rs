@@ -14,8 +14,7 @@ const NIGHTLIGHT_STATE_ENABLED_BYTES: [u8; 2] = [0x10, 0x00];
 /// * [STRUCT_HEADER_BYTES]
 /// * [TIMESTAMP_HEADER_BYTES]
 /// * [TIMESTAMP_PREFIX_BYTES]
-/// * The last-modified Unix timestamp in seconds, variably-encoded into
-///   [TIMESTAMP_SIZE] bytes
+/// * The last-modified Unix timestamp in seconds, variably-encoded into [TIMESTAMP_SIZE] bytes
 ///     - byte 0: bits 0-6 = timestamp's bits 0-6, but top bit 7 is always set
 ///     - byte 1: bits 0-6 = timestamp's bits 7-13, but top bit 7 is always set
 ///     - byte 2: bits 0-6 = timestamp's bits 14-20, but top bit 7 is always set
@@ -23,8 +22,7 @@ const NIGHTLIGHT_STATE_ENABLED_BYTES: [u8; 2] = [0x10, 0x00];
 ///     - byte 4: bits 0-6 = timestamp's bits 28-31, but top bit 7 is NOT set
 /// * [TIMESTAMP_SUFFIX_BYTES]
 /// * A single byte indicating the size of the following data block.
-///     - The purpose of these remaining bytes is currently unknown. Known
-///       values for the size byte are:
+///     - The purpose of these remaining bytes is currently unknown. Known values for the size byte are:
 ///         - 0x13 (19 bytes) when `is_enabled` is false.
 ///         - 0x15 (21 bytes) when `is_enabled` is true.
 /// * [STRUCT_HEADER_BYTES] again
@@ -59,9 +57,7 @@ impl State {
         };
         Error::System(io::Error::new(
           error_kind,
-          format!(
-            "Failed to open registry key '{NIGHTLIGHT_STATE_REGISTRY_KEY}' with access {access}: {e}"
-          )
+          format!("Failed to open registry key '{NIGHTLIGHT_STATE_REGISTRY_KEY}' with access {access}: {e}")
         ))
       })
   }
@@ -71,20 +67,18 @@ impl State {
     let key = Self::open_nightlight_registry_key(KEY_READ).map_err(|e| {
       Error::System(io::Error::new(
         io::ErrorKind::NotFound,
-        format!(
-          "Failed to open registry key '{NIGHTLIGHT_STATE_REGISTRY_KEY}': {e}"
-        )
+        format!("Failed to open registry key '{NIGHTLIGHT_STATE_REGISTRY_KEY}': {e}")
       ))
     })?;
 
     // Read raw bytes from registry - we need to use get_raw_value for binary
     // data
     let reg_value = key.get_raw_value(NIGHTLIGHT_STATE_REGISTRY_VAL).map_err(|e| {
-        Error::System(io::Error::new(
-          io::ErrorKind::NotFound, // Specific to reading the value
-          format!("Failed to read registry value '{NIGHTLIGHT_STATE_REGISTRY_VAL}': {e}"),
-        ))
-      })?;
+      Error::System(io::Error::new(
+        io::ErrorKind::NotFound, // Specific to reading the value
+        format!("Failed to read registry value '{NIGHTLIGHT_STATE_REGISTRY_VAL}': {e}")
+      ))
+    })?;
 
     let data = reg_value.bytes;
     Self::deserialize_from_bytes(&data)
@@ -108,7 +102,7 @@ impl State {
       .map_err(|e| {
         Error::System(io::Error::new(
           io::ErrorKind::PermissionDenied, // Specific to writing the value
-          format!("Failed to write registry value '{NIGHTLIGHT_STATE_REGISTRY_VAL}': {e}"),
+          format!("Failed to write registry value '{NIGHTLIGHT_STATE_REGISTRY_VAL}': {e}")
         ))
       })?;
 
@@ -134,9 +128,10 @@ impl State {
 
     // Read the byte indicating the length of the subsequent block (including
     // itself)
-    let remaining_struct_size_byte_value = *data.get(pos).ok_or_else(|| {
-      Error::Parse(parse::Error::Block("Missing struct size byte".to_string()))
-    })? as usize;
+    let remaining_struct_size_byte_value = *data
+      .get(pos)
+      .ok_or_else(|| Error::Parse(parse::Error::Block("Missing struct size byte".to_string())))?
+      as usize;
     pos += 1; // Consume the size byte
 
     // The `remaining_struct_size_byte_value` includes the size byte itself.
@@ -145,8 +140,7 @@ impl State {
     // from the current `pos` to the end of the slice
     // should be `(remaining_struct_size_byte_value - 1) +
     // STRUCT_FOOTER_BYTES.len()`.
-    let expected_remaining_data_len =
-      (remaining_struct_size_byte_value - 1) + STRUCT_FOOTER_BYTES.len();
+    let expected_remaining_data_len = (remaining_struct_size_byte_value - 1) + STRUCT_FOOTER_BYTES.len();
     if data.len() - pos != expected_remaining_data_len {
       return Err(Error::Parse(parse::Error::Block(format!(
         "Invalid struct size: expected {} bytes from pos {}, got {} bytes total. Size byte value: {}",
@@ -166,25 +160,19 @@ impl State {
     }
     pos = end;
 
-    let (is_enabled, new_pos) = if data
-      .get(pos..pos + NIGHTLIGHT_STATE_ENABLED_BYTES.len())
-      == Some(&NIGHTLIGHT_STATE_ENABLED_BYTES)
-    {
-      (true, pos + NIGHTLIGHT_STATE_ENABLED_BYTES.len())
-    } else {
-      (false, pos)
-    };
+    let (is_enabled, new_pos) =
+      if data.get(pos..pos + NIGHTLIGHT_STATE_ENABLED_BYTES.len()) == Some(&NIGHTLIGHT_STATE_ENABLED_BYTES) {
+        (true, pos + NIGHTLIGHT_STATE_ENABLED_BYTES.len())
+      } else {
+        (false, pos)
+      };
     pos = new_pos;
 
     // Read the remaining data bytes and save it if we need to write it back
-    let end_of_remaining_data =
-      data.len().saturating_sub(STRUCT_FOOTER_BYTES.len());
-    let remaining_data_slice =
-      data.get(pos..end_of_remaining_data).ok_or_else(|| {
-        Error::Parse(parse::Error::Block(
-          "Invalid remaining data slice".to_string()
-        ))
-      })?;
+    let end_of_remaining_data = data.len().saturating_sub(STRUCT_FOOTER_BYTES.len());
+    let remaining_data_slice = data
+      .get(pos..end_of_remaining_data)
+      .ok_or_else(|| Error::Parse(parse::Error::Block("Invalid remaining data slice".to_string())))?;
     let remaining_data_vec = Vec::from(remaining_data_slice);
     pos += remaining_data_vec.len();
 
@@ -194,9 +182,7 @@ impl State {
     }
     pos = end;
 
-    debug!(
-      "State::deserialize_from_bytes: Parsed state: timestamp={timestamp}, is_enabled={is_enabled}"
-    );
+    debug!("State::deserialize_from_bytes: Parsed state: timestamp={timestamp}, is_enabled={is_enabled}");
     Ok(Self {
       timestamp,
       is_enabled,
@@ -222,15 +208,13 @@ impl State {
     remaining_struct_bytes_content.extend_from_slice(&STRUCT_HEADER_BYTES);
 
     if self.is_enabled {
-      remaining_struct_bytes_content
-        .extend_from_slice(&NIGHTLIGHT_STATE_ENABLED_BYTES);
+      remaining_struct_bytes_content.extend_from_slice(&NIGHTLIGHT_STATE_ENABLED_BYTES);
     }
     remaining_struct_bytes_content.extend_from_slice(&self.remaining_data);
 
     // The size byte itself is included in the count, so add 1 to the content
     // length
-    let remaining_struct_size_byte_value =
-      (remaining_struct_bytes_content.len() + 1) as u8;
+    let remaining_struct_size_byte_value = (remaining_struct_bytes_content.len() + 1) as u8;
     bytes.push(remaining_struct_size_byte_value);
     bytes.extend(remaining_struct_bytes_content);
     bytes.extend_from_slice(&STRUCT_FOOTER_BYTES);
@@ -238,20 +222,14 @@ impl State {
   }
 
   fn update_timestamp(&mut self) {
-    self.timestamp = SystemTime::now()
-      .duration_since(UNIX_EPOCH)
-      .unwrap()
-      .as_secs();
+    self.timestamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
   }
 
   /// Enables the nightlight and updates the timestamp.
   /// Returns true if a change was made (i.e. the nightlight was previously
   /// disabled).
   pub fn enable(&mut self) -> bool {
-    debug!(
-      "State::enable: Called. Current state is_enabled={}",
-      self.is_enabled
-    );
+    debug!("State::enable: Called. Current state is_enabled={}", self.is_enabled);
     if !self.is_enabled {
       self.is_enabled = true;
       self.update_timestamp();
@@ -265,10 +243,7 @@ impl State {
   /// Returns true if a change was made (i.e. the nightlight was previously
   /// enabled).
   pub fn disable(&mut self) -> bool {
-    debug!(
-      "State::disable: Called. Current state is_enabled={}",
-      self.is_enabled
-    );
+    debug!("State::disable: Called. Current state is_enabled={}", self.is_enabled);
     if self.is_enabled {
       self.is_enabled = false;
       self.update_timestamp();
@@ -314,10 +289,7 @@ pub fn enable() -> Result<bool> {
   let mut state = State::read_from_registry()?;
   if !state.is_enabled {
     state.is_enabled = true;
-    state.timestamp = SystemTime::now()
-      .duration_since(UNIX_EPOCH)
-      .unwrap()
-      .as_secs();
+    state.timestamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
     state.write_to_registry()?;
     Ok(true)
   } else {
@@ -332,10 +304,7 @@ pub fn disable() -> Result<bool> {
   let mut state = State::read_from_registry()?;
   if state.is_enabled {
     state.is_enabled = false;
-    state.timestamp = SystemTime::now()
-      .duration_since(UNIX_EPOCH)
-      .unwrap()
-      .as_secs();
+    state.timestamp = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
     state.write_to_registry()?;
     Ok(true)
   } else {
@@ -363,18 +332,16 @@ mod tests {
   use super::*;
   // Test data (no changes, just uncommenting for context)
   const BYTES_DISABLED: [u8; 41] = [
-    0x43, 0x42, 0x01, 0x00, 0x0A, 0x02, 0x01, 0x00, 0x2A, 0x06, 0x89, 0x95,
-    0xFC, 0xBE, 0x06, 0x2A, 0x2B, 0x0E, 0x13, 0x43, 0x42, 0x01, 0x00,
-    0xD0, // size byte 19
-    0x0A, 0x02, 0xC6, 0x14, 0xA9, 0xF6, 0xE2, 0xD3, 0xEF, 0xEA, 0xE6, 0xED,
-    0x01, 0x00, 0x00, 0x00, 0x00 // 4-byte footer
+    0x43, 0x42, 0x01, 0x00, 0x0A, 0x02, 0x01, 0x00, 0x2A, 0x06, 0x89, 0x95, 0xFC, 0xBE, 0x06, 0x2A, 0x2B, 0x0E, 0x13,
+    0x43, 0x42, 0x01, 0x00, 0xD0, // size byte 19
+    0x0A, 0x02, 0xC6, 0x14, 0xA9, 0xF6, 0xE2, 0xD3, 0xEF, 0xEA, 0xE6, 0xED, 0x01, 0x00, 0x00, 0x00,
+    0x00 // 4-byte footer
   ];
   const BYTES_ENABLED: [u8; 43] = [
-    0x43, 0x42, 0x01, 0x00, 0x0A, 0x02, 0x01, 0x00, 0x2A, 0x06, 0x89, 0x95,
-    0xFC, 0xBE, 0x06, 0x2A, 0x2B, 0x0E, 0x15, 0x43, 0x42, 0x01, 0x00,
-    0x10, // size byte 21
-    0x00, 0xD0, 0x0A, 0x02, 0xC6, 0x14, 0xA9, 0xF6, 0xE2, 0xD3, 0xEF, 0xEA,
-    0xE6, 0xED, 0x01, 0x00, 0x00, 0x00, 0x00 // 4-byte footer
+    0x43, 0x42, 0x01, 0x00, 0x0A, 0x02, 0x01, 0x00, 0x2A, 0x06, 0x89, 0x95, 0xFC, 0xBE, 0x06, 0x2A, 0x2B, 0x0E, 0x15,
+    0x43, 0x42, 0x01, 0x00, 0x10, // size byte 21
+    0x00, 0xD0, 0x0A, 0x02, 0xC6, 0x14, 0xA9, 0xF6, 0xE2, 0xD3, 0xEF, 0xEA, 0xE6, 0xED, 0x01, 0x00, 0x00, 0x00,
+    0x00 // 4-byte footer
   ];
 
   #[test]
@@ -383,8 +350,7 @@ mod tests {
       timestamp: 1742670473,
       is_enabled: false,
       remaining_data: vec![
-        0xD0, 0x0A, 0x02, 0xC6, 0x14, 0xA9, 0xF6, 0xE2, 0xD3, 0xEF, 0xEA, 0xE6,
-        0xED, 0x01,
+        0xD0, 0x0A, 0x02, 0xC6, 0x14, 0xA9, 0xF6, 0xE2, 0xD3, 0xEF, 0xEA, 0xE6, 0xED, 0x01,
       ]
     };
     let bytes_disabled = state_disabled.serialize_to_bytes();
@@ -394,8 +360,7 @@ mod tests {
       timestamp: 1742670473,
       is_enabled: true,
       remaining_data: vec![
-        0xD0, 0x0A, 0x02, 0xC6, 0x14, 0xA9, 0xF6, 0xE2, 0xD3, 0xEF, 0xEA, 0xE6,
-        0xED, 0x01,
+        0xD0, 0x0A, 0x02, 0xC6, 0x14, 0xA9, 0xF6, 0xE2, 0xD3, 0xEF, 0xEA, 0xE6, 0xED, 0x01,
       ]
     };
     let bytes_enabled = state_enabled.serialize_to_bytes();
@@ -408,20 +373,17 @@ mod tests {
       timestamp: 1742670473,
       is_enabled: false,
       remaining_data: vec![
-        0xD0, 0x0A, 0x02, 0xC6, 0x14, 0xA9, 0xF6, 0xE2, 0xD3, 0xEF, 0xEA, 0xE6,
-        0xED, 0x01,
+        0xD0, 0x0A, 0x02, 0xC6, 0x14, 0xA9, 0xF6, 0xE2, 0xD3, 0xEF, 0xEA, 0xE6, 0xED, 0x01,
       ]
     };
-    let state_disabled =
-      State::deserialize_from_bytes(&BYTES_DISABLED).unwrap();
+    let state_disabled = State::deserialize_from_bytes(&BYTES_DISABLED).unwrap();
     assert_eq!(state_disabled, expected_state_disabled);
 
     let expected_state_enabled = State {
       timestamp: 1742670473,
       is_enabled: true,
       remaining_data: vec![
-        0xD0, 0x0A, 0x02, 0xC6, 0x14, 0xA9, 0xF6, 0xE2, 0xD3, 0xEF, 0xEA, 0xE6,
-        0xED, 0x01,
+        0xD0, 0x0A, 0x02, 0xC6, 0x14, 0xA9, 0xF6, 0xE2, 0xD3, 0xEF, 0xEA, 0xE6, 0xED, 0x01,
       ]
     };
     let state_enabled = State::deserialize_from_bytes(&BYTES_ENABLED).unwrap();
@@ -430,8 +392,7 @@ mod tests {
 
   #[test]
   fn test_serde_roundtrip() {
-    let state_disabled =
-      State::deserialize_from_bytes(&BYTES_DISABLED).unwrap();
+    let state_disabled = State::deserialize_from_bytes(&BYTES_DISABLED).unwrap();
     let bytes = state_disabled.serialize_to_bytes();
     let state_deserialized = State::deserialize_from_bytes(&bytes).unwrap();
     assert_eq!(state_deserialized, state_disabled);
@@ -461,16 +422,13 @@ mod tests {
         // Keep eprintln! for test-specific output
         "Skipping test: Night Light registry key not found at '{NIGHTLIGHT_STATE_REGISTRY_KEY}'."
       );
-      println!(
-        "To run this test, please toggle Night Light once in Windows Settings to initialize it."
-      );
+      println!("To run this test, please toggle Night Light once in Windows Settings to initialize it.");
       return;
     }
 
     // This test verifies that enable() and disable() correctly change the state
     // and report that a change was made.
-    let initial_state = is_enabled()
-      .expect("Failed to get initial state for enable/disable test");
+    let initial_state = is_enabled().expect("Failed to get initial state for enable/disable test");
 
     if initial_state {
       // If it's on, turn it off.
@@ -496,18 +454,13 @@ mod tests {
     // key exists, which Windows creates on first use.
     let hkcu = RegKey::predef(HKEY_CURRENT_USER);
     if hkcu.open_subkey(NIGHTLIGHT_STATE_REGISTRY_KEY).is_err() {
-      warn!(
-        "Skipping test: Night Light registry key not found at '{NIGHTLIGHT_STATE_REGISTRY_KEY}'."
-      );
-      warn!(
-        "To run this test, please toggle Night Light once in Windows Settings to initialize it."
-      );
+      warn!("Skipping test: Night Light registry key not found at '{NIGHTLIGHT_STATE_REGISTRY_KEY}'.");
+      warn!("To run this test, please toggle Night Light once in Windows Settings to initialize it.");
       return;
     }
 
     // 1. Get initial state
-    let initial_state =
-      is_enabled().expect("Failed to get initial state for toggle test");
+    let initial_state = is_enabled().expect("Failed to get initial state for toggle test");
 
     // 2. Toggle once
     let (changed1, new_state1) = toggle().expect("Failed to toggle first time");
@@ -518,8 +471,7 @@ mod tests {
     );
 
     // 3. Toggle back to original state
-    let (changed2, new_state2) =
-      toggle().expect("Failed to toggle second time");
+    let (changed2, new_state2) = toggle().expect("Failed to toggle second time");
     assert!(changed2, "Toggle should report a change the second time.");
     assert_eq!(
       new_state2, initial_state,
@@ -552,12 +504,8 @@ mod tests {
           if let Error::System(io_err) = e
             && io_err.kind() == std::io::ErrorKind::NotFound
           {
-            warn!(
-              "\nHint: This error is common if Night Light has never been used on this system."
-            );
-            warn!(
-              "Please toggle it on and off once in Windows Settings to create the necessary registry key."
-            );
+            warn!("\nHint: This error is common if Night Light has never been used on this system.");
+            warn!("Please toggle it on and off once in Windows Settings to create the necessary registry key.");
           }
           false
         }

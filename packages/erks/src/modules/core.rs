@@ -83,11 +83,7 @@ impl Metadata {
     self
   }
 
-  pub fn with_context<K: Into<String>, V: Into<String>>(
-    mut self,
-    key: K,
-    value: V
-  ) -> Self {
+  pub fn with_context<K: Into<String>, V: Into<String>>(mut self, key: K, value: V) -> Self {
     self.context.insert(key.into(), value.into());
     self
   }

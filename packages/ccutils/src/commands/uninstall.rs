@@ -60,11 +60,7 @@ impl Config {
     Ok(())
   }
 
-  fn remove_if_exists(
-    &self,
-    binary_name: &str,
-    verbose: bool
-  ) -> Result<usize> {
+  fn remove_if_exists(&self, binary_name: &str, verbose: bool) -> Result<usize> {
     let path_with_ext = self
       .cargo_bin_dir
       .join(binary_name)
@@ -87,9 +83,7 @@ impl Config {
       if verbose {
         println!("Removing '{}'", path.display());
       }
-      remove_file(&path).with_context(|| {
-        format!("Failed to remove binary '{}'", path.display())
-      })?;
+      remove_file(&path).with_context(|| format!("Failed to remove binary '{}'", path.display()))?;
       Ok(1)
     } else {
       Ok(0)

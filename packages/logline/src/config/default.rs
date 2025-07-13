@@ -19,11 +19,7 @@ impl Default for Config {
     };
     let level = Level::default();
 
-    Self {
-      level,
-      time,
-      display
-    }
+    Self { level, time, display }
   }
 }
 

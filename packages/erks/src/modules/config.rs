@@ -40,10 +40,7 @@ impl Error {
   }
 
   /// Create an invalid format error
-  pub fn invalid_format<T: Into<String>, F: Into<String>>(
-    file: F,
-    msg: T
-  ) -> Self {
+  pub fn invalid_format<T: Into<String>, F: Into<String>>(file: F, msg: T) -> Self {
     Self::InvalidFormat {
       file: file.into(),
       message: msg.into(),
@@ -57,10 +54,7 @@ impl Error {
   }
 
   /// Create an invalid value error
-  pub fn invalid_value<K: Into<String>, T: Into<String>>(
-    key: K,
-    msg: T
-  ) -> Self {
+  pub fn invalid_value<K: Into<String>, T: Into<String>>(key: K, msg: T) -> Self {
     Self::InvalidValue {
       key: key.into(),
       message: msg.into()
@@ -110,16 +104,11 @@ impl Context for Error {
     let metadata = Metadata::new(self.error_code()).with_component("config");
 
     match self {
-      Error::FileNotFound { path } =>
-        Some(metadata.with_context("path", path.clone())),
-      Error::InvalidFormat { file, .. } =>
-        Some(metadata.with_context("file", file.clone())),
-      Error::MissingKey { key } =>
-        Some(metadata.with_context("key", key.clone())),
-      Error::InvalidValue { key, .. } =>
-        Some(metadata.with_context("key", key.clone())),
-      Error::Environment { message } =>
-        Some(metadata.with_context("message", message.clone())),
+      Error::FileNotFound { path } => Some(metadata.with_context("path", path.clone())),
+      Error::InvalidFormat { file, .. } => Some(metadata.with_context("file", file.clone())),
+      Error::MissingKey { key } => Some(metadata.with_context("key", key.clone())),
+      Error::InvalidValue { key, .. } => Some(metadata.with_context("key", key.clone())),
+      Error::Environment { message } => Some(metadata.with_context("message", message.clone())),
       Error::Generic(_) => None /* Generic config errors might not have
                                  * specific metadata */
     }

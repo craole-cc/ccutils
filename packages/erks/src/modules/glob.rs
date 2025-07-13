@@ -15,9 +15,7 @@ pub enum Error {
 impl Error {
   /// Create a glob iteration error
   pub fn iteration<T: Into<String>>(msg: T) -> Self {
-    Self::Iteration {
-      message: msg.into()
-    }
+    Self::Iteration { message: msg.into() }
   }
 }
 
@@ -44,8 +42,7 @@ impl Context for Error {
   fn metadata(&self) -> Option<Metadata> {
     let metadata = Metadata::new(self.error_code()).with_component("glob");
     match self {
-      Error::Iteration { message } =>
-        Some(metadata.with_context("message", message.clone())),
+      Error::Iteration { message } => Some(metadata.with_context("message", message.clone())),
       _ => None
     }
   }

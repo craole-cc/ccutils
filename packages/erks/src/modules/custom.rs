@@ -60,10 +60,7 @@ impl Error {
   }
 
   /// Create a validation error for a specific field
-  pub fn validation_field<T: Into<String>, F: Into<String>>(
-    msg: T,
-    field: F
-  ) -> Self {
+  pub fn validation_field<T: Into<String>, F: Into<String>>(msg: T, field: F) -> Self {
     Self::Validation {
       message: msg.into(),
       field: Some(field.into()),
@@ -73,11 +70,7 @@ impl Error {
   }
 
   /// Create a detailed validation error
-  pub fn validation_detailed<
-    T: Into<String>,
-    F: Into<String>,
-    V: Into<String>
-  >(
+  pub fn validation_detailed<T: Into<String>, F: Into<String>, V: Into<String>>(
     msg: T,
     field: F,
     value: V,
@@ -102,12 +95,7 @@ impl Error {
   }
 
   /// Create a detailed invalid state error
-  pub fn invalid_state_transition<
-    T: Into<String>,
-    C: Into<String>,
-    E: Into<String>,
-    Tr: Into<String>
-  >(
+  pub fn invalid_state_transition<T: Into<String>, C: Into<String>, E: Into<String>, Tr: Into<String>>(
     msg: T,
     current: C,
     expected: E,
@@ -138,11 +126,7 @@ impl Error {
   }
 
   /// Create a resource limit error with units
-  pub fn resource_limit_with_unit<
-    T: Into<String>,
-    R: Into<String>,
-    U: Into<String>
-  >(
+  pub fn resource_limit_with_unit<T: Into<String>, R: Into<String>, U: Into<String>>(
     msg: T,
     resource_type: R,
     limit: usize,
@@ -168,10 +152,7 @@ impl Error {
   }
 
   /// Create a business logic error with operation context
-  pub fn business_logic_with_operation<T: Into<String>, O: Into<String>>(
-    msg: T,
-    operation: O
-  ) -> Self {
+  pub fn business_logic_with_operation<T: Into<String>, O: Into<String>>(msg: T, operation: O) -> Self {
     Self::BusinessLogic {
       message: msg.into(),
       operation: Some(operation.into()),
@@ -201,10 +182,7 @@ impl Error {
   }
 
   /// Create a generic custom error with context
-  pub fn new_with_context<T: Into<String>>(
-    msg: T,
-    context: HashMap<String, String>
-  ) -> Self {
+  pub fn new_with_context<T: Into<String>>(msg: T, context: HashMap<String, String>) -> Self {
     Self::Generic {
       message: msg.into(),
       context
@@ -248,8 +226,7 @@ impl Context for Error {
   }
 
   fn metadata(&self) -> Option<Metadata> {
-    let metadata =
-      Metadata::new(self.error_code()).with_component("application");
+    let metadata = Metadata::new(self.error_code()).with_component("application");
 
     match self {
       Error::Validation {
@@ -268,8 +245,7 @@ impl Context for Error {
 
         Some(meta)
       }
-      Error::Validation { field: Some(f), .. } =>
-        Some(metadata.with_context("field", f.clone())),
+      Error::Validation { field: Some(f), .. } => Some(metadata.with_context("field", f.clone())),
       Error::InvalidState {
         current_state: Some(c),
         expected_state: Some(e),

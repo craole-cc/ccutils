@@ -24,8 +24,7 @@ impl Decimal {
         parse_big_decimal(&input_str).map(Self::Large)
       }
       #[cfg(not(feature = "big-decimal"))]
-      Err(Error::Decimal(_)) =>
-        Err(Error::Decimal("BigDecimal feature not enabled".into())),
+      Err(Error::Decimal(_)) => Err(Error::Decimal("BigDecimal feature not enabled".into())),
       Err(err) => Err(err) // Propagate other errors
     }
   }

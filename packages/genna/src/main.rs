@@ -54,9 +54,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     //     }
     // };
 
-    let stream = client
-      .exec_chat_stream(&model, request.clone(), None)
-      .await?;
+    let stream = client.exec_chat_stream(&model, request.clone(), None).await?;
 
     // logline::trace!("Response: {:#?}", &response_content);
     // logline::trace!(

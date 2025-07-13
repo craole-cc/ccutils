@@ -18,10 +18,8 @@ pub struct Search {
 
   /// Specifies if the search should be case-sensitive.
   ///
-  /// - If `true`, the search is case-sensitive (e.g., "File.txt" and
-  ///   "file.txt" are different).
-  /// - If `false`, the search is case-insensitive (e.g., "File.txt" and
-  ///   "file.txt" are the same).
+  /// - If `true`, the search is case-sensitive (e.g., "File.txt" and "file.txt" are different).
+  /// - If `false`, the search is case-insensitive (e.g., "File.txt" and "file.txt" are the same).
   ///
   /// By default, `case_sensitive` is `false`, making the search
   /// case-insensitive.

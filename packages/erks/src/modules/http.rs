@@ -15,9 +15,7 @@ pub enum Error {
 impl Error {
   /// Create a new custom HTTP error.
   pub fn custom<T: Into<String>>(msg: T) -> Self {
-    Self::Custom {
-      message: msg.into()
-    }
+    Self::Custom { message: msg.into() }
   }
 }
 

@@ -12,8 +12,7 @@ use scraper::{Html, Selector};
 ///
 /// # Returns
 ///
-/// * `Result<String>` - On success, returns the HTML content as a `String`. On
-///   failure, returns an error.
+/// * `Result<String>` - On success, returns the HTML content as a `String`. On failure, returns an error.
 pub async fn html_content(url: &str) -> Result<String> {
   let response = get(url)
     .await
@@ -37,8 +36,7 @@ pub async fn html_content(url: &str) -> Result<String> {
 ///
 /// # Returns
 ///
-/// * `Result<Html>` - On success, returns a `Html` document. On failure,
-///   returns an error.
+/// * `Result<Html>` - On success, returns a `Html` document. On failure, returns an error.
 pub fn html_document(content: String) -> Result<Html> {
   let html = Html::parse_document(&content);
   debug!("{:#?}", html);

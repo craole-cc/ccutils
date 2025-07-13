@@ -91,13 +91,10 @@ impl std::fmt::Display for Num2Err {
   }
 }
 
-const UNITS: [&str; 9] = [
-  "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"
-];
+const UNITS: [&str; 9] = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
 const TENS: [&str; 9] = [
-  "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty",
-  "ninety"
+  "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"
 ];
 
 const TEENS: [&str; 10] = [

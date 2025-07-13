@@ -52,11 +52,6 @@ impl FormatHelpers for Info {
   }
 
   fn format_field(&self, label: &str, value: &str) -> String {
-    format!(
-      "{:width$}: {}\n",
-      label,
-      value,
-      width = self.content_padding()
-    )
+    format!("{:width$}: {}\n", label, value, width = self.content_padding())
   }
 }

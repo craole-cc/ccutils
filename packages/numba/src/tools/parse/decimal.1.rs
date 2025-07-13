@@ -47,9 +47,7 @@ macro_rules! impl_to_string_ref_numeric {
 }
 
 // Implement for all numeric types we want to support
-impl_to_string_ref_numeric!(
-  i8, i16, i32, i64, i128, isize, u8, u16, u32, u64, u128, usize, f32, f64
-);
+impl_to_string_ref_numeric!(i8, i16, i32, i64, i128, isize, u8, u16, u32, u64, u128, usize, f32, f64);
 
 #[inline]
 pub fn big_decimal<T>(input: T) -> Result<BigDecimal, Error<'static>>
@@ -75,9 +73,8 @@ where
   };
 
   BigDecimal::from_str(&cleaned).map_err(|err| match err {
-    ParseBigDecimalError::Empty =>
-      Error::InvalidBigDecimal(err, cleaned.into_owned().into()),
-    ParseBigDecimalError::ParseDecimal(float_err) => {
+    ParseBigDecimalError::Empty => Error::InvalidBigDecimal(err, cleaned.into_owned().into()),
+    ParseBigDecimalError::ParseDecimal(float_err) =>
       if cleaned.contains(['e', 'E']) {
         Error::InvalidScientificNotation(float_err, cleaned.into_owned().into())
       } else {
@@ -85,18 +82,12 @@ where
           ParseBigDecimalError::ParseDecimal(float_err),
           cleaned.into_owned().into()
         )
-      }
-    }
-    ParseBigDecimalError::ParseInt(int_err) => Error::InvalidMantissa(
-      ParseBigDecimalError::ParseInt(int_err),
-      cleaned.into_owned().into()
-    ),
-    ParseBigDecimalError::ParseBigInt(bigint_err) =>
-      Error::InvalidBigInt(bigint_err, cleaned.into_owned().into()),
-    ParseBigDecimalError::Other(err_msg) => Error::InvalidBigDecimal(
-      ParseBigDecimalError::Other(err_msg),
-      cleaned.into_owned().into()
-    )
+      },
+    ParseBigDecimalError::ParseInt(int_err) =>
+      Error::InvalidMantissa(ParseBigDecimalError::ParseInt(int_err), cleaned.into_owned().into()),
+    ParseBigDecimalError::ParseBigInt(bigint_err) => Error::InvalidBigInt(bigint_err, cleaned.into_owned().into()),
+    ParseBigDecimalError::Other(err_msg) =>
+      Error::InvalidBigDecimal(ParseBigDecimalError::Other(err_msg), cleaned.into_owned().into()),
   })
 }
 
@@ -117,10 +108,7 @@ mod tests {
 
     // String types
     assert_eq!(big_decimal("123.45").unwrap().to_string(), "123.45");
-    assert_eq!(
-      big_decimal(String::from("456.78")).unwrap().to_string(),
-      "456.78"
-    );
+    assert_eq!(big_decimal(String::from("456.78")).unwrap().to_string(), "456.78");
 
     // With commas
     assert_eq!(big_decimal("1,234.56").unwrap().to_string(), "1234.56");

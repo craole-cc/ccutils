@@ -23,8 +23,6 @@ pub enum SymlinkError {
   IoError(String),
   #[error("Path error: {0}")]
   PathError(String),
-  #[error(
-    "Insufficient privileges to create symlink. Try running the program as administrator."
-  )]
+  #[error("Insufficient privileges to create symlink. Try running the program as administrator.")]
   InsufficientPrivileges
 }

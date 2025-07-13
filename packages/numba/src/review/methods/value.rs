@@ -50,11 +50,7 @@ impl Value {
 
         // Try parsing as fraction words
         if let Some((numerator, denominator)) = fraction_worded(words) {
-          return Ok(Self::Fraction(
-            numerator,
-            "over".to_string(),
-            denominator
-          ));
+          return Ok(Self::Fraction(numerator, "over".to_string(), denominator));
         }
 
         // Try parsing as roman numeral
@@ -83,8 +79,7 @@ impl Value {
     match self {
       Self::Cardinal(v) => *v as usize,
       Self::OrdinalSymbolic(v, _) | Self::Ordinal(v) => *v,
-      Self::PercentageSymbol(v, _) | Self::Percentage(v, _) =>
-        (*v / 100.0) as usize,
+      Self::PercentageSymbol(v, _) | Self::Percentage(v, _) => (*v / 100.0) as usize,
       Self::Fraction(n, _, d) => *n / *d,
       Self::Roman(s) => roman_symbolic(s).unwrap_or(0)
     }

@@ -101,8 +101,7 @@ pub fn numeric_to_worded(input: &str) -> Result<f64, Error> {
       let value = i128::try_from(value).map_err(|_| Error::InvalidScale)?;
 
       if is_fractional {
-        fractional_part =
-          fractional_part * 10 + u64::try_from(value).unwrap_or(0);
+        fractional_part = fractional_part * 10 + u64::try_from(value).unwrap_or(0);
         fractional_digits += 1;
       } else {
         // Check if it's a large number (thousand or greater)
@@ -110,11 +109,7 @@ pub fn numeric_to_worded(input: &str) -> Result<f64, Error> {
           let scale = value;
 
           // If current_number is 0, use 1 as the multiplier
-          let multiplier = if current_number == 0 {
-            1
-          } else {
-            current_number
-          };
+          let multiplier = if current_number == 0 { 1 } else { current_number };
 
           // Add the scaled value to result
           result += multiplier * scale;
@@ -125,11 +120,8 @@ pub fn numeric_to_worded(input: &str) -> Result<f64, Error> {
         } else {
           // Handle compound numbers (like twenty-one)
           if i + 1 < words.len() && words[i + 1].to_lowercase() != "hundred" {
-            if let Some(next_value) =
-              word_to_value(&words[i + 1].to_lowercase())
-            {
-              let next_value =
-                i128::try_from(next_value).map_err(|_| Error::InvalidScale)?;
+            if let Some(next_value) = word_to_value(&words[i + 1].to_lowercase()) {
+              let next_value = i128::try_from(next_value).map_err(|_| Error::InvalidScale)?;
               if next_value < 10 {
                 current_number += value + next_value;
                 i += 1;
@@ -154,14 +146,9 @@ pub fn numeric_to_worded(input: &str) -> Result<f64, Error> {
   // Add any remaining current_number to result
   result += current_number;
 
-  let final_result =
-    result as f64 + (fractional_part as f64 / 10f64.powi(fractional_digits));
+  let final_result = result as f64 + (fractional_part as f64 / 10f64.powi(fractional_digits));
 
-  Ok(if is_negative {
-    -final_result
-  } else {
-    final_result
-  })
+  Ok(if is_negative { -final_result } else { final_result })
 }
 
 pub fn worded_from_numeric(value: f64) -> Result<String, Error> {
@@ -171,11 +158,7 @@ pub fn worded_from_numeric(value: f64) -> Result<String, Error> {
   if fraction.is_empty() {
     Ok(integer_worded)
   } else {
-    Ok(format!(
-      "{} point {}",
-      integer_worded,
-      fraction_to_words(&fraction)?
-    ))
+    Ok(format!("{} point {}", integer_worded, fraction_to_words(&fraction)?))
   }
 }
 
@@ -229,11 +212,7 @@ fn worded_from_isize(value: i128) -> Result<String, Error> {
   result.reverse();
   let words = result.join(" ");
 
-  Ok(if is_negative {
-    format!("minus {}", words)
-  } else {
-    words
-  })
+  Ok(if is_negative { format!("minus {}", words) } else { words })
 }
 
 fn three_digit_group(value: isize) -> Result<String, Error> {
@@ -261,22 +240,12 @@ fn three_digit_group(value: isize) -> Result<String, Error> {
 
 fn tens_and_ones(value: isize) -> Result<String, Error> {
   match value {
-    0..=20 => Ok(
-      SMALL
-        .get(value as usize)
-        .ok_or(Error::InvalidScale)?
-        .to_string()
-    ),
+    0..=20 => Ok(SMALL.get(value as usize).ok_or(Error::InvalidScale)?.to_string()),
     21..=99 => {
       let tens = value / 10;
       let ones = value % 10;
       if ones == 0 {
-        Ok(
-          TENS
-            .get(tens as usize - 2)
-            .ok_or(Error::InvalidScale)?
-            .to_string()
-        )
+        Ok(TENS.get(tens as usize - 2).ok_or(Error::InvalidScale)?.to_string())
       } else {
         Ok(format!(
           "{}-{}",
@@ -294,12 +263,7 @@ fn word_to_value(word: &str) -> Option<u128> {
     .iter()
     .position(|&w| w == word)
     .map(|i| i as u128)
-    .or_else(|| {
-      TENS
-        .iter()
-        .position(|&w| w == word)
-        .map(|i| (i as u128 + 2) * 10)
-    })
+    .or_else(|| TENS.iter().position(|&w| w == word).map(|i| (i as u128 + 2) * 10))
     .or_else(|| {
       LARGE
         .iter()

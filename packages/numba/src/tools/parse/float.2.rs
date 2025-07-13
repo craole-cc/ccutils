@@ -78,26 +78,21 @@ where
           // This case is unreachable due to our empty check above
           Ok(BigDecimal::zero())
         }
-        ParseBigDecimalError::ParseDecimal(float_err) => {
+        ParseBigDecimalError::ParseDecimal(float_err) =>
           if cleaned.contains(['e', 'E']) {
-            Err(Error::InvalidScientificNotation(
-              float_err,
-              cleaned.into_owned().into()
-            ))
+            Err(Error::InvalidScientificNotation(float_err, cleaned.into_owned().into()))
           } else {
             Err(Error::InvalidBigDecimal(
               ParseBigDecimalError::ParseDecimal(float_err),
               cleaned.into_owned().into()
             ))
-          }
-        }
+          },
         ParseBigDecimalError::ParseInt(int_err) => Err(Error::InvalidMantissa(
           ParseBigDecimalError::ParseInt(int_err),
           cleaned.into_owned().into()
         )),
-        ParseBigDecimalError::ParseBigInt(bigint_err) => Err(
-          Error::InvalidBigInt(bigint_err, cleaned.into_owned().into())
-        ),
+        ParseBigDecimalError::ParseBigInt(bigint_err) =>
+          Err(Error::InvalidBigInt(bigint_err, cleaned.into_owned().into())),
         ParseBigDecimalError::Other(err_msg) => Err(Error::InvalidBigDecimal(
           ParseBigDecimalError::Other(err_msg),
           cleaned.into_owned().into()
@@ -124,10 +119,7 @@ mod tests {
 
     // String types
     assert_eq!(big_decimal("123.45").unwrap().to_string(), "123.45");
-    assert_eq!(
-      big_decimal(&String::from("456.78")).unwrap().to_string(),
-      "456.78"
-    );
+    assert_eq!(big_decimal(&String::from("456.78")).unwrap().to_string(), "456.78");
 
     // With commas
     assert_eq!(big_decimal("1,234.56").unwrap().to_string(), "1234.56");

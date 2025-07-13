@@ -25,8 +25,7 @@ impl Default for Info {
       .single()
       .unwrap_or_else(Local::now);
     let uptime = current.signed_duration_since(boot);
-    let timezone = iana_time_zone::get_timezone()
-      .unwrap_or_else(|_| boot.format("%Z").to_string());
+    let timezone = iana_time_zone::get_timezone().unwrap_or_else(|_| boot.format("%Z").to_string());
     let dtfmt = "%Y-%m-%d %H:%M";
 
     Self {

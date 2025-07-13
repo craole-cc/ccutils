@@ -50,10 +50,8 @@ impl Fetcher {
     output.push_str(&format!("ID           : {}\n", self.process.id));
     output.push_str(&format!("Name         : {}\n", self.process.name));
     output.push_str(&format!("User         : {}\n", self.process.user));
-    output
-      .push_str(&format!("Path         : {}\n", self.process.path.display()));
-    output
-      .push_str(&format!("Working Dir  : {}\n", self.process.cwd.display()));
+    output.push_str(&format!("Path         : {}\n", self.process.path.display()));
+    output.push_str(&format!("Working Dir  : {}\n", self.process.cwd.display()));
 
     // Shell section
     output.push_str("\nShell Environment\n");
@@ -64,10 +62,7 @@ impl Fetcher {
       "Version      : {}\n",
       self.process.shell.version.as_deref().unwrap_or("Unknown")
     ));
-    output.push_str(&format!(
-      "Shell Path   : {}\n",
-      self.process.shell.path.display()
-    ));
+    output.push_str(&format!("Shell Path   : {}\n", self.process.shell.path.display()));
 
     // Shell configurations
     output.push_str("\nConfiguration Files:\n");
@@ -95,26 +90,14 @@ impl Fetcher {
     output.push_str(&term.format_field("ID", &self.process.id.to_string()));
     output.push_str(&term.format_field("Name", &self.process.name));
     output.push_str(&term.format_field("User", &self.process.user));
-    output.push_str(
-      &term.format_field("Path", &self.process.path.display().to_string())
-    );
-    output.push_str(
-      &term
-        .format_field("Working Dir", &self.process.cwd.display().to_string())
-    );
+    output.push_str(&term.format_field("Path", &self.process.path.display().to_string()));
+    output.push_str(&term.format_field("Working Dir", &self.process.cwd.display().to_string()));
 
     output.push_str(&term.format_section("Shell"));
-    output
-      .push_str(&term.format_field("ID", &self.process.shell.id.to_string()));
+    output.push_str(&term.format_field("ID", &self.process.shell.id.to_string()));
     output.push_str(&term.format_field("Name", &self.process.shell.name));
-    output.push_str(
-      &term
-        .format_field("Path", &self.process.shell.path.display().to_string())
-    );
-    output.push_str(&term.format_field(
-      "Version",
-      self.process.shell.version.as_deref().unwrap_or("Unknown")
-    ));
+    output.push_str(&term.format_field("Path", &self.process.shell.path.display().to_string()));
+    output.push_str(&term.format_field("Version", self.process.shell.version.as_deref().unwrap_or("Unknown")));
 
     output.push_str(&term.format_section("Shell Configurations"));
     for path in &self.process.shell.conf {

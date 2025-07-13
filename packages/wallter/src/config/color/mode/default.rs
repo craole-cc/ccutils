@@ -8,9 +8,7 @@ pub trait Manager {
   fn notify(&self) -> Result<()>;
 }
 
-#[derive(
-  Debug, Default, Serialize, Deserialize, PartialEq, Eq, Clone, Copy,
-)]
+#[derive(Debug, Default, Serialize, Deserialize, PartialEq, Eq, Clone, Copy)]
 pub enum Config {
   Light,
   Dark,
@@ -33,15 +31,11 @@ impl Config {
       Ok(Mode::Dark) => Self::Dark,
       Ok(Mode::Light) => Self::Light,
       Ok(Mode::Unspecified) => {
-        eprintln!(
-          "System color mode is unspecified. Using default mode: {fallback}"
-        );
+        eprintln!("System color mode is unspecified. Using default mode: {fallback}");
         fallback
       }
       Err(e) => {
-        eprintln!(
-          "Failed to detect the system's color mode: {e}. Using default mode: {fallback}"
-        );
+        eprintln!("Failed to detect the system's color mode: {e}. Using default mode: {fallback}");
         fallback
       }
     }
@@ -94,9 +88,7 @@ impl Config {
         struct UnsupportedManager;
         impl self::Manager for UnsupportedManager {
           fn set(&self, _config: Config) -> Result<()> {
-            eprintln!(
-              "System theme setting is not supported on this platform."
-            );
+            eprintln!("System theme setting is not supported on this platform.");
             Ok(())
           }
 

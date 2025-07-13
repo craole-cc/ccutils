@@ -24,8 +24,7 @@ impl Numeral {
     self.cardinal_worded = self.to_cardinal_worded(self.cardinal_symbol);
     self.ordinal_worded = self.to_ordinal_worded(self.whole);
     self.ordinal_symbol = self.to_ordinal_symbol(self.whole);
-    self.fraction_symbol =
-      format!("{}/{}", self.fractional.0, self.fractional.1);
+    self.fraction_symbol = format!("{}/{}", self.fractional.0, self.fractional.1);
     self.fraction_worded = self.to_fraction_worded(self.whole, self.fractional);
     self.percentage_symbol = format!("{:.1}%", self.cardinal_symbol * 100.0);
     self.percentage_worded = self.to_percentage_worded(self.cardinal_symbol);
@@ -70,16 +69,9 @@ impl Numeral {
     )
   }
 
-  fn to_fraction_worded(
-    &self,
-    whole: usize,
-    fractional: (usize, usize)
-  ) -> String {
+  fn to_fraction_worded(&self, whole: usize, fractional: (usize, usize)) -> String {
     // Implement logic to convert fraction into word form
-    format!(
-      "Fraction word for {} {}/{}",
-      whole, fractional.0, fractional.1
-    ) // Placeholder
+    format!("Fraction word for {} {}/{}", whole, fractional.0, fractional.1) // Placeholder
   }
 
   fn to_percentage_worded(&self, cardinal: f64) -> String {

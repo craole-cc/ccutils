@@ -1,25 +1,18 @@
-use crate::{
-  cache::PARSE_CACHE, error::decimal::Error, simd::remove_commas_simd
-};
+use crate::{cache::PARSE_CACHE, error::decimal::Error, simd::remove_commas_simd};
 use bigdecimal::BigDecimal;
 use rust_decimal::Decimal;
 use std::str::FromStr;
 
 /// Convert BigDecimal to Decimal safely
 #[cfg(feature = "big-decimal")]
-fn convert_big_decimal_to_decimal(
-  bd: BigDecimal
-) -> Result<Decimal, Error<'static>> {
+fn convert_big_decimal_to_decimal(bd: BigDecimal) -> Result<Decimal, Error<'static>> {
   // Convert through string representation as a safe fallback
-  Decimal::from_str(&bd.to_string())
-    .map_err(|_| Error::Overflow("Number too large for Decimal"))
+  Decimal::from_str(&bd.to_string()).map_err(|_| Error::Overflow("Number too large for Decimal"))
 }
 
 /// Fast path for parsing common numeric types
 #[inline]
-fn parse_rust_decimal<T: ToString>(
-  input: T
-) -> Result<Decimal, Error<'static>> {
+fn parse_rust_decimal<T: ToString>(input: T) -> Result<Decimal, Error<'static>> {
   let input_str = input.to_string();
 
   // Check cache first
@@ -66,9 +59,7 @@ fn parse_big_decimal(input: &str) -> Result<BigDecimal, Error<'static>> {
 
 /// Parse number with fallback to BigDecimal if needed
 #[inline]
-pub fn parse_decimal<T: ToString>(
-  input: T
-) -> Result<BigDecimal, Error<'static>> {
+pub fn parse_decimal<T: ToString>(input: T) -> Result<BigDecimal, Error<'static>> {
   let input_str = input.to_string();
 
   // Try parsing as Decimal first
@@ -124,9 +115,7 @@ mod tests {
   #[test]
   pub fn test_large_decimal() {
     // Initialize test values
-    let integer = <num::BigInt as num::FromPrimitive>::from_u64(10)
-      .unwrap()
-      .pow(100);
+    let integer = <num::BigInt as num::FromPrimitive>::from_u64(10).unwrap().pow(100);
     let fractional: usize = isize::MAX as usize;
     let sign = "-";
     let input = format!("{}{}.{}", sign, integer, fractional);
@@ -170,9 +159,7 @@ mod tests {
   #[test]
   pub fn test_big_decimal() {
     // Initialize test values
-    let integer = <num::BigInt as num::FromPrimitive>::from_u64(10)
-      .unwrap()
-      .pow(100);
+    let integer = <num::BigInt as num::FromPrimitive>::from_u64(10).unwrap().pow(100);
     let fractional: usize = isize::MAX as usize;
     let sign = "-";
     let input = format!("{}{}.{}", sign, integer, fractional);

@@ -19,12 +19,7 @@ impl Config {
     }
   }
 
-  pub fn build_crates(
-    &self,
-    crates: &[String],
-    force: bool,
-    verbose: bool
-  ) -> Result<()> {
+  pub fn build_crates(&self, crates: &[String], force: bool, verbose: bool) -> Result<()> {
     let to_build = if force {
       crates.to_vec()
     } else {
@@ -49,12 +44,7 @@ impl Config {
     Ok(())
   }
 
-  pub fn filter_outdated_crates(
-    &self,
-    crates: &[String],
-    force: bool,
-    verbose: bool
-  ) -> Result<Vec<String>> {
+  pub fn filter_outdated_crates(&self, crates: &[String], force: bool, verbose: bool) -> Result<Vec<String>> {
     if force {
       return Ok(crates.to_vec());
     }
@@ -80,15 +70,10 @@ impl Config {
     let binary_name = Path::new(member)
       .file_name()
       .and_then(|name| name.to_str())
-      .with_context(|| {
-        format!("Could not determine binary name from path: {member}")
-      })?;
+      .with_context(|| format!("Could not determine binary name from path: {member}"))?;
 
     //{ On Windows, cargo install adds .exe. On Linux/macOS, it does not }
-    let installed_binary_path = self
-      .cargo_bin_dir
-      .join(binary_name)
-      .with_extension(EXE_EXTENSION);
+    let installed_binary_path = self.cargo_bin_dir.join(binary_name).with_extension(EXE_EXTENSION);
 
     if !installed_binary_path.exists() {
       if verbose {
@@ -119,9 +104,7 @@ impl Config {
     let binary_name = Path::new(member)
       .file_name()
       .and_then(|name| name.to_str())
-      .with_context(|| {
-        format!("Could not determine binary name from path: {member}")
-      })?;
+      .with_context(|| format!("Could not determine binary name from path: {member}"))?;
 
     println!("Building binary '{binary_name}' in release mode...");
 

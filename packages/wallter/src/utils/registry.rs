@@ -28,21 +28,14 @@ pub fn read_bytes(hive: HKEY, path: &str, name: &str) -> Result<Vec<u8>> {
 }
 
 /// Writes a raw binary value to the specified registry key and value name.
-pub fn write_bytes(
-  hive: HKEY,
-  path: &str,
-  name: &str,
-  data: &[u8]
-) -> Result<()> {
+pub fn write_bytes(hive: HKEY, path: &str, name: &str, data: &[u8]) -> Result<()> {
   let root = RegKey::predef(hive);
-  let key = root
-    .open_subkey_with_flags(path, KEY_SET_VALUE)
-    .map_err(|e| {
-      Error::System(io::Error::new(
-        io::ErrorKind::PermissionDenied,
-        format!("Failed to open registry key '{path}' for writing: {e}")
-      ))
-    })?;
+  let key = root.open_subkey_with_flags(path, KEY_SET_VALUE).map_err(|e| {
+    Error::System(io::Error::new(
+      io::ErrorKind::PermissionDenied,
+      format!("Failed to open registry key '{path}' for writing: {e}")
+    ))
+  })?;
 
   let reg_value = RegValue {
     bytes: data.to_vec(),
@@ -74,8 +67,5 @@ pub fn key_exists(hive: HKEY, path: &str) -> bool {
 /// * `name` - The name of the value to check for.
 pub fn value_exists(hive: HKEY, path: &str, name: &str) -> bool {
   let root = RegKey::predef(hive);
-  root
-    .open_subkey(path)
-    .and_then(|key| key.get_raw_value(name))
-    .is_ok()
+  root.open_subkey(path).and_then(|key| key.get_raw_value(name)).is_ok()
 }

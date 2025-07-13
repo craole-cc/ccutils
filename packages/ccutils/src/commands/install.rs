@@ -31,13 +31,7 @@ impl Config {
     }
   }
 
-  pub fn install_crates(
-    &self,
-    crates: &[String],
-    mode: &Target,
-    force: bool,
-    verbose: bool
-  ) -> Result<()> {
+  pub fn install_crates(&self, crates: &[String], mode: &Target, force: bool, verbose: bool) -> Result<()> {
     println!("\n--- Installing {} binary crates ---", crates.len());
 
     for member in crates {
@@ -50,23 +44,12 @@ impl Config {
       let is_self_install = self.is_self_install(binary_name)?;
 
       if is_self_install && !force {
-        println!(
-          "Skipping self-install of '{binary_name}' (would cause file lock)."
-        );
-        println!(
-          "To update {binary_name}, use --force or run: cargo install --path {member} --force"
-        );
+        println!("Skipping self-install of '{binary_name}' (would cause file lock).");
+        println!("To update {binary_name}, use --force or run: cargo install --path {member} --force");
         continue;
       }
 
-      self.install_with_mode(
-        member,
-        binary_name,
-        mode,
-        force,
-        is_self_install,
-        verbose
-      )?;
+      self.install_with_mode(member, binary_name, mode, force, is_self_install, verbose)?;
     }
     Ok(())
   }
@@ -82,14 +65,7 @@ impl Config {
   ) -> Result<()> {
     match mode {
       Target::Unprefixed => {
-        self.install_binary(
-          member_path,
-          binary_name,
-          None,
-          force,
-          is_self_install,
-          verbose
-        )?;
+        self.install_binary(member_path, binary_name, None, force, is_self_install, verbose)?;
       }
       Target::Prefixed => {
         let prefixed_name = format!("{}-{}", self.workspace_name, binary_name);
@@ -104,14 +80,7 @@ impl Config {
       }
       Target::Both => {
         //{ Install unprefixed version first }
-        self.install_binary(
-          member_path,
-          binary_name,
-          None,
-          force,
-          is_self_install,
-          verbose
-        )?;
+        self.install_binary(member_path, binary_name, None, force, is_self_install, verbose)?;
 
         //{ Create alias for prefixed version }
         let prefixed_name = format!("{}-{}", self.workspace_name, binary_name);
@@ -174,11 +143,7 @@ impl Config {
           member_path
         );
       } else {
-        bail!(
-          "Cargo install failed for '{}' with status: {}",
-          member_path,
-          status
-        );
+        bail!("Cargo install failed for '{}' with status: {}", member_path, status);
       }
     }
 
@@ -192,27 +157,12 @@ impl Config {
     Ok(())
   }
 
-  fn create_alias(
-    &self,
-    source_name: &str,
-    alias_name: &str,
-    verbose: bool
-  ) -> Result<()> {
-    let src = self
-      .cargo_bin_dir
-      .join(source_name)
-      .with_extension(EXE_EXTENSION);
-    let alias = self
-      .cargo_bin_dir
-      .join(alias_name)
-      .with_extension(EXE_EXTENSION);
+  fn create_alias(&self, source_name: &str, alias_name: &str, verbose: bool) -> Result<()> {
+    let src = self.cargo_bin_dir.join(source_name).with_extension(EXE_EXTENSION);
+    let alias = self.cargo_bin_dir.join(alias_name).with_extension(EXE_EXTENSION);
 
     if !src.exists() {
-      bail!(
-        "Source binary '{}' not found at '{}'",
-        source_name,
-        src.display()
-      );
+      bail!("Source binary '{}' not found at '{}'", source_name, src.display());
     }
 
     if verbose {
@@ -221,9 +171,7 @@ impl Config {
 
     // Remove the alias if it already exists
     if alias.exists() {
-      remove_file(&alias).with_context(|| {
-        format!("Failed to remove existing alias '{}'", alias.display())
-      })?;
+      remove_file(&alias).with_context(|| format!("Failed to remove existing alias '{}'", alias.display()))?;
     }
 
     #[cfg(unix)]
@@ -246,13 +194,7 @@ impl Config {
             println!("Created symlink for '{alias_name}'");
           },
         Err(_) => {
-          copy(&src, &alias).with_context(|| {
-            format!(
-              "Failed to copy '{}' to '{}'",
-              src.display(),
-              alias.display()
-            )
-          })?;
+          copy(&src, &alias).with_context(|| format!("Failed to copy '{}' to '{}'", src.display(), alias.display()))?;
           if verbose {
             println!("Created copy for '{alias_name}' (symlink not available)");
           }
@@ -266,8 +208,7 @@ impl Config {
   /// Check if we're trying to install the same binary that's currently running
   fn is_self_install(&self, binary_name: &str) -> Result<bool> {
     if let Ok(current_exe) = current_exe()
-      && let Some(current_name) =
-        current_exe.file_stem().and_then(|n| n.to_str())
+      && let Some(current_name) = current_exe.file_stem().and_then(|n| n.to_str())
     {
       return Ok(current_name == binary_name);
     }

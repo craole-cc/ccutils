@@ -10,9 +10,7 @@ impl Default for Cache {
       for_rust_decimal: DashMap::with_capacity(CACHE_SIZE),
 
       #[cfg(feature = "big-decimal")]
-      for_big_decimal: Mutex::new(LruCache::new(
-        NonZeroUsize::new(CACHE_SIZE).unwrap()
-      ))
+      for_big_decimal: Mutex::new(LruCache::new(NonZeroUsize::new(CACHE_SIZE).unwrap()))
     }
   }
 }

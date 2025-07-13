@@ -1,7 +1,4 @@
-use erks::{
-  Code, Error, Result, bail, custom, ensure, error, io, log_error,
-  retry_with_backoff, wrap_error
-};
+use erks::{Code, Error, Result, bail, custom, ensure, error, io, log_error, retry_with_backoff, wrap_error};
 use std::sync::{
   Arc,
   atomic::{AtomicUsize, Ordering}
@@ -9,8 +6,7 @@ use std::sync::{
 
 #[test]
 fn test_wrap_error() {
-  let original_err =
-    std::io::Error::new(std::io::ErrorKind::NotFound, "original");
+  let original_err = std::io::Error::new(std::io::ErrorKind::NotFound, "original");
   let wrapped_err = wrap_error(original_err);
   assert!(matches!(wrapped_err, Error::Anyhow(_)));
   assert!(wrapped_err.to_string().contains("original"));
@@ -72,8 +68,7 @@ async fn test_retry_with_backoff_unrecoverable_failure() {
     async move {
       counter_ref.fetch_add(1, Ordering::SeqCst);
       // An unrecoverable custom error
-      let result: Result<()> =
-        Err(Error::from(custom::Error::invalid_state("unrecoverable")));
+      let result: Result<()> = Err(Error::from(custom::Error::invalid_state("unrecoverable")));
       result
     }
   };
@@ -122,10 +117,7 @@ fn returns_error() -> Result<()> {
 fn test_error_macro() {
   let err = returns_error().unwrap_err();
   assert!(matches!(err, Error::Custom(_)));
-  assert_eq!(
-    err.to_string(),
-    "Application error: This is a formatted error: 123"
-  );
+  assert_eq!(err.to_string(), "Application error: This is a formatted error: 123");
 }
 
 fn bails_out() -> Result<()> {
@@ -136,10 +128,7 @@ fn bails_out() -> Result<()> {
 fn test_bail_macro() {
   let err = bails_out().unwrap_err();
   assert!(matches!(err, Error::Custom(_)));
-  assert_eq!(
-    err.to_string(),
-    "Application error: Bailing out with a message"
-  );
+  assert_eq!(err.to_string(), "Application error: Bailing out with a message");
 }
 
 fn ensure_condition(value: i32) -> Result<()> {

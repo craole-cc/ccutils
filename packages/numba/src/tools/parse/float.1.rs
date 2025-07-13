@@ -11,8 +11,7 @@ use std::str::FromStr;
 ///
 /// # Arguments
 ///
-/// * `float` - A type that can be converted into a string slice (e.g., &str or
-///   String).
+/// * `float` - A type that can be converted into a string slice (e.g., &str or String).
 ///
 /// # Returns
 ///
@@ -23,11 +22,9 @@ use std::str::FromStr;
 ///
 /// This function can return several errors:
 /// - `Error::EmptyString`: If the cleaned string is empty.
-/// - `Error::TooManyDecimalPoints`: If more than one decimal point is found in
-///   the input.
+/// - `Error::TooManyDecimalPoints`: If more than one decimal point is found in the input.
 /// - `Error::InvalidBigInt`: If parsing fails while converting to BigInt.
-/// - `Error::InvalidFractional`: If there are issues with parsing fractional
-///   parts.
+/// - `Error::InvalidFractional`: If there are issues with parsing fractional parts.
 pub fn float<T: AsRef<str>>(float: T) -> Result<BigDecimal, Error<'static>> {
   // Clean the string by removing leading/trailing whitespace and commas
   let cleaned = float.as_ref().trim().replace(",", "");
@@ -72,16 +69,11 @@ pub fn float<T: AsRef<str>>(float: T) -> Result<BigDecimal, Error<'static>> {
       // Check length of fractional part against max size
       let provided_len = fractional_part.len();
       if provided_len > MAX_SCALE {
-        return Err(Error::fractional_overflow(
-          fractional_part.to_string(),
-          MAX_SCALE
-        ));
+        return Err(Error::fractional_overflow(fractional_part.to_string(), MAX_SCALE));
       }
 
-      let fractional_value =
-        usize::from_str(fractional_part).map_err(|err| {
-          Error::InvalidFractional(err, fractional_part.to_string().into())
-        })?;
+      let fractional_value = usize::from_str(fractional_part)
+        .map_err(|err| Error::InvalidFractional(err, fractional_part.to_string().into()))?;
 
       fractional_value as i64 // Return scale as i64 for BigDecimal creation.
     }
@@ -100,16 +92,13 @@ pub fn float<T: AsRef<str>>(float: T) -> Result<BigDecimal, Error<'static>> {
 ///
 /// # Arguments
 ///
-/// * `input` - Any type that implements `ToString` (e.g., &str, String, i32,
-///   f64, etc.).
+/// * `input` - Any type that implements `ToString` (e.g., &str, String, i32, f64, etc.).
 ///
 /// # Returns
 ///
 /// * `Ok(BigDecimal)` if the parsing is successful.
 /// * `Err(Error)` if the input string is empty or if parsing fails.
-pub fn big_decimal<T: ToString>(
-  input: T
-) -> Result<BigDecimal, Error<'static>> {
+pub fn big_decimal<T: ToString>(input: T) -> Result<BigDecimal, Error<'static>> {
   // Convert the input to a string and clean it
   let cleaned = input.to_string().trim().replace(",", "");
 
@@ -138,8 +127,7 @@ pub fn big_decimal<T: ToString>(
         ParseBigDecimalError::ParseInt(err),
         cleaned.into()
       )),
-      ParseBigDecimalError::ParseBigInt(err) =>
-        Err(Error::InvalidBigInt(err, cleaned.into())),
+      ParseBigDecimalError::ParseBigInt(err) => Err(Error::InvalidBigInt(err, cleaned.into())),
       ParseBigDecimalError::Other(err) => Err(Error::InvalidBigDecimal(
         ParseBigDecimalError::Other(err),
         cleaned.into()

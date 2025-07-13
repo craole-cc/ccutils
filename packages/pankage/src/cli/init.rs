@@ -1,6 +1,4 @@
-use crate::cli::commands::{
-  Commands, Default, ListCommands, add, list, remove, update
-};
+use crate::cli::commands::{Commands, Default, ListCommands, add, list, remove, update};
 use anyhow::Result;
 use clap::Parser;
 use logline::info;

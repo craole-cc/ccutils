@@ -6,13 +6,10 @@ pub struct English {
   prefer_nil: bool
 }
 
-const UNITS: [&str; 9] = [
-  "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"
-];
+const UNITS: [&str; 9] = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
 const TENS: [&str; 9] = [
-  "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty",
-  "ninety"
+  "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"
 ];
 
 const TEENS: [&str; 10] = [
@@ -57,10 +54,7 @@ const HUGE: [&str; 21] = [
 
 impl English {
   pub fn new(prefer_oh: bool, prefer_nil: bool) -> Self {
-    Self {
-      prefer_oh,
-      prefer_nil
-    }
+    Self { prefer_oh, prefer_nil }
   }
 
   fn currencies(&self, currency: Currency, plural_form: bool) -> String {
@@ -276,12 +270,8 @@ impl Language for English {
 
     let bf_100 = BigFloat::from(100);
 
-    let (high, low) = (
-      (num / bf_100).to_i64().unwrap(),
-      (num % bf_100).to_i64().unwrap()
-    );
-    let year_word = if high == 0 || (high % 10 == 0 && low < 10) || high >= 100
-    {
+    let (high, low) = ((num / bf_100).to_i64().unwrap(), (num % bf_100).to_i64().unwrap());
+    let year_word = if high == 0 || (high % 10 == 0 && low < 10) || high >= 100 {
       // if year is 00XX, X00X, or beyond 9999, go cardinal
       self.int_to_cardinal(num)?
     } else {
@@ -300,11 +290,7 @@ impl Language for English {
     Ok(format!("{}{}", year_word, suffix))
   }
 
-  fn to_currency(
-    &self,
-    num: BigFloat,
-    currency: Currency
-  ) -> Result<String, Num2Err> {
+  fn to_currency(&self, num: BigFloat, currency: Currency) -> Result<String, Num2Err> {
     if num.is_inf() {
       Ok(format!(
         "{}an infinity of {}",
@@ -330,10 +316,7 @@ impl Language for English {
       } else if integral_part.is_zero() {
         Ok(format!("{} {}", cents_words, cents_suffix))
       } else {
-        Ok(format!(
-          "{} and {} {}",
-          integral_word, cents_words, cents_suffix
-        ))
+        Ok(format!("{} and {} {}", integral_word, cents_words, cents_suffix))
       }
     }
   }

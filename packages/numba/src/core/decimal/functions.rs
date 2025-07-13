@@ -2,9 +2,7 @@ use super::{CACHE, Error};
 use crate::remove_commas;
 use std::str::FromStr;
 
-pub fn parse_rust_decimal<T: ToString>(
-  input: T
-) -> Result<rust_decimal::Decimal, Error<'static>> {
+pub fn parse_rust_decimal<T: ToString>(input: T) -> Result<rust_decimal::Decimal, Error<'static>> {
   let input_str = input.to_string();
 
   // Check cache first
@@ -36,15 +34,12 @@ pub fn parse_rust_decimal<T: ToString>(
 }
 
 #[cfg(feature = "big-decimal")]
-pub fn parse_big_decimal(
-  input: &str
-) -> Result<bigdecimal::BigDecimal, Error<'static>> {
+pub fn parse_big_decimal(input: &str) -> Result<bigdecimal::BigDecimal, Error<'static>> {
   if let Some(cached) = CACHE.get_big_decimal(input) {
     return Ok(cached);
   }
 
-  let result =
-    bigdecimal::BigDecimal::from_str(input).map_err(Error::BigDecimal)?;
+  let result = bigdecimal::BigDecimal::from_str(input).map_err(Error::BigDecimal)?;
 
   CACHE.insert_big_decimal(input.to_owned(), result.clone());
   Ok(result)

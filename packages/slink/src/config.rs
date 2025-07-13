@@ -9,12 +9,7 @@ pub struct Config {
 }
 
 impl Config {
-  pub fn new(
-    force: bool,
-    debug: bool,
-    sources: Vec<PathBuf>,
-    link_base: PathBuf
-  ) -> Self {
+  pub fn new(force: bool, debug: bool, sources: Vec<PathBuf>, link_base: PathBuf) -> Self {
     Self {
       force,
       debug,
@@ -23,10 +18,7 @@ impl Config {
     }
   }
 
-  pub fn resolve_link_path(
-    &self,
-    src: &std::path::Path
-  ) -> Result<PathBuf, crate::error::SymlinkError> {
+  pub fn resolve_link_path(&self, src: &std::path::Path) -> Result<PathBuf, crate::error::SymlinkError> {
     let src_name = src
       .file_name()
       .and_then(|name| name.to_str())

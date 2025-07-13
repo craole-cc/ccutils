@@ -6,11 +6,9 @@
 //!
 //! ## Features
 //!
-//! - `mi-alloc`: Enables the `mimalloc` allocator, which is a high-performance
-//!   memory allocator. This allocator is used globally across the entire
-//!   program if this feature is enabled.
-//! - `std-alloc`: Uses the default Rust allocator. This is the default feature
-//!   if no other allocator is specified.
+//! - `mi-alloc`: Enables the `mimalloc` allocator, which is a high-performance memory allocator. This allocator is used
+//!   globally across the entire program if this feature is enabled.
+//! - `std-alloc`: Uses the default Rust allocator. This is the default feature if no other allocator is specified.
 //!
 //! ## Usage
 //!

@@ -41,13 +41,7 @@ impl Display for Params {
     const PAD: usize = 22;
     const TAB: usize = 6;
 
-    printf!(
-      f,
-      "Default Query",
-      self.query.as_deref().unwrap_or("[None]"),
-      PAD,
-      TAB
-    )?;
+    printf!(f, "Default Query", self.query.as_deref().unwrap_or("[None]"), PAD, TAB)?;
 
     if let Some(cats) = self.categories {
       let cat_str = format!(

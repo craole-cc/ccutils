@@ -6,8 +6,6 @@ impl Numeral {
   where
     T: Into<BigFloat>
   {
-    Self {
-      value: numeral.into()
-    }
+    Self { value: numeral.into() }
   }
 }

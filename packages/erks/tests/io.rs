@@ -28,8 +28,7 @@ fn test_network_error() {
 
 #[test]
 fn test_network_with_endpoint() {
-  let error =
-    Error::network_with_endpoint("Host not found", "example.com", Some(443));
+  let error = Error::network_with_endpoint("Host not found", "example.com", Some(443));
   let meta = error.metadata().unwrap();
   assert_eq!(meta.context.get("host").unwrap(), "example.com");
   assert_eq!(meta.context.get("port").unwrap(), "443");
@@ -46,8 +45,7 @@ fn test_permission_error() {
 
 #[test]
 fn test_permission_denied_with_context() {
-  let error =
-    Error::permission_denied("Cannot execute", "/usr/bin/top", "execute");
+  let error = Error::permission_denied("Cannot execute", "/usr/bin/top", "execute");
   let meta = error.metadata().unwrap();
   assert_eq!(meta.context.get("resource").unwrap(), "/usr/bin/top");
   assert_eq!(meta.context.get("required_permission").unwrap(), "execute");
@@ -56,10 +54,7 @@ fn test_permission_denied_with_context() {
 #[test]
 fn test_not_found_error() {
   let error = Error::not_found("User profile not found");
-  assert_eq!(
-    error.to_string(),
-    "Resource not found: User profile not found"
-  );
+  assert_eq!(error.to_string(), "Resource not found: User profile not found");
   assert_eq!(error.error_code(), Code::NotFound);
   assert_eq!(error.severity(), Severity::Warning);
   assert!(error.is_recoverable());
@@ -72,16 +67,12 @@ fn test_not_found_with_paths() {
   let meta = error.metadata().unwrap();
   assert_eq!(meta.context.get("resource_type").unwrap(), "config");
   assert_eq!(meta.context.get("searched_paths_count").unwrap(), "2");
-  assert_eq!(
-    meta.context.get("searched_path_0").unwrap(),
-    "/etc/app.conf"
-  );
+  assert_eq!(meta.context.get("searched_path_0").unwrap(), "/etc/app.conf");
 }
 
 #[test]
 fn test_generic_io_error() {
-  let std_io_error =
-    std::io::Error::new(std::io::ErrorKind::Interrupted, "syscall interrupted");
+  let std_io_error = std::io::Error::new(std::io::ErrorKind::Interrupted, "syscall interrupted");
   let error = Error::from(std_io_error);
   assert_eq!(error.to_string(), "I/O error: syscall interrupted");
   assert_eq!(error.error_code(), Code::IoError);

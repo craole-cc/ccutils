@@ -10,8 +10,7 @@ use std::str::FromStr;
 ///
 /// # Arguments
 ///
-/// * `integer` - A type that can be converted into a string slice (e.g., &str
-///   or String).
+/// * `integer` - A type that can be converted into a string slice (e.g., &str or String).
 ///
 /// # Returns
 ///
@@ -22,11 +21,8 @@ use std::str::FromStr;
 ///
 /// This function can return the following errors:
 /// - `Error::EmptyString`: If the cleaned string is empty.
-/// - `Error::InvalidBigInt`: If parsing the cleaned string into a `BigInt`
-///   fails.
-pub fn big_integer<T: AsRef<str>>(
-  integer: T
-) -> Result<BigInt, Error<'static>> {
+/// - `Error::InvalidBigInt`: If parsing the cleaned string into a `BigInt` fails.
+pub fn big_integer<T: AsRef<str>>(integer: T) -> Result<BigInt, Error<'static>> {
   // Clean the string by removing leading/trailing whitespace and commas
   let cleaned = integer.as_ref().trim().replace(",", "");
 
@@ -36,8 +32,7 @@ pub fn big_integer<T: AsRef<str>>(
     Ok(BigInt::zero())
   } else {
     // Parse the BigInt from the cleaned string
-    BigInt::from_str(&cleaned)
-      .map_err(|err| Error::InvalidBigInt(err, cleaned.into()))
+    BigInt::from_str(&cleaned).map_err(|err| Error::InvalidBigInt(err, cleaned.into()))
   }
 }
 
@@ -48,8 +43,7 @@ pub fn big_integer<T: AsRef<str>>(
 ///
 /// # Arguments
 ///
-/// * `integer` - A type that can be converted into a string slice (e.g., &str
-///   or String).
+/// * `integer` - A type that can be converted into a string slice (e.g., &str or String).
 ///
 /// # Returns
 ///
@@ -71,7 +65,6 @@ pub fn integer<T: AsRef<str>>(integer: T) -> Result<isize, Error<'static>> {
     Ok(isize::zero())
   } else {
     // Parse the BigInt from the cleaned string
-    isize::from_str(&cleaned)
-      .map_err(|err| Error::InvalidInt(err, cleaned.into()))
+    isize::from_str(&cleaned).map_err(|err| Error::InvalidInt(err, cleaned.into()))
   }
 }

@@ -14,11 +14,7 @@ pub fn error_chain<T: Into<String>>(msg: T) -> anyhow::Error {
 }
 
 /// Retry function with exponential backoff for recoverable errors
-pub async fn retry_with_backoff<F, T, Fut>(
-  mut operation: F,
-  max_retries: usize,
-  base_delay_ms: u64
-) -> Result<T>
+pub async fn retry_with_backoff<F, T, Fut>(mut operation: F, max_retries: usize, base_delay_ms: u64) -> Result<T>
 where
   F: FnMut() -> Fut,
   Fut: std::future::Future<Output = Result<T>>

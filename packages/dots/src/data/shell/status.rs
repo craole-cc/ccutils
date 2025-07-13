@@ -77,8 +77,7 @@ fn detect_current_shell() -> Shell {
     name if name.contains("bash") => Shell::Bash,
     name if name.contains("zsh") => Shell::Zsh,
     name if name.contains("fish") => Shell::Fish,
-    name if name.contains("powershell") || name.contains("pwsh") =>
-      Shell::PowerShell,
+    name if name.contains("powershell") || name.contains("pwsh") => Shell::PowerShell,
     name if name.contains("cmd.exe") => Shell::Cmd,
     _ => Shell::Unknown
   }
@@ -123,8 +122,7 @@ fn is_shell_active(shell: &Shell) -> bool {
   let parent_process = get_process_name(ppid).to_lowercase();
 
   match shell {
-    Shell::PowerShell =>
-      parent_process.contains("powershell") || parent_process.contains("pwsh"),
+    Shell::PowerShell => parent_process.contains("powershell") || parent_process.contains("pwsh"),
     Shell::Bash => parent_process.contains("bash"),
     Shell::Zsh => parent_process.contains("zsh"),
     Shell::Fish => parent_process.contains("fish"),
@@ -141,9 +139,7 @@ fn get_parent_pid() -> u32 {
 
   #[cfg(target_family = "windows")]
   {
-    use windows::Win32::System::ProcessStatus::{
-      GetCurrentProcessId, GetParentPid
-    };
+    use windows::Win32::System::ProcessStatus::{GetCurrentProcessId, GetParentPid};
     unsafe {
       let current_pid = GetCurrentProcessId();
       GetParentPid(current_pid)

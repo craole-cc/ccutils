@@ -8,11 +8,7 @@ mod tests {
     assert!(result.is_ok());
     let locations = result.unwrap();
     assert!(!locations.is_empty());
-    assert!(
-      locations
-        .iter()
-        .any(|loc| matches!(loc, Location::Executable(_)))
-    );
+    assert!(locations.iter().any(|loc| matches!(loc, Location::Executable(_))));
   }
 
   #[test]
@@ -20,11 +16,7 @@ mod tests {
     let result = Location::find("cd");
     assert!(result.is_ok());
     let locations = result.unwrap();
-    assert!(
-      locations
-        .iter()
-        .any(|loc| matches!(loc, Location::ShellBuiltin))
-    );
+    assert!(locations.iter().any(|loc| matches!(loc, Location::ShellBuiltin)));
   }
 
   #[test]
@@ -62,11 +54,7 @@ mod tests {
     let result = Location::find("cmd");
     assert!(result.is_ok());
     let locations = result.unwrap();
-    assert!(
-      locations
-        .iter()
-        .any(|loc| matches!(loc, Location::Executable(_)))
-    );
+    assert!(locations.iter().any(|loc| matches!(loc, Location::Executable(_))));
   }
 
   #[cfg(unix)]
@@ -75,27 +63,17 @@ mod tests {
     let result = Location::find("bash");
     assert!(result.is_ok());
     let locations = result.unwrap();
-    assert!(
-      locations
-        .iter()
-        .any(|loc| matches!(loc, Location::Executable(_)))
-    );
+    assert!(locations.iter().any(|loc| matches!(loc, Location::Executable(_))));
   }
 
   #[test]
   fn test_all_commands() {
-    let commands = vec![
-      "rustc", "pathof", "type", "ls", "fd", "find", "pwsh", "whereis",
-    ];
+    let commands = vec!["rustc", "pathof", "type", "ls", "fd", "find", "pwsh", "whereis"];
     for cmd in commands {
       let result = Location::find(cmd);
       match result {
         Ok(locations) => {
-          println!(
-            "Command '{}' found in {} location(s):",
-            cmd,
-            locations.len()
-          );
+          println!("Command '{}' found in {} location(s):", cmd, locations.len());
           for loc in locations {
             match loc {
               Location::Executable(path) => {

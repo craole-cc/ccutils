@@ -10,8 +10,7 @@ use std::str::FromStr;
 ///
 /// # Arguments
 ///
-/// * `integer` - A type that can be converted into a string slice (e.g., &str
-///   or String).
+/// * `integer` - A type that can be converted into a string slice (e.g., &str or String).
 ///
 /// # Returns
 ///
@@ -22,11 +21,8 @@ use std::str::FromStr;
 ///
 /// This function can return the following errors:
 /// - `Error::EmptyString`: If the cleaned string is empty.
-/// - `Error::InvalidBigInt`: If parsing the cleaned string into a `BigInt`
-///   fails.
-pub fn big_integer<T: AsRef<str>>(
-  integer: T
-) -> Result<BigInt, Error<'static>> {
+/// - `Error::InvalidBigInt`: If parsing the cleaned string into a `BigInt` fails.
+pub fn big_integer<T: AsRef<str>>(integer: T) -> Result<BigInt, Error<'static>> {
   // Clean the string by removing leading/trailing whitespace and commas
   let cleaned = integer.as_ref().trim().replace(",", "");
 
@@ -36,8 +32,7 @@ pub fn big_integer<T: AsRef<str>>(
     Ok(BigInt::zero())
   } else {
     // Parse the BigInt from the cleaned string
-    BigInt::from_str(&cleaned)
-      .map_err(|err| Error::InvalidBigInt(err, cleaned.into()))
+    BigInt::from_str(&cleaned).map_err(|err| Error::InvalidBigInt(err, cleaned.into()))
   }
 }
 
@@ -48,8 +43,7 @@ pub fn big_integer<T: AsRef<str>>(
 ///
 /// # Arguments
 ///
-/// * `integer` - A type that can be converted into a string slice (e.g., &str
-///   or String).
+/// * `integer` - A type that can be converted into a string slice (e.g., &str or String).
 ///
 /// # Returns
 ///
@@ -71,8 +65,7 @@ pub fn integer<T: AsRef<str>>(integer: T) -> Result<isize, Error<'static>> {
     Ok(isize::zero())
   } else {
     // Parse the BigInt from the cleaned string
-    isize::from_str(&cleaned)
-      .map_err(|err| Error::InvalidInt(err, cleaned.into()))
+    isize::from_str(&cleaned).map_err(|err| Error::InvalidInt(err, cleaned.into()))
   }
 }
 
@@ -84,8 +77,7 @@ pub fn integer<T: AsRef<str>>(integer: T) -> Result<isize, Error<'static>> {
 ///
 /// # Arguments
 ///
-/// * `float` - A type that can be converted into a string slice (e.g., &str or
-///   String).
+/// * `float` - A type that can be converted into a string slice (e.g., &str or String).
 ///
 /// # Returns
 ///
@@ -96,11 +88,9 @@ pub fn integer<T: AsRef<str>>(integer: T) -> Result<isize, Error<'static>> {
 ///
 /// This function can return several errors:
 /// - `Error::EmptyString`: If the cleaned string is empty.
-/// - `Error::TooManyDecimalPoints`: If more than one decimal point is found in
-///   the input.
+/// - `Error::TooManyDecimalPoints`: If more than one decimal point is found in the input.
 /// - `Error::InvalidBigInt`: If parsing fails while converting to BigInt.
-/// - `Error::InvalidFractional`: If there are issues with parsing fractional
-///   parts.
+/// - `Error::InvalidFractional`: If there are issues with parsing fractional parts.
 pub fn float<T: AsRef<str>>(float: T) -> Result<BigDecimal, Error<'static>> {
   // Clean the string by removing leading/trailing whitespace and commas
   let cleaned = float.as_ref().trim().replace(",", "");
@@ -145,16 +135,11 @@ pub fn float<T: AsRef<str>>(float: T) -> Result<BigDecimal, Error<'static>> {
       // Check length of fractional part against max size
       let provided_len = fractional_part.len();
       if provided_len > MAX_SCALE {
-        return Err(Error::fractional_overflow(
-          fractional_part.to_string(),
-          MAX_SCALE
-        ));
+        return Err(Error::fractional_overflow(fractional_part.to_string(), MAX_SCALE));
       }
 
-      let fractional_value =
-        usize::from_str(fractional_part).map_err(|err| {
-          Error::InvalidFractional(err, fractional_part.to_string().into())
-        })?;
+      let fractional_value = usize::from_str(fractional_part)
+        .map_err(|err| Error::InvalidFractional(err, fractional_part.to_string().into()))?;
 
       fractional_value as i64 // Return scale as i64 for BigDecimal creation.
     }
