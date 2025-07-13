@@ -12,6 +12,8 @@ rqp = "run --quiet --package"
 wq = "watch --quiet --clear --exec"
 wrp = "wq rrp --"
 wqp = "watch --quiet --clear --exec rqp"
+lint = "clippy --all-targets --all-features -- -D warnings"
+wl = "watch --quiet --clear --exec lint"
 
 #> dots
 rr-dots = "rrp dots"

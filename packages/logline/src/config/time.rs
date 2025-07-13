@@ -11,18 +11,15 @@ impl Config {
     Self::default()
   }
 
-  pub fn datetime(mut self) -> Self {
-    self = Self::Datetime;
-    self
+  pub fn datetime(&self) -> Self {
+    Self::Datetime
   }
 
-  pub fn uptime(mut self) -> Self {
-    self = Self::Uptime;
-    self
+  pub fn uptime(&self) -> Self {
+    Self::Uptime
   }
 
-  pub fn off(mut self) -> Self {
-    self = Self::None;
-    self
+  pub fn off(&self) -> Self {
+    Self::None
   }
 }

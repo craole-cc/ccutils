@@ -1,4 +1,4 @@
-use wallter::{prelude::*, *};
+use wallter::prelude::*;
 
 fn main() -> Result<()> {
   log::init()?;

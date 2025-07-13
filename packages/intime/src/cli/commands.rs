@@ -15,10 +15,9 @@ pub enum Error {
   Greet(#[from] greet::Error),
 
   #[error("Fetch error: {0}")]
-  Fetch(#[from] fetch::Error),
-
-  #[error("Unknown error occurred")]
-  Unknown
+  Fetch(#[from] fetch::Error)
+  // #[error("Unknown error occurred")]
+  // Unknown
 }
 
 type Result<T> = std::result::Result<T, Error>;

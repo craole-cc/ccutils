@@ -1,6 +1,6 @@
 use super::Orientation;
 use serde::{Deserialize, Serialize};
-use std::fmt::{self, Display, Formatter, Write};
+use std::fmt::{self, Display, Formatter};
 
 /// Represents the pixel dimensions of a monitor.
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -68,13 +68,6 @@ impl Display for Config {
       self.ratio_str(),
       self.orientation()
     )?;
-
-    // printf!(f, "Height", self.height)?;
-    // printf!(f, "Width", self.width)?;
-    // printf!(f, "Resolution", &self.resolution())?;
-    // printf!(f, "Ratio", format!("{:.2}", self.ratio()))?;
-    // printf!(f, "Orientation", &self.orientation())?;
-
     Ok(())
   }
 }

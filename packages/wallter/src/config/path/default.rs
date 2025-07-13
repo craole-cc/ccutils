@@ -1,13 +1,12 @@
 use super::types;
-use crate::{Error, Result, config::Monitor};
+use crate::{Result, config::Monitor};
 use serde::{Deserialize, Serialize};
 use std::{
   fmt::{self, Display, Formatter},
   fs::{File, create_dir_all},
   io::Write,
-  path::{Path, PathBuf}
+  path::PathBuf
 };
-use winit::monitor;
 
 /// Holds paths specific to a single monitor.
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -55,20 +54,6 @@ impl Display for Config {
     printf!(f, "Favorites Directory", self.favorites_dir.display())?;
     printf!(f, "Wallpaper Directory", self.wallpaper_dir.display())?;
     printf!(f, "Config File", self.config_file.display())?;
-
-    // for paths in &self.monitor_paths {
-    //   printf!(
-    //     f,
-    //     &format!("Wallpapers [{}]", paths.name),
-    //     paths.download_dir.display()
-    //   )?;
-    //   printf!(
-    //     f,
-    //     &format!("Wallpaper [{}]", paths.name),
-    //     paths.current_wallpaper.display()
-    //   )?;
-    // }
-
     Ok(())
   }
 }
@@ -93,7 +78,8 @@ impl Default for Config {
     let wallpaper_dir = home_dir.join("wallpaper");
     let config_name = "config".to_string();
     let config_type = types::Config::default();
-    let config_file = home_dir.join(format!("{}.{}", config_name, config_type.extension()));
+    let config_file =
+      home_dir.join(format!("{}.{}", config_name, config_type.extension()));
 
     Self {
       home_dir,
@@ -138,7 +124,8 @@ impl Config {
       // The path for the active wallpaper for this monitor.
       // We assume a default extension for now; the `set` command will manage
       // the actual file.
-      let current_wallpaper = self.wallpaper_dir.join(format!("{}.png", monitor.name));
+      let current_wallpaper =
+        self.wallpaper_dir.join(format!("{}.png", monitor.name));
 
       self.monitor_paths.push(MonitorPaths {
         name: monitor.name.clone(),
@@ -152,7 +139,10 @@ impl Config {
   }
 
   /// Create the config file if it does not exist.
-  pub fn create_config_file(&self, default_content: Option<&str>) -> Result<()> {
+  pub fn create_config_file(
+    &self,
+    default_content: Option<&str>
+  ) -> Result<()> {
     if !self.config_exists() {
       let mut file = File::create(&self.config_file)?;
       if let Some(content) = default_content {
@@ -183,8 +173,10 @@ impl Config {
 
   /// Private helper to update the config_file path.
   fn update_config_file(&mut self) {
-    self.config_file = self
-      .home_dir
-      .join(format!("{}.{}", self.config_name, self.config_type.extension()));
+    self.config_file = self.home_dir.join(format!(
+      "{}.{}",
+      self.config_name,
+      self.config_type.extension()
+    ));
   }
 }

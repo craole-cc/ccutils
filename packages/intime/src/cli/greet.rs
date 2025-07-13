@@ -2,9 +2,8 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum Error {
-  #[error("Failed to greet: {0}")]
-  GreetingFailed(String),
-
+  // #[error("Failed to greet: {0}")]
+  // GreetingFailed(String),
   #[error("Invalid name provided: {0}")]
   InvalidName(String),
 

@@ -1,9 +1,9 @@
 use super::{Color, ColorMode, ConfigType, Monitor, Path, Search, Slideshow};
-use crate::{Error, Result, prelude::*};
+use crate::{Error, Result};
 use serde::{Deserialize, Serialize};
 use std::{
   fmt::{self, Display, Formatter},
-  fs::{create_dir_all, read_to_string, write}
+  fs::{read_to_string, write}
 };
 
 pub fn init() -> Result<Config> {
@@ -37,7 +37,7 @@ impl Config {
     let mut config = match Self::load(path_config) {
       Ok(cfg) => cfg,
       Err(_) => {
-        let mut default_cfg = Self::default();
+        let default_cfg = Self::default();
         default_cfg.save(path_config)?;
         default_cfg
       }
@@ -67,8 +67,10 @@ impl Config {
 
     //{ Parse the contents of the config file based on the defined format }
     match path_config.config_type {
-      ConfigType::Toml => toml::from_str(&content).map_err(|e| Error::Config(e.to_string())),
-      ConfigType::Json => serde_json::from_str(&content).map_err(|e| Error::Config(e.to_string()))
+      ConfigType::Toml =>
+        toml::from_str(&content).map_err(|e| Error::Config(e.to_string())),
+      ConfigType::Json =>
+        serde_json::from_str(&content).map_err(|e| Error::Config(e.to_string())),
     }
   }
 
@@ -76,8 +78,10 @@ impl Config {
   pub fn save(&self, path_config: &Path) -> Result<()> {
     //{ Serialize to appropriate format }
     let contents = match path_config.config_type {
-      ConfigType::Toml => toml::to_string(self).map_err(|e| Error::Config(e.to_string()))?,
-      ConfigType::Json => serde_json::to_string_pretty(self).map_err(|e| Error::Config(e.to_string()))?
+      ConfigType::Toml =>
+        toml::to_string(self).map_err(|e| Error::Config(e.to_string()))?,
+      ConfigType::Json => serde_json::to_string_pretty(self)
+        .map_err(|e| Error::Config(e.to_string()))?
     };
 
     //{ Update the configuration file }

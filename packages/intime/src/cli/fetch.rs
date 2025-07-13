@@ -2,17 +2,15 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum Error {
-  #[error("Failed to fetch data: {0}")]
-  Fetch(String),
-
+  // #[error("Failed to fetch data: {0}")]
+  // Fetch(String),
   #[error("Invalid duration: {0}")]
   InvalidDuration(String),
 
   #[error("Network error: {0}")]
-  Network(#[from] std::io::Error),
-
-  #[error("Parse error: {0}")]
-  Parse(String)
+  Network(#[from] std::io::Error)
+  // #[error("Parse error: {0}")]
+  // Parse(String)
 }
 
 pub type Result<T> = std::result::Result<T, Error>;

@@ -4,4 +4,4 @@ mod tests;
 mod utils;
 
 pub use config::Search;
-pub use error::Error;
+// pub use error::Error;

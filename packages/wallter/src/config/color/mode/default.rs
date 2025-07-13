@@ -1,4 +1,4 @@
-use crate::{Error, Result};
+use crate::Result;
 use dark_light::{Mode, detect};
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display, Formatter};
@@ -8,7 +8,9 @@ pub trait Manager {
   fn notify(&self) -> Result<()>;
 }
 
-#[derive(Debug, Default, Serialize, Deserialize, PartialEq, Eq, Clone, Copy)]
+#[derive(
+  Debug, Default, Serialize, Deserialize, PartialEq, Eq, Clone, Copy,
+)]
 pub enum Config {
   Light,
   Dark,
@@ -31,11 +33,15 @@ impl Config {
       Ok(Mode::Dark) => Self::Dark,
       Ok(Mode::Light) => Self::Light,
       Ok(Mode::Unspecified) => {
-        eprintln!("System color mode is unspecified. Using default mode: {fallback}");
+        eprintln!(
+          "System color mode is unspecified. Using default mode: {fallback}"
+        );
         fallback
       }
       Err(e) => {
-        eprintln!("Failed to detect the system's color mode: {e}. Using default mode: {fallback}");
+        eprintln!(
+          "Failed to detect the system's color mode: {e}. Using default mode: {fallback}"
+        );
         fallback
       }
     }
@@ -59,20 +65,16 @@ impl Config {
     let current = Self::get_current();
     // let desired = *self;
     let desired = match *self {
-      // Self::Light => Self::Light,
-      // Self::Dark => Self::Dark,
       Self::Auto => current,
       _ => *self
     };
 
-    //{ Early return if mode is already set }
+    // Early return if mode is already set
     if current == desired {
-      println!("System mode is already {desired:?}");
       return Ok(());
     };
 
-    //{ Set the system mode using the necessary platform-specific manager }
-    println!("Setting system mode to {desired:?}");
+    //~@ Set the system mode using the necessary platform-specific manager
     let manager: Box<dyn self::Manager> = {
       #[cfg(target_os = "windows")]
       {
@@ -88,19 +90,21 @@ impl Config {
         struct UnsupportedManager;
         impl self::Manager for UnsupportedManager {
           fn set(&self, _config: Config) -> Result<()> {
-            eprintln!("System theme setting is not supported on this platform.");
+            eprintln!(
+              "System theme setting is not supported on this platform."
+            );
             Ok(())
           }
 
           fn notify(&self) -> Result<()> {
-            // No-op for unsupported platforms
+            //? No-op for unsupported platforms
             Ok(())
           }
         }
         Box::new(UnsupportedManager)
       }
     };
-    manager.set(desired);
+    manager.set(desired)?;
     Ok(())
   }
 }

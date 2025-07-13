@@ -1,7 +1,6 @@
 use super::{Position, Size};
 use crate::config::path::Config as PathConfig;
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
 use std::{
   cell::RefCell,
   fmt::{self, Display, Formatter}
@@ -12,7 +11,6 @@ use winit::{
   dpi::{PhysicalPosition, PhysicalSize},
   event::WindowEvent,
   event_loop::{ActiveEventLoop, EventLoop},
-  monitor::MonitorHandle,
   window::WindowId
 };
 
@@ -78,10 +76,14 @@ impl Config {
           .enumerate()
           .map(|(i, handle)| {
             let id = i as u32;
-            let raw_name = handle.name().unwrap_or_else(|| format!("Monitor // {id}"));
+            let raw_name =
+              handle.name().unwrap_or_else(|| format!("Monitor // {id}"));
             let name = {
               let prefix = r"\\.\";
-              raw_name.strip_prefix(prefix).unwrap_or(&raw_name).to_string()
+              raw_name
+                .strip_prefix(prefix)
+                .unwrap_or(&raw_name)
+                .to_string()
             };
             let PhysicalSize { width, height } = &handle.size();
             let PhysicalPosition { x, y } = &handle.position();
@@ -112,7 +114,13 @@ impl Config {
       }
 
       //{ Implement the other event handlers as no-ops }
-      fn window_event(&mut self, _: &ActiveEventLoop, _: WindowId, _: WindowEvent) {}
+      fn window_event(
+        &mut self,
+        _: &ActiveEventLoop,
+        _: WindowId,
+        _: WindowEvent
+      ) {
+      }
       fn device_event(
         &mut self,
         _event_loop: &winit::event_loop::ActiveEventLoop,
@@ -134,15 +142,35 @@ impl Config {
 
   /// Helper function to display wallpaper paths for a given monitor.
   /// This can be commented out in the `Display` impl to toggle visibility.
-  pub fn display_wallpaper_paths(&self, f: &mut Formatter<'_>, path_config: &PathConfig) -> fmt::Result {
-    if let Some(monitor_path) = path_config.monitor_paths.iter().find(|p| p.name == self.name) {
+  pub fn display_wallpaper_paths(
+    &self,
+    f: &mut Formatter<'_>,
+    path_config: &PathConfig
+  ) -> fmt::Result {
+    if let Some(monitor_path) = path_config
+      .monitor_paths
+      .iter()
+      .find(|p| p.name == self.name)
+    {
       // The default padding for `printf!` is 24, with 4 spaces of indentation.
       // To indent by 6 spaces while keeping the separator aligned,
       // we reduce the key padding by 2 (from 24 to 22).
       const PAD: usize = 22;
       const INDENT: usize = 6;
-      printf!(f, "Available", monitor_path.download_dir.display(), PAD, INDENT)?;
-      printf!(f, "Activated", monitor_path.current_wallpaper.display(), PAD, INDENT)?;
+      printf!(
+        f,
+        "Available",
+        monitor_path.download_dir.display(),
+        PAD,
+        INDENT
+      )?;
+      printf!(
+        f,
+        "Activated",
+        monitor_path.current_wallpaper.display(),
+        PAD,
+        INDENT
+      )?;
     }
     Ok(())
   }

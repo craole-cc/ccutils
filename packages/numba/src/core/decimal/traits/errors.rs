@@ -1,8 +1,8 @@
 use crate::decimal::Error;
 #[cfg(feature = "big-decimal")]
-use bigdecimal::ParseBigDecimalError;
+// use bigdecimal::ParseBigDecimalError;
 use num::bigint::ParseBigIntError;
-use std::{borrow::Cow, num::ParseIntError};
+use std::num::ParseIntError;
 
 // Implement From for (&str, ParseBigIntError)
 impl<'a> From<(&'a str, ParseBigIntError)> for Error<'a> {

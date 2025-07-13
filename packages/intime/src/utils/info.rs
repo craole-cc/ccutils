@@ -1,5 +1,3 @@
-use std::time::Instant;
-
 use crate::{Info, Options};
 use battery::units::Time as BatTime;
 use chrono::{DateTime, Duration, Local};
@@ -68,14 +66,13 @@ impl Info {
   }
 
   pub fn from_secs_f64(duration: f64) -> Self {
-    let total_minutes = (duration / 60.0).floor() as i64;
-    let remaining_seconds = (duration % 60.0).floor() as i64;
-
-    let chrono_duration = Duration::seconds(duration as i64);
-    let mut duration = Self::from_delta(chrono_duration);
-    duration.seconds = remaining_seconds;
-    duration
+    let whole_seconds = duration.floor() as i64;
+    let mut duration_struct =
+      Self::from_delta(Duration::seconds(whole_seconds));
+    duration_struct.seconds = (duration % 60.0).floor() as i64;
+    duration_struct
   }
+
   pub fn from_delta(duration: Duration) -> Self {
     let total_minutes = duration.num_minutes();
     let total_hours = duration.num_hours();

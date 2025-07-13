@@ -1,7 +1,7 @@
-use battery::units::Time as BatTime;
-use chrono::{DateTime, Duration as ChronoDuration, Local};
-use std::fmt::{self, Display, Formatter};
-use uom::si::{f64::Time as SiTime, time::second};
+// use battery::units::Time as BatTime;
+// use chrono::{DateTime, Duration as ChronoDuration, Local};
+// use std::fmt::{self, Display, Formatter};
+// use uom::si::{f64::Time as SiTime, time::second};
 
 #[derive(Debug, Default, Clone, PartialEq)]
 pub struct Info {
@@ -15,7 +15,6 @@ pub struct Info {
   pub options: Options
 }
 
-// TODO: Maybe this should be an enum
 #[derive(Debug, Default, Clone, PartialEq)]
 pub struct Options {
   pub hide_years: bool,

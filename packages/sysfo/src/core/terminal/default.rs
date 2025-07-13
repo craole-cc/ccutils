@@ -4,7 +4,7 @@ use crossterm::terminal::size;
 // TODO: make width and height min-max structs or traits
 // TODO: make section struct or trait
 
-#[derive(Debug, Clone, Copy)]
+// #[derive(Debug)]
 pub struct Info {
   pub width: u16,
   pub height: u16,
@@ -44,6 +44,10 @@ impl Info {
   pub fn content_padding(&self) -> usize {
     12 // Base padding for labels
   }
+
+  pub fn dimensions(&self) -> String {
+    format!("{}x{}", self.width, self.height)
+  }
 }
 
 impl FormatHelpers for Info {
@@ -52,6 +56,11 @@ impl FormatHelpers for Info {
   }
 
   fn format_field(&self, label: &str, value: &str) -> String {
-    format!("{:width$}: {}\n", label, value, width = self.content_padding())
+    format!(
+      "{:width$}: {}\n",
+      label,
+      value,
+      width = self.content_padding()
+    )
   }
 }

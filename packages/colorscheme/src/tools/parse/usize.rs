@@ -1,5 +1,4 @@
-use std::collections::HashMap;
-use std::convert::From;
+use std::{collections::HashMap, convert::From};
 
 #[derive(Debug)]
 pub struct OrdinalNumber(usize);

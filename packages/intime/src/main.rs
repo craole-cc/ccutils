@@ -1,5 +1,11 @@
 mod cli;
 
 fn main() {
-  cli::run();
+  match cli::run() {
+    Ok(_) => {}
+    Err(e) => {
+      eprintln!("{e}");
+      std::process::exit(1);
+    }
+  }
 }

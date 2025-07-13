@@ -6,7 +6,7 @@
 
 use crate::{Error, Result};
 use reqwest::Client;
-use serde::{Deserialize, Deserializer, Serialize};
+use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display, Formatter};
 
 // -- Data Structures for API Responses --
@@ -35,8 +35,8 @@ pub struct Wallpaper {
   pub views: u32,
   pub favorites: u32,
   pub source: String,
-  pub purity: String,
-  pub category: String,
+  pub purity: Purity,
+  pub category: Category,
   pub dimension_x: u32,
   pub dimension_y: u32,
   pub resolution: String,
@@ -87,7 +87,7 @@ pub struct Meta {
 // -- Enums for Type-Safe Search Parameters --
 
 /// Categories for filtering wallpapers.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Deserialize, Clone, Copy, PartialEq, Eq)]
 pub enum Category {
   General = 0,
   Anime = 1,
@@ -95,7 +95,7 @@ pub enum Category {
 }
 
 /// Purity levels for filtering wallpapers.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Deserialize, Clone, Copy, PartialEq, Eq)]
 pub enum Purity {
   Sfw = 0,
   Sketchy = 1,
@@ -309,7 +309,11 @@ impl Api {
   }
 
   /// Sends a request, handling authentication and error responses.
-  async fn send_request<T: for<'de> Deserialize<'de>>(&self, url: String, params: &[(&str, String)]) -> Result<T> {
+  async fn send_request<T: for<'de> Deserialize<'de>>(
+    &self,
+    url: String,
+    params: &[(&str, String)]
+  ) -> Result<T> {
     let mut request = self.client.get(&url).query(params);
 
     // Add API key to header if available.
@@ -332,12 +336,18 @@ impl Api {
       )));
     }
 
-    response.json::<T>().await.map_err(|e| Error::API(e.to_string()))
+    response
+      .json::<T>()
+      .await
+      .map_err(|e| Error::API(e.to_string()))
   }
 
   /// Searches for wallpapers on Wallhaven.
   /// Returns a `PaginatedResponse` containing the wallpapers and metadata.
-  pub async fn search(&self, params: &SearchParams) -> Result<PaginatedResponse> {
+  pub async fn search(
+    &self,
+    params: &SearchParams
+  ) -> Result<PaginatedResponse> {
     let url = format!("{}/search", self.base_url);
     let mut query_params = Vec::new();
 
@@ -357,7 +367,9 @@ impl Api {
 
     if let Some(mut purities) = params.purity {
       if purities.2 && !self.has_api_key() {
-        eprintln!("Warning: NSFW purity filter requires an API key. Disabling NSFW for this search.");
+        eprintln!(
+          "Warning: NSFW purity filter requires an API key. Disabling NSFW for this search."
+        );
         purities.2 = false; // Disable NSFW
       }
       let purity_str = format!(
@@ -376,7 +388,9 @@ impl Api {
           query_params.push(("topRange", range.to_string()));
         }
       } else if params.top_range.is_some() {
-        eprintln!("Warning: `top_range` is only effective when `sorting` is `Toplist`. It will be ignored.");
+        eprintln!(
+          "Warning: `top_range` is only effective when `sorting` is `Toplist`. It will be ignored."
+        );
       }
     }
 
@@ -415,7 +429,8 @@ impl Api {
   /// An API key is required to view NSFW wallpapers.
   pub async fn get_wallpaper_details(&self, id: &str) -> Result<Wallpaper> {
     let url = format!("{}/w/{}", self.base_url, id);
-    let response: WallpaperDetailsResponse = self.send_request(url, &[]).await?;
+    let response: WallpaperDetailsResponse =
+      self.send_request(url, &[]).await?;
     Ok(response.data)
   }
 
@@ -428,16 +443,83 @@ impl Api {
   // Result<Vec<Collection>> { ... }
 
   /// Downloads a wallpaper image from its direct URL (`wallpaper.path`).
-  pub async fn download_wallpaper(&self, url: &str, path: &std::path::Path) -> Result<()> {
+  pub async fn download_wallpaper(
+    &self,
+    url: &str,
+    path: &std::path::Path
+  ) -> Result<()> {
     let response = self.client.get(url).send().await.map_err(Error::Network)?;
 
     if !response.status().is_success() {
       let status = response.status();
-      return Err(Error::API(format!("Failed to download wallpaper: Status {status}")));
+      return Err(Error::API(format!(
+        "Failed to download wallpaper: Status {status}"
+      )));
     }
 
     let bytes = response.bytes().await.map_err(Error::Network)?;
     tokio::fs::write(path, bytes).await.map_err(Error::System)?;
     Ok(())
+  }
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn test_search_params_builder() {
+    let params = SearchParams::new()
+      .with_query("nature")
+      .with_categories((true, false, false))
+      .with_purity((true, false, false))
+      .with_sorting(Sorting::Relevance)
+      .with_order(Order::Desc)
+      .with_atleast("1920x1080")
+      .with_page(1);
+
+    assert_eq!(params.query, Some("nature".to_string()));
+    assert_eq!(params.categories, Some((true, false, false)));
+    assert_eq!(params.purity, Some((true, false, false)));
+    assert_eq!(params.sorting, Some(Sorting::Relevance));
+    assert_eq!(params.order, Some(Order::Desc));
+    assert_eq!(params.atleast, Some("1920x1080".to_string()));
+    assert_eq!(params.page, Some(1));
+  }
+
+  #[test]
+  fn test_sorting_display() {
+    assert_eq!(Sorting::DateAdded.to_string(), "date_added");
+    assert_eq!(Sorting::Relevance.to_string(), "relevance");
+    assert_eq!(Sorting::Random.to_string(), "random");
+    assert_eq!(Sorting::Views.to_string(), "views");
+    assert_eq!(Sorting::Favorites.to_string(), "favorites");
+    assert_eq!(Sorting::Toplist.to_string(), "toplist");
+  }
+
+  #[test]
+  fn test_order_display() {
+    assert_eq!(Order::Desc.to_string(), "desc");
+    assert_eq!(Order::Asc.to_string(), "asc");
+  }
+
+  #[test]
+  fn test_toplist_range_display() {
+    assert_eq!(ToplistRange::Day.to_string(), "1d");
+    assert_eq!(ToplistRange::Days3.to_string(), "3d");
+    assert_eq!(ToplistRange::Week.to_string(), "1w");
+    assert_eq!(ToplistRange::Month.to_string(), "1M");
+    assert_eq!(ToplistRange::Months3.to_string(), "3M");
+    assert_eq!(ToplistRange::Months6.to_string(), "6M");
+    assert_eq!(ToplistRange::Year.to_string(), "1y");
+  }
+
+  #[test]
+  fn test_api_initialization() {
+    let api = Api::new(None);
+    assert!(!api.has_api_key());
+
+    let api_with_key = Api::new(Some("test_key".to_string()));
+    assert!(api_with_key.has_api_key());
   }
 }

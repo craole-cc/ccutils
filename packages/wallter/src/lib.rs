@@ -13,16 +13,18 @@ pub mod config;
 mod consts;
 mod error;
 pub mod features;
-mod utils;
+pub mod utils;
 
 // -- Exports --
 pub mod prelude {
   pub use crate::{
     api::Api,
-    config::Config,
+    cli,
+    config::{self, Config},
     consts::*,
     error::{Error, Result},
-    utils::*
+    features,
+    utils::{self, *}
   };
 }
-pub use prelude::{Api, Config, Error, Result};
+pub use prelude::{Api, Config, Error, Result, utils::log};

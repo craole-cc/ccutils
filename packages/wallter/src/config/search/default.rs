@@ -1,5 +1,5 @@
 use super::{Source, wallhaven::Params as Wallhaven};
-use crate::{Error, Result, api::wallhaven::Sorting};
+use crate::api::wallhaven::Sorting;
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display, Formatter};
 
@@ -18,9 +18,11 @@ pub struct Config {
 
 impl Display for Config {
   fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-    for (i, source) in self.sources.iter().enumerate() {
+    for source in self.sources.iter() {
       //{ Determine and display rank }
-      if let Some(rank) = self.ordered.iter().position(|name| name == &source.name) {
+      if let Some(rank) =
+        self.ordered.iter().position(|name| name == &source.name)
+      {
         printf!(f, "Rank", rank + 1)?;
       }
 
@@ -64,10 +66,14 @@ impl Default for Config {
       ..Default::default()
     };
 
-    let default_sources = vec![wallhaven_source, unsplash_source, pixabay_source];
+    let default_sources =
+      vec![wallhaven_source, unsplash_source, pixabay_source];
 
     //{ Define default rank order based on the default sources' names }
-    let default_rank_names: Vec<String> = default_sources.iter().map(|source| source.name.clone()).collect();
+    let default_rank_names: Vec<String> = default_sources
+      .iter()
+      .map(|source| source.name.clone())
+      .collect();
 
     Self {
       sources: default_sources,
