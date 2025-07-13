@@ -33,7 +33,7 @@ ccutils
 ├── Cargo.toml
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
-├── crates
+├── packages
 │   ├── ccutils
 │   ├── colorscheme
 │   ├── dots
