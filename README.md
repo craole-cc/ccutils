@@ -60,21 +60,21 @@ ccutils
 
 ### Utilities
 
-- [ ] **[ccutils](crates/ccutils)**: Manages the ccutils workspace crates.
-- [ ] **[colorscheme](crates/colorscheme)**: Manages the desktop color scheme.
-- [ ] **[dots](crates/dots)**: Establishes dotfiles.
-- [ ] **[embellish](crates/embellish)**: Formatting text in various ways.
-- [ ] **[grit](crates/grit)**: Simplifies common Git operations to enhance workflow.
-- [x] **[erks](./crates/erks)**: Simplifies error handling throughout the project.
-- [x] **[intime](./crates/intime)**: Displays time in natural language.
-- [x] **[logline](./crates/logline)**: Manages tracing/log messages internally.
-- [ ] **[numba](crates/numba)**: Utilities for working with numbers.
-- [ ] **[pankage](crates/pankage)**: Manages applications using available package manager.
-- [ ] **[scraps](crates/scraps)**: Implementation of a web scraper.
-- [ ] **[slink](crates/slink)**: Simplifies common tasks related to symlink management.
-- [ ] **[sysfo](crates/sysfo)**: Displays system information.
-- [ ] **[wallter](crates/wallter)**: Redefined dynamic desktop wallpaper manager.
-- [ ] **[whers](crates/whers)**: Locate files or commands available locally.
+- [ ] **[ccutils](packages/ccutils)**: Manages the ccutils workspace crates.
+- [ ] **[colorscheme](packages/colorscheme)**: Manages the desktop color scheme.
+- [ ] **[dots](packages/dots)**: Establishes dotfiles.
+- [ ] **[embellish](packages/embellish)**: Formatting text in various ways.
+- [ ] **[grit](packages/grit)**: Simplifies common Git operations to enhance workflow.
+- [x] **[erks](./packages/erks)**: Simplifies error handling throughout the project.
+- [x] **[intime](./packages/intime)**: Displays time in natural language.
+- [x] **[logline](./packages/logline)**: Manages tracing/log messages internally.
+- [ ] **[numba](packages/numba)**: Utilities for working with numbers.
+- [ ] **[pankage](packages/pankage)**: Manages applications using available package manager.
+- [ ] **[scraps](packages/scraps)**: Implementation of a web scraper.
+- [ ] **[slink](packages/slink)**: Simplifies common tasks related to symlink management.
+- [ ] **[sysfo](packages/sysfo)**: Displays system information.
+- [ ] **[wallter](packages/wallter)**: Redefined dynamic desktop wallpaper manager.
+- [ ] **[whers](packages/whers)**: Locate files or commands available locally.
 
 ### Configuration Management
 
@@ -107,7 +107,7 @@ To use `ccutils`, you'll need to have Rust or Nix installed. If you haven't alre
 Once Rust is set up:
 
 ```bash
-git clone https://github.com/yourusername/ccutils.git
+git clone https://github.com/craole-cc/ccutils.git
 cd ccutils
 cargo build
 ```
@@ -124,6 +124,6 @@ This project is still a work in progress. Contributions are welcome as I continu
 
 ## License
 
-This project is dual-licensed under the [Apache License 2.0](./LICENSE-APACHE-2.0) and [MIT License](./LICENSE-MIT).
+This project is dual-licensed under the [Apache License 2.0](./LICENSE-APACHE) and [MIT License](./LICENSE-MIT).
 
 All contributions submitted for inclusion in this project will be dual-licensed under both licenses mentioned above, unless explicitly specified otherwise. This dual-licensing approach ensures maximum flexibility and compatibility with other open-source projects.
