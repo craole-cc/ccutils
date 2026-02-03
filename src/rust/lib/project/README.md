@@ -36,6 +36,57 @@ let manager = WorkspaceManager::new(&root);
 manager.add_member("lib/my-lib")?;
 ```
 
+## Examples
+
+The `examples/` folder contains working, copy-paste ready examples:
+
+### Basic Usage (No Extra Dependencies)
+
+```bash
+cargo run --example basic
+```
+
+Creates library and binary packages with complete Cargo.toml files. **No additional dependencies needed** - just works!
+
+**Output:**
+
+```sh
+📁 Workspace root: /path/to/workspace
+🏠 Is workspace: true
+📚 Library: Ok("./example-lib")
+⚙️  Binary: Ok("./example-bin")
+```
+
+**Files created:**
+
+```md
+example-lib/
+├── Cargo.toml
+└── src/lib.rs
+
+example-bin/
+├── Cargo.toml
+└── src/main.rs
+```
+
+### Full Workspace Management
+
+```bash
+cargo run --example workspace
+```
+
+Complete workspace operations: scaffold packages and add them to your workspace Cargo.toml.
+
+### Advanced (With Tracing)
+
+```bash
+cargo run --example advanced --features=tracing
+```
+
+Production-ready example with proper error handling using `miette` and `thiserror`.
+
+**View all examples:** [examples/](https://github.com/craole-cc/devtools/tree/main/src/rust/lib/project/examples)
+
 ## Crates in the Craole CC Dev Toolkit
 
 The Craole CC toolkit provides a suite of Rust development utilities designed to work seamlessly together:
@@ -86,7 +137,7 @@ craole-cc-project = { version = "0.1", features = ["tracing"] }
 craole-cc-log = "0.1"  # Recommended for tracing support
 ```
 
-## Examples
+## API Examples
 
 ### Find Workspace Root
 
@@ -152,8 +203,8 @@ Contributions are welcome! Please see [CONTRIBUTING.md](../../../../CONTRIBUTING
 
 Licensed under either of:
 
-- Apache License, Version 2.0 ([LICENSE-APACHE](../../../../LICENSE-APACHE) or <http://www.apache.org/licenses/LICENSE-2.0>)
-- MIT license ([LICENSE-MIT](../../../../LICENSE-MIT) or <http://opensource.org/licenses/MIT>)
+- Apache License, Version 2.0 [LICENSE-APACHE](../../../../LICENSE-APACHE)
+- MIT license [LICENSE-MIT](../../../../LICENSE-MIT)
 
 at your option.
 
