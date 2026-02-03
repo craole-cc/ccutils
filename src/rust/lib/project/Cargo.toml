@@ -4,10 +4,10 @@ version = "0.1.0"
 description = "Cargo workspace and package scaffolding - part of the Craole CC toolkit"
 edition = { workspace = true }
 authors = { workspace = true }
-# homepage = { workspace = true }
-# repository = { workspace = true }
-# license = { workspace = true }
-# readme = { workspace = true }
+homepage = { workspace = true }
+repository = { workspace = true }
+license = { workspace = true }
+readme = "README.md"
 categories = { workspace = true }
 keywords = ["cargo", "workspace", "scaffold", "craole", "cc"]
 
