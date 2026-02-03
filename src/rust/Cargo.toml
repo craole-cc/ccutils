@@ -1,59 +1,75 @@
-[workspace]
-# default-members = ["bin/*", "lib/*"]
-members = [
-  # "bin/log",
-  # "lib/log",
-  # "lib/env",
-  "lib/project",
-
-]
-resolver = "2"
-
-[workspace.package]
-version = "0.1.0"
-edition = "2024"
-authors = ["Craig 'Craole' Cole <craig.craole.cole@gmail.com>"]
-license = "MIT OR Apache-2.0"
-repository = "https://github.com/craole-cc/devtools"
-homepage = "https://github.com/craole-cc"
-categories = ["development-tools"]
-readme = "README.md"
-
-[workspace.dependencies]
-# -- Internal
-# ephelog = { path = "bin/log" }
-# log = { path = "lib/log" }
-craole-cc-project = { path = "lib/project" }
-
-# -- Error/Message Handling
-miette = "7.6.0"
-thiserror = "2.0.18"
-tracing = "0.1.41"
-
-# -- Information Management
-cargo_metadata = "0.23.0"
-toml = "0.9.8"
-
 [profile.dev]
 opt-level = 0
 
 [profile.release]
-opt-level = 3
-lto = true
 codegen-units = 1
+lto = true
+opt-level = 3
 
-[workspace.lints.rust]
-unsafe_code = { level = "deny", priority = 0 }
-unused = { level = "allow", priority = -1 }
+[workspace]
+members = ["lib/project"]
+resolver = "2"
 
-[workspace.lints.clippy]
-cargo = { level = "warn", priority = 0 }
-complexity = { level = "warn", priority = 0 }
-correctness = { level = "deny", priority = 0 }
-nursery = { level = "warn", priority = 0 }
-pedantic = { level = "warn", priority = 0 }
-perf = { level = "warn", priority = 0 }
-style = { level = "warn", priority = 0 }
-suspicious = { level = "warn", priority = 0 }
-# multiple_crate_versions = { level = "allow", priority = 1 }
-cognitive_complexity = { level = "allow", priority = 1 }
+[workspace.dependencies]
+cargo_metadata = "0.23.0"
+miette = "7.6.0"
+thiserror = "2.0.18"
+toml = "0.9.8"
+tracing = "0.1.41"
+
+[workspace.dependencies.craole-cc-project]
+path = "lib/project"
+
+[workspace.lints.clippy.cargo]
+level = "warn"
+priority = 0
+
+[workspace.lints.clippy.cognitive_complexity]
+level = "allow"
+priority = 1
+
+[workspace.lints.clippy.complexity]
+level = "warn"
+priority = 0
+
+[workspace.lints.clippy.correctness]
+level = "deny"
+priority = 0
+
+[workspace.lints.clippy.nursery]
+level = "warn"
+priority = 0
+
+[workspace.lints.clippy.pedantic]
+level = "warn"
+priority = 0
+
+[workspace.lints.clippy.perf]
+level = "warn"
+priority = 0
+
+[workspace.lints.clippy.style]
+level = "warn"
+priority = 0
+
+[workspace.lints.clippy.suspicious]
+level = "warn"
+priority = 0
+
+[workspace.lints.rust.unsafe_code]
+level = "deny"
+priority = 0
+
+[workspace.lints.rust.unused]
+level = "allow"
+priority = -1
+
+[workspace.package]
+authors = ["Craig 'Craole' Cole <craig.craole.cole@gmail.com>"]
+categories = ["development-tools"]
+edition = "2024"
+homepage = "https://github.com/craole-cc"
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/craole-cc/devtools"
+version = "0.1.0"

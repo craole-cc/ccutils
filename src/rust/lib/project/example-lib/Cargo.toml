@@ -1,0 +1,5 @@
+[package]
+description = "Example library package"
+edition = "2024"
+name = "example-lib"
+version = "0.1.0"
