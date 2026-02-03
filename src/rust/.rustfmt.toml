@@ -1,0 +1,12 @@
+# https://rust-lang.github.io/rustfmt
+#> rustfmt --print-config default > rustfmt.default.toml
+
+edition = "2024"
+style_edition = "2024"
+tab_spaces = 2
+imports_layout = "Vertical"        # Horizontal, HorizontalVertical, Mixed, Vertical
+imports_granularity = "One"        # Preserve, Crate, Module, Item, One
+group_imports = "One"              # Preserve, StdExternalCrate, One
+reorder_impl_items = true
+condense_wildcard_suffixes = true
+format_code_in_doc_comments = true

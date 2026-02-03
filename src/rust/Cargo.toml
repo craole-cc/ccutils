@@ -1,20 +1,29 @@
 [workspace]
-default-members = ["bin/*", "lib/*"]
-members = ["bin/*", "lib/*"]
+# default-members = ["bin/*", "lib/*"]
+members = [
+  # "bin/log",
+  # "lib/log",
+  "bin/env",
+  # "bin/env"
+
+]
 resolver = "2"
 
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
-authors = ["Your Name <your.email@example.com>"]
+authors = ["Craig 'Craole' Cole <craig.craole.cole@gmail.com>"]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/yourusername/yourproject"
+repository = "https://github.com/craole-cc/devtools"
 
 [workspace.dependencies]
-# Shared dependencies go here
-# Example:
-# serde = { version = "1.0", features = ["derive"] }
-# tokio = { version = "1", features = ["full"] }
+# -- Internal
+ephelog = { path = "bin/log" }
+log = { path = "lib/log" }
+
+# -- Error Handling
+miette = "7.6.0"
+thiserror = "2.0.18"
 
 [profile.dev]
 opt-level = 0
@@ -23,3 +32,19 @@ opt-level = 0
 opt-level = 3
 lto = true
 codegen-units = 1
+
+[workspace.lints.rust]
+unsafe_code = { level = "deny", priority = 0 }
+unused = { level = "allow", priority = -1 }
+
+[workspace.lints.clippy]
+cargo = { level = "warn", priority = 0 }
+complexity = { level = "warn", priority = 0 }
+correctness = { level = "deny", priority = 0 }
+nursery = { level = "warn", priority = 0 }
+pedantic = { level = "warn", priority = 0 }
+perf = { level = "warn", priority = 0 }
+style = { level = "warn", priority = 0 }
+suspicious = { level = "warn", priority = 0 }
+# multiple_crate_versions = { level = "allow", priority = 1 }
+cognitive_complexity = { level = "allow", priority = 1 }
