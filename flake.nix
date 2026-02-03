@@ -17,7 +17,7 @@
           inherit system;
           config.allowUnfree = true;
           overlays = [
-            neovim.overlays.default
+            # neovim.overlays.default
           ];
         };
       in {
