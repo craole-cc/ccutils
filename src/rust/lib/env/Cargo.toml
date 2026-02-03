@@ -1,14 +1,14 @@
 [package]
 name = "env"
-version = { workspace = true }
-edition = { workspace = true }
-authors = { workspace = true }
-description = { workspace = true }
-homepage = { workspace = true }
-repository = { workspace = true }
-license = { workspace = true }
-readme = { workspace = true }
-keywords = { workspace = true }
+version = "0.1.0"
+edition = "2024"
+authors = ["Craig 'Craole' Cole <craig.craole.cole@gmail.com>"]
+# description = { workspace = true }
+# homepage = { workspace = true }
+# repository = { workspace = true }
+# license = { workspace = true }
+# readme = { workspace = true }
+# keywords = { workspace = true }
 categories = ["config", "data-structures", "filesystem"]
 
 [lints]
@@ -35,11 +35,11 @@ json = ["tracing-subscriber?/json"]
 
 [dependencies]
 # -- Error Handling
-miette = { workspace = true }
-thiserror = { workspace = true }
+miette = "7.6.0"
+thiserror = "2.0.18"
 
 # -- Logging
-tracing = { workspace = true, optional = true }
+tracing = { version = "0.1.41", optional = true }
 tracing-subscriber = { version = "0.3", features = [
   "env-filter",
 ], optional = true }

@@ -1,6 +1,7 @@
-pub use crate::prelude::*; // TODO: Check this
+#[cfg(feature = "time")]
+pub use chrono::prelude::*;
 pub use {
-  chrono::prelude::*,
+  crate::prelude::*,
   std::time::{
     Duration as StdDuration,
     SystemTime as StdSysTime,

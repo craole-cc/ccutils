@@ -3,7 +3,7 @@
 members = [
   # "bin/log",
   # "lib/log",
-  "bin/env",
+  "lib/env",
   # "bin/env"
 
 ]

@@ -6,3 +6,4 @@
 [rR]eview/
 [tT]arget/
 .direnv/
+!.vscode/
