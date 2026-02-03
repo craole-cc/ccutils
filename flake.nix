@@ -25,7 +25,6 @@
           inputsFrom = [(import ./shell.nix {inherit pkgs;})];
           shellHook = ''
             onefetch
-            alias exa='exa --icons'
 
             # if [ t1 ]; then
             #   if [ -n "$VISUAL" ] ;then
