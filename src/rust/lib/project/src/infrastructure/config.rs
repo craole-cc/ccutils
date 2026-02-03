@@ -7,10 +7,10 @@
 //!
 //! | Variable | Type | Default | Purpose |
 //! |----------|------|---------|---------|
-//! | `DATABASE_URL` | String | (auto-set to `{project}/assets/db`) | Database connection URL or file path |
+//! | `DATABASE_URL` | String | (auto-set to `{workspace}/assets/db`) | Database connection URL or file path |
 //! | `IP` | String | `localhost` | Server bind address (use `0.0.0.0` for production) |
 //! | `PORT` | u16 | `3000` | Server bind port (must be valid u16, panics if invalid) |
-//! | `RUST_LOG` | String | `api=trace,cli=info,gui=info,web=info` | Tracing filter directives |
+//! | `RUST_LOG` | String | (empty by default) | Tracing filter directives |
 //!
 //! # Examples
 //!
@@ -24,20 +24,20 @@
 //! ```no_run
 //! use craole_cc_project::prelude::*;
 //!
-//! let prj = get();
-//! let port = prj.workspace.configuration.port;
-//! let db = &prj.workspace.configuration.db;
-//! let ip = &prj.workspace.configuration.ip;
+//! let env = get();
+//! let port = env.config.port;
+//! let db = &env.config.db;
+//! let ip = &env.config.ip;
 //! println!("Server: {}:{}", ip, port);
 //! println!("Database: {}", db);
 //! ```
 //!
 //! ## Builder Pattern
 //! ```no_run
-//! use craole_cc_project::prelude::*;
+//! use craole_cc_project::infrastructure::*;
 //!
 //! let config = Configuration::new()
-//!   .with_port(8080_u16)
+//!   .with_port(8080)
 //!   .with_ip("0.0.0.0")
 //!   .with_db("sqlite:///data/app.db");
 //! ```
@@ -56,11 +56,10 @@ use crate::_prelude::*;
 /// specific fields after construction.
 ///
 /// # Defaults
-/// - `db`: Falls back to `{workspace}/assets/db` if `DATABASE_URL` is empty
-///   (handled by `Project::default`, not here)
+/// - `db`: Empty (fallback to `{workspace}/assets/db` handled by `Environment::default`)
 /// - `ip`: "localhost" (suitable for development)
 /// - `port`: 3000 (IANA registered for commonly used services)
-/// - `rust_log`: "api=trace,cli=info,gui=info,web=info" (multi-crate defaults)
+/// - `rust_log`: Empty (use env var or builder to set)
 ///
 /// # Thread Safety
 /// Can be cloned safely; all fields are `String` or primitive types.
@@ -81,24 +80,24 @@ use crate::_prelude::*;
 ///   config.db, config.ip, config.port
 /// );
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct Configuration {
   /// Database URL or file path.
   ///
   /// Set via `DATABASE_URL` environment variable.
-  /// If empty, falls back to `{workspace_root}/assets/db` (handled by `Project::default`).
+  /// If empty, the `Environment` struct will fall back to `{workspace}/assets/db`.
   ///
   /// # Common Values
-  /// - **`SQLite`** (file-based):
+  /// - **SQLite** (file-based):
   ///   - `sqlite:///data/app.db` (absolute path)
   ///   - `sqlite://./data/app.db` (relative path)
   ///   - `/var/lib/app/app.db` (simple file path)
   ///
-  /// - **`PostgreSQL`**:
+  /// - **PostgreSQL**:
   ///   - `postgres://user:password@localhost/dbname`
   ///   - `postgresql://user:password@host:5432/dbname`
   ///
-  /// - **`MySQL`**:
+  /// - **MySQL**:
   ///   - `mysql://user:password@localhost/dbname`
   ///   - `mysql://user:password@host:3306/dbname`
   ///
@@ -122,15 +121,11 @@ pub struct Configuration {
   ///   - Required for production behind reverse proxies
   ///   - Accessible from network (rely on firewall rules)
   ///
-  /// - **"`::1`"** (IPv6 loopback)
+  /// - **"::1"** (IPv6 loopback)
   ///   - IPv6 equivalent of 127.0.0.1
   ///
   /// - **"::"** (all IPv6 interfaces)
   ///   - IPv6 equivalent of 0.0.0.0 (may require dual-stack config)
-  ///
-  /// # Note on String vs IP Type
-  /// This is stored as `String` rather than a proper IP type for flexibility.
-  /// TODO: This should probably be a true IP, not a string
   pub ip: String,
 
   /// Server bind port.
@@ -160,12 +155,7 @@ pub struct Configuration {
   /// Defines which modules log at which levels, controlling verbosity per component.
   ///
   /// # Default
-  /// ```text
-  /// api=trace,cli=info,gui=info,web=info
-  /// ```
-  /// This enables very detailed logging (`trace`) for the API, while the UI, CLI,
-  /// and web modules log at `info` level. The actual output depends on the tracing
-  /// subscriber configuration (see `log` module).
+  /// Empty string by default. Set via `RUST_LOG` env var or builder methods.
   ///
   /// # Format: Comma-Separated Directives
   /// Each directive is `target=level`:
@@ -210,12 +200,12 @@ pub struct Configuration {
   pub rust_log: String,
 }
 
-impl Default for Configuration {
-  /// Loads configuration from environment variables with built-in defaults.
+impl Configuration {
+  /// Creates configuration from environment variables with built-in defaults.
   ///
   /// # Reading Order
-  /// 1. `RUST_LOG` → defaults to "api=trace,cli=info,gui=info,web=info"
-  /// 2. `DATABASE_URL` → defaults to empty (Project handles fallback)
+  /// 1. `RUST_LOG` → defaults to empty
+  /// 2. `DATABASE_URL` → defaults to empty (fallback handled by Environment)
   /// 3. `IP` → defaults to "localhost"
   /// 4. `PORT` → defaults to "3000", parsed as u16
   ///
@@ -227,15 +217,15 @@ impl Default for Configuration {
   /// # Examples
   /// ```no_run
   /// use craole_cc_project::infrastructure::*;
-  /// let config = Configuration::default();
+  /// let config = Configuration::new();
   /// // If PORT="invalid", this panics with "PORT must be a valid number"
   /// ```
   ///
   /// # Performance
   /// ~1ms (reads 4 environment variables, parses one u16)
-  fn default() -> Self {
+  #[must_use]
+  pub fn new() -> Self {
     let rust_log = var("RUST_LOG").unwrap_or_default();
-    // var("RUST_LOG").unwrap_or_else(|_| String::from("api=trace,cli=info,gui=info,web=info"));
     let db = var("DATABASE_URL").unwrap_or_default();
     let ip = var("IP").unwrap_or_else(|_| String::from("localhost"));
     let port = var("PORT")
@@ -250,27 +240,12 @@ impl Default for Configuration {
       rust_log,
     }
   }
-}
 
-impl Configuration {
-  /// Creates a new default configuration from environment variables.
-  ///
-  /// Equivalent to `Configuration::default()`. Use builder methods to customize.
-  ///
-  /// # Examples
-  /// ```no_run
-  /// use craole_cc_project::infrastructure::*;
-  /// let config = Configuration::new();
-  /// ```
-  #[must_use]
-  pub fn new() -> Self {
-    Self::default()
-  }
+  //╔═══════════════════════════════════════════════════════════╗
+  //║ Builders                                                  ║
+  //╚═══════════════════════════════════════════════════════════╝
 
   /// Sets the database URL/path, overriding the `DATABASE_URL` environment variable.
-  ///
-  /// This builder method allows changing the database configuration after creation
-  /// without affecting other settings.
   ///
   /// # Examples
   /// ```no_run
@@ -281,16 +256,6 @@ impl Configuration {
   ///
   /// // Or keep SQLite in development
   /// let config = Configuration::new().with_db("sqlite:///./data/app.db");
-  /// ```
-  ///
-  /// # Builder Chaining
-  /// Returns `Self` for method chaining:
-  /// ```no_run
-  /// use craole_cc_project::infrastructure::*;
-  /// let config = Configuration::new()
-  ///   .with_db("postgres://localhost/mydb")
-  ///   .with_port(5432_u16)
-  ///   .with_ip("0.0.0.0");
   /// ```
   #[must_use]
   pub fn with_db(mut self, database_url: impl Into<String>) -> Self {
@@ -340,7 +305,7 @@ impl Configuration {
   /// let config = Configuration::new().with_ip("0.0.0.0");
   ///
   /// // Docker container (all interfaces)
-  /// let config = Configuration::new().with_ip("0.0.0.0").with_port(3000_u16);
+  /// let config = Configuration::new().with_ip("0.0.0.0").with_port(3000);
   ///
   /// // IPv6
   /// let config = Configuration::new().with_ip("::1"); // IPv6 loopback
@@ -354,6 +319,22 @@ impl Configuration {
   #[must_use]
   pub fn with_ip(mut self, ip: impl Into<String>) -> Self {
     self.ip = ip.into();
+    self
+  }
+
+  /// Sets the RUST_LOG filter directives.
+  ///
+  /// # Examples
+  /// ```no_run
+  /// use craole_cc_project::infrastructure::*;
+  ///
+  /// let config = Configuration::new().with_rust_log("debug");
+  ///
+  /// let config = Configuration::new().with_rust_log("myapp=trace,tokio=warn");
+  /// ```
+  #[must_use]
+  pub fn with_rust_log(mut self, rust_log: impl Into<String>) -> Self {
+    self.rust_log = rust_log.into();
     self
   }
 }
