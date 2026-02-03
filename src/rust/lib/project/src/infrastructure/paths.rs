@@ -18,18 +18,15 @@
 //! # Examples
 //!
 //! ```no_run
-//! use env::project::prelude::*;
+//! use craole_cc_project::prelude::*;
 //!
-//! let paths = ProjectPaths::default();
+//! let paths = WorkspacePaths::default();
 //! println!("Project root: {}", paths.project.display());
 //! println!("Assets: {}", paths.assets.display());
 //! println!("Database: {}", paths.database.display());
 //! ```
 
-use {
-  super::utils::*,
-  crate::_prelude::*,
-};
+use crate::_prelude::*;
 
 /// Project directory structure and path management.
 ///
@@ -52,11 +49,11 @@ use {
 /// # Examples
 /// ```no_run
 /// use {
-///   env::project::prelude::*,
+///   craole_cc_project::prelude::*,
 ///   std::path::PathBuf,
 /// };
 ///
-/// let mut paths = ProjectPaths::default();
+/// let mut paths = WorkspacePaths::default();
 /// println!("Assets: {}", paths.assets.display());
 ///
 /// // Customize if needed
@@ -115,8 +112,8 @@ impl Default for Paths {
   ///
   /// # Examples
   /// ```no_run
-  /// use env::project::prelude::*;
-  /// let paths = ProjectPaths::default();
+  /// use craole_cc_project::prelude::*;
+  /// let paths = WorkspacePaths::default();
   /// assert!(paths.assets.ends_with("assets"));
   /// assert!(paths.database.ends_with("db"));
   /// ```

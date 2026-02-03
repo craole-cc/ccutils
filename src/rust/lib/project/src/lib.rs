@@ -6,10 +6,12 @@
 //! - Managing workspace members
 //! - Manipulating Cargo.toml files
 
-pub mod package;
-pub mod workspace;
-
+mod core;
 mod exports;
+mod infrastructure;
+mod metadata;
+mod package;
+mod workspace;
 
 /// Internal prelude for use within this crate.
 ///

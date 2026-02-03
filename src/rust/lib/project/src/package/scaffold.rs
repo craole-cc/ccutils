@@ -1,10 +1,27 @@
-//! Package scaffolding builder.
+//! Package scaffolding utilities.
+//!
+//! Creates new package directory structures with Cargo.toml and source files.
 
 use crate::_prelude::*;
 
-/// Package scaffolding builder.
+/// Package scaffolding configuration.
+///
+/// Used to generate a new package structure with Cargo.toml and source files.
+///
+/// # Examples
+/// ```no_run
+/// use craole_cc_project::prelude::*;
+///
+/// let scaffold = PackageScaffold::new("my-package")
+///   .version("0.1.0")
+///   .description("My new package")
+///   .binary();
+///
+/// scaffold.create("packages/my-package")?;
+/// # Ok::<(), std::io::Error>(())
+/// ```
 #[derive(Debug, Clone)]
-pub struct Builder {
+pub struct Scaffold {
   pub name: String,
   pub version: String,
   pub description: String,
@@ -14,8 +31,16 @@ pub struct Builder {
   pub is_binary: bool,
 }
 
-impl Builder {
-  /// Create a new package builder.
+impl Scaffold {
+  /// Create a new package scaffold builder.
+  ///
+  /// # Examples
+  /// ```no_run
+  /// use craole_cc_project::prelude::*;
+  ///
+  /// let scaffold = PackageScaffold::new("my-cli");
+  /// ```
+  #[must_use]
   pub fn new(name: impl Into<String>) -> Self {
     Self {
       name: name.into(),
@@ -27,6 +52,10 @@ impl Builder {
       is_binary: false,
     }
   }
+
+  //╔═══════════════════════════════════════════════════════════╗
+  //║ Builders                                                  ║
+  //╚═══════════════════════════════════════════════════════════╝
 
   #[must_use]
   pub fn version(mut self, version: impl Into<String>) -> Self {
@@ -59,35 +88,40 @@ impl Builder {
   }
 
   #[must_use]
-  pub fn binary(mut self) -> Self {
+  pub const fn binary(mut self) -> Self {
     self.is_binary = true;
     self
   }
 
   #[must_use]
-  pub fn library(mut self) -> Self {
+  pub const fn library(mut self) -> Self {
     self.is_binary = false;
     self
   }
 
-  /// Convert to TOML table.
+  //╔═══════════════════════════════════════════════════════════╗
+  //║ Scaffolding Operations                                    ║
+  //╚═══════════════════════════════════════════════════════════╝
+
+  /// Convert to TOML table for Cargo.toml.
+  #[must_use]
   pub fn to_toml(&self) -> TomlTable {
     let mut table = TomlTable::new();
     let mut package = TomlTable::new();
 
-    package.insert("name".to_string(), TomlValue::String(self.name.clone()));
+    package.insert(String::from("name"), TomlValue::String(self.name.clone()));
     package.insert(
-      "version".to_string(),
+      String::from("version"),
       TomlValue::String(self.version.clone()),
     );
     package.insert(
-      "edition".to_string(),
+      String::from("edition"),
       TomlValue::String(self.edition.clone()),
     );
 
     if !self.description.is_empty() {
       package.insert(
-        "description".to_string(),
+        String::from("description"),
         TomlValue::String(self.description.clone()),
       );
     }
@@ -98,10 +132,10 @@ impl Builder {
         .iter()
         .map(|a| TomlValue::String(a.clone()))
         .collect();
-      package.insert("authors".to_string(), TomlValue::Array(authors));
+      package.insert(String::from("authors"), TomlValue::Array(authors));
     }
 
-    table.insert("package".to_string(), TomlValue::Table(package));
+    table.insert(String::from("package"), TomlValue::Table(package));
 
     // Add dependencies if any
     if !self.dependencies.is_empty() {
@@ -109,23 +143,43 @@ impl Builder {
       for (name, version) in &self.dependencies {
         deps.insert(name.clone(), TomlValue::String(version.clone()));
       }
-      table.insert("dependencies".to_string(), TomlValue::Table(deps));
+      table.insert(String::from("dependencies"), TomlValue::Table(deps));
     }
 
     table
   }
 
   /// Write Cargo.toml to file.
+  ///
+  /// # Errors
+  /// Returns an error if TOML serialization or file writing fails.
   pub fn write_cargo_toml(&self, path: impl AsRef<Path>) -> Result<()> {
     let toml_string = to_toml_string_pretty(&self.to_toml())
-      .map_err(|e| IoError::new(ErrorKind::InvalidData, e))?;
+      .map_err(|e| IOError::new(IOErrorKind::InvalidData, e))?;
 
     write(path, toml_string)?;
     Ok(())
   }
 
-  /// Scaffold complete package structure.
-  pub fn scaffold(self, base_path: impl AsRef<Path>) -> Result<PathBuf> {
+  /// Create complete package structure.
+  ///
+  /// Creates directories, Cargo.toml, and initial source file.
+  ///
+  /// # Errors
+  /// Returns an error if directory creation or file writing fails.
+  ///
+  /// # Examples
+  /// ```no_run
+  /// use craole_cc_project::prelude::*;
+  ///
+  /// let scaffold = PackageScaffold::new("my-cli")
+  ///   .binary()
+  ///   .description("My CLI tool");
+  ///
+  /// scaffold.create("packages")?;
+  /// # Ok::<(), std::io::Error>(())
+  /// ```
+  pub fn create(self, base_path: impl AsRef<Path>) -> Result<PathBuf> {
     let pkg_path = base_path.as_ref().join(&self.name);
 
     // Create directories

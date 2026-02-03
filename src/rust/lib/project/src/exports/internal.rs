@@ -12,15 +12,18 @@ pub use tracing::{
   warn,
 };
 pub use {
-  // crate::{
-  //   // package::prelude::*,
-  //   workspace::prelude::*,
-  // },
-  // Standard library
+  crate::prelude::*,
+  dotenv::dotenv,
   std::{
     env::{
       current_dir,
       var,
+    },
+    fmt::{
+      Debug,
+      Display,
+      Formatter,
+      Result as FmtResult,
     },
     fs::{
       create_dir_all,
@@ -29,20 +32,23 @@ pub use {
       write,
     },
     io::{
-      self,
-      Error as IoError,
-      ErrorKind,
-      Result as IoResult,
+      Error as IOError,
+      ErrorKind as IOErrorKind,
+      Write as IOWrite,
+      stderr,
+      stdout,
     },
     path::{
       Path,
       PathBuf,
     },
     result::Result as StdResult,
-    sync::OnceLock,
+    str::FromStr,
+    sync::{
+      Arc,
+      OnceLock,
+    },
   },
-
-  // TOML (always enabled - required for scaffolding)
   toml::{
     Table as TomlTable,
     Value as TomlValue,
@@ -70,4 +76,4 @@ pub use {
 pub type CargoToml = TomlMap<String, TomlValue>;
 
 /// Result type for project operations.
-pub type Result<T> = StdResult<T, IoError>;
+pub type Result<T> = StdResult<T, IOError>; // TODO: Why not StdError here?

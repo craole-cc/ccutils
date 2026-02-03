@@ -17,13 +17,16 @@ workspace = true
 [features]
 default = [
   # "full",
+  # "macros",
   #
 ]
-full = ["tracing", "dep:cargo_metadata"]
+full = ["tracing", "macros", "dep:cargo_metadata"]
 tracing = ["dep:tracing"]
+macros = []
 
 [dependencies]
 cargo_metadata = { workspace = true, optional = true }
+dotenv = { workspace = true }
 toml = { workspace = true }
 tracing = { workspace = true, optional = true }
 

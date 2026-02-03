@@ -29,7 +29,7 @@
 //! # Examples
 //!
 //! ```no_run
-//! use env::project::prelude::*;
+//! use craole_cc_project::prelude::*;
 //! let root = find_cargo_root();
 //! println!("Project root: {}", root.display());
 //!
@@ -64,7 +64,7 @@ use crate::_prelude::*;
 ///
 /// # Examples
 /// ```no_run
-/// use env::project::prelude::*;
+/// use craole_cc_project::prelude::*;
 /// let root = find_cargo_root();
 /// assert!(root.join("Cargo.toml").exists());
 /// ```
@@ -201,7 +201,7 @@ fn search_from_current_dir() -> Option<PathBuf> {
 /// # Examples
 /// ```no_run
 /// use {
-///   env::project::prelude::*,
+///   craole_cc_project::prelude::*,
 ///   std::path::Path,
 /// };
 ///
@@ -278,7 +278,7 @@ pub fn find_cargo_root_via_cargo_metadata() -> Option<PathBuf> {
 /// # Examples
 /// ```no_run
 /// use {
-///   env::project::prelude::*,
+///   craole_cc_project::prelude::*,
 ///   std::path::Path,
 /// };
 ///

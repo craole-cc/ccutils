@@ -1,5 +1,0 @@
-[package]
-description = "Example binary package"
-edition = "2024"
-name = "example-bin"
-version = "0.1.0"

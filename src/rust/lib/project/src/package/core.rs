@@ -1,143 +1,67 @@
-//! Current running crate (package) environment.
+//! Package domain model.
 //!
-//! This module defines the `Package` environment struct that holds metadata about
-//! the currently executing binary or library crate.
+//! Represents a single package/crate in a workspace.
+//! Pure domain model - uses shared Metadata from metadata module.
 //!
-//! # Relationship to Project
+//! # Examples
 //!
-//! The global `Environment` struct (in `core.rs`) contains both:
-//! - **Project**: Workspace-level configuration (static, workspace-wide)
-//! - **Package**: Individual crate configuration (dynamic, current crate only)
-//!
-//! In a workspace, multiple packages might exist, but only one is running at a time.
-//! The `Package` struct represents the metadata of that currently executing crate.
-//!
-//! # Initialization
-//!
-//! `Package` metadata is typically set via compile-time env vars and builder methods:
 //! ```no_run
-//! use env::prelude::*;
+//! use craole_cc_project::prelude::*;
 //!
 //! let package = Package::new()
 //!   .with_name(env!("CARGO_PKG_NAME"))
 //!   .with_version(env!("CARGO_PKG_VERSION"))
 //!   .with_description(env!("CARGO_PKG_DESCRIPTION"));
-//! ```
 //!
-//! Or using the `setenv!()` macro:
-//! ```no_run
-//! # #[cfg(feature = "macros")]
-//! # {
-//! use env::prelude::*;
-//! setenv!(); // Auto-populates from env! macros
-//!
-//! # }
-//! ```
-//!
-//! # Examples
-//!
-//! ```no_run
-//! use env::prelude::*;
-//!
-//! let env = get_env();
-//! let pkg_name = &env.package.metadata.name;
-//! let pkg_version = &env.package.metadata.version;
-//! println!("{} v{}", pkg_name, pkg_version);
+//! println!("Package: {}", package.metadata.display_name());
 //! ```
 
-use super::Metadata;
+use crate::_prelude::*;
 
-/// Current running package (crate) environment.
+/// Package domain model.
 ///
-/// Contains metadata about the currently executing binary or library.
-/// This is distinct from `Project` which represents the entire workspace.
+/// Represents a single package/crate with its metadata.
 ///
-/// # Single Field
-/// - `metadata` - The package name, version, and description
+/// # Fields
+/// - `metadata` - Package name, version, description
 ///
 /// # Builder Pattern
-/// All `with_*` methods return `Self` for method chaining:
 /// ```no_run
-/// use env::package::prelude::*;
+/// use craole_cc_project::prelude::*;
+///
 /// let package = Package::new()
 ///   .with_name("my-cli")
 ///   .with_version("1.0.0")
 ///   .with_description("A CLI application");
 /// ```
-///
-/// # Thread Safety
-/// Safe to clone and share; contains only `String` fields.
-///
-/// # Defaults
-/// By default, Package metadata is cloned from Project metadata.
-/// This provides sensible defaults if not explicitly set, but typically you'll
-/// override these values with the current crate's `env!()` macros.
-///
-/// # Examples
-/// ```no_run
-/// use env::package::prelude::*;
-///
-/// let package = Package::default();
-/// println!("Running: {}", package.metadata.name);
-///
-/// // Override for specific needs
-/// let custom = Package::new()
-///   .with_name("my-special-name")
-///   .with_version("2.0.0");
-/// ```
-#[derive(Debug, Clone)]
-pub struct Environment {
-  /// Package metadata (name, version, description).
-  ///
-  /// Represents the currently executing crate's information.
-  /// Set via builder methods or by cloning from Project metadata by default.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct Package {
+  /// Package metadata (name, version, description)
   pub metadata: Metadata,
 }
 
-impl Default for Environment {
-  /// Creates a package environment with default metadata.
-  ///
-  /// # Default Behavior
-  /// By default, package metadata is cloned from the project metadata.
-  /// This means if not explicitly set, the package will have the same
-  /// name/version/description as the workspace.
-  ///
-  /// This is typically overridden immediately via builder methods or
-  /// the `setenv!()` macro using compile-time `env!()` values.
-  ///
-  /// # Examples
-  /// ```no_run
-  /// use env::package::prelude::*;
-  /// let package = Package::default();
-  /// // Will have project's metadata
-  /// ```
-  fn default() -> Self {
-    let metadata = Metadata::default();
-
-    Self { metadata }
-  }
-}
-
-impl Environment {
-  /// Creates a new default package environment.
-  ///
-  /// Equivalent to `Package::default()`. Use builder methods to customize.
-  ///
-  /// # Examples
-  /// ```no_run
-  /// use env::package::prelude::*;
-  /// let package = Package::new();
-  /// ```
+impl Package {
+  /// Creates a new empty package.
   #[must_use]
   pub fn new() -> Self {
     Self::default()
   }
 
-  /// Sets the package name, overriding the default.
+  /// Creates a package with metadata.
+  #[must_use]
+  pub fn with_metadata(metadata: Metadata) -> Self {
+    Self { metadata }
+  }
+
+  //╔═══════════════════════════════════════════════════════════╗
+  //║ Metadata Builders (delegation)                           ║
+  //╚═══════════════════════════════════════════════════════════╝
+
+  /// Sets the package name.
   ///
   /// # Examples
   /// ```no_run
-  /// use env::package::prelude::*;
+  /// use craole_cc_project::prelude::*;
   ///
   /// let package = Package::new().with_name(env!("CARGO_PKG_NAME"));
   /// ```
@@ -147,11 +71,11 @@ impl Environment {
     self
   }
 
-  /// Sets the package version, overriding the default.
+  /// Sets the package version.
   ///
   /// # Examples
   /// ```no_run
-  /// use env::package::prelude::*;
+  /// use craole_cc_project::prelude::*;
   ///
   /// let package = Package::new().with_version(env!("CARGO_PKG_VERSION"));
   /// ```
@@ -161,11 +85,11 @@ impl Environment {
     self
   }
 
-  /// Sets the package description, overriding the default.
+  /// Sets the package description.
   ///
   /// # Examples
   /// ```no_run
-  /// use env::package::prelude::*;
+  /// use craole_cc_project::prelude::*;
   ///
   /// let package = Package::new().with_description(env!("CARGO_PKG_DESCRIPTION"));
   /// ```
@@ -173,5 +97,39 @@ impl Environment {
   pub fn with_description(mut self, description: impl Into<String>) -> Self {
     self.metadata = self.metadata.with_description(description);
     self
+  }
+
+  //╔═══════════════════════════════════════════════════════════╗
+  //║ Queries                                                   ║
+  //╚═══════════════════════════════════════════════════════════╝
+
+  /// Returns the package name.
+  #[must_use]
+  pub fn name(&self) -> &str {
+    &self.metadata.name
+  }
+
+  /// Returns the package version.
+  #[must_use]
+  pub fn version(&self) -> &str {
+    &self.metadata.version
+  }
+
+  /// Returns the package description.
+  #[must_use]
+  pub fn description(&self) -> &str {
+    &self.metadata.description
+  }
+}
+
+impl Display for Package {
+  fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+    write!(f, "{}", self.metadata)
+  }
+}
+
+impl From<Metadata> for Package {
+  fn from(metadata: Metadata) -> Self {
+    Self { metadata }
   }
 }

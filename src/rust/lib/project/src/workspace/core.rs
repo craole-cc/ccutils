@@ -1,170 +1,81 @@
-//! Workspace project environment configuration.
+//! Workspace domain model.
 //!
-//! This module defines the `Project` environment struct that combines workspace metadata,
-//! server/runtime configuration, and project paths into a single cohesive structure.
+//! Represents a Rust workspace containing multiple packages.
+//! This is a pure domain model - no infrastructure concerns.
 //!
-//! The `Project` struct is the workspace-level equivalent of `Package` - it represents
-//! the workspace root configuration rather than the individual crate.
+//! # Relationship to Workspace
 //!
-//! # Relationship to Global Environment
-//!
-//! The global `Environment` struct (in `core.rs`) contains both:
-//! - **Project**: Workspace-level configuration (this module)
-//! - **Package**: Individual crate configuration (in `package` module)
-//!
-//! # Initialization Flow
-//!
-//! ```text
-//! Environment::default()
-//! └── Project::default()
-//!     ├── Metadata::default() [reads workspace Cargo.toml]
-//!     ├── Paths::default() [discovers workspace root and paths]
-//!     └── Configuration::default() [reads env vars]
-//! ```
+//! The global `Workspace` struct composes:
+//! - `Workspace` (this module) - Domain model
+//! - `Paths` - Infrastructure (filesystem)
+//! - `Configuration` - Infrastructure (env vars)
 //!
 //! # Examples
 //!
 //! ```no_run
-//! use env::project::prelude::*;
+//! use craole_cc_project::prelude::*;
 //!
-//! let project = Project::new();
-//! println!("Name: {}", project.metadata.name);
-//! println!("Version: {}", project.metadata.version);
-//! println!("Database: {}", project.configuration.db);
-//! println!("Assets: {}", project.paths.assets.display());
+//! let workspace = Workspace::new()
+//!   .with_name("my-workspace")
+//!   .with_version("1.0.0")
+//!   .with_package_name("api")
+//!   .with_package_name("cli");
+//!
+//! println!(
+//!   "Workspace: {} v{}",
+//!   workspace.metadata.name, workspace.metadata.version
+//! );
+//! println!("Packages: {}", workspace.package_count());
 //! ```
 
-use super::{
-  Configuration,
-  Metadata,
-  Paths,
-};
+use crate::_prelude::*;
 
-/// Workspace project environment configuration.
+/// Workspace domain model.
 ///
-/// Combines three aspects of the workspace into a single struct:
-/// 1. **Metadata** - Project name, version, description from Cargo.toml
-/// 2. **Paths** - Workspace root and standard directory locations
-/// 3. **Configuration** - Server settings and env var configuration
-///
-/// This represents the entire workspace-level configuration, as opposed to
-/// `Package` which represents the individual running crate.
+/// Represents a Rust workspace with metadata and registered packages.
+/// Does NOT contain infrastructure concerns like paths or configuration.
 ///
 /// # Fields
-/// - `metadata` - Parsed from workspace Cargo.toml
-/// - `paths` - Discovered from filesystem
-/// - `configuration` - Loaded from environment variables
+/// - `metadata` - Workspace name, version, description
+/// - `packages` - Packages registered in this workspace
 ///
 /// # Builder Pattern
-/// All `with_*` methods return `Self` for method chaining:
 /// ```no_run
-/// use env::project::prelude::*;
-/// let project = Project::new()
+/// use craole_cc_project::prelude::*;
+///
+/// let workspace = Workspace::new()
 ///   .with_name("my-workspace")
-///   .with_port(8080)
-///   .with_ip("0.0.0.0");
+///   .with_packages(vec![
+///     Package::new().with_name("api"),
+///     Package::new().with_name("cli"),
+///   ]);
 /// ```
-///
-/// # Defaults
-/// Uses sensible defaults for all fields. Environment variables override defaults,
-/// and builder methods override environment variables.
-///
-/// # Thread Safety
-/// Safe to clone and share; all fields are cloneable (`String`, `PathBuf`, `u16`).
-///
-/// # Examples
-/// ```no_run
-/// use env::project::prelude::*;
-/// let project = Project::default();
-/// println!(
-///   "Project: {} v{}",
-///   project.metadata.name, project.metadata.version
-/// );
-/// println!("Database: {}", project.configuration.db);
-/// ```
-#[derive(Debug, Clone)]
-pub struct Environment {
-  /// Project metadata (name, version, description).
-  ///
-  /// Read from workspace Cargo.toml and cached. Override using `with_name()`,
-  /// `with_version()`, or `with_description()`.
+#[derive(Debug, Clone, Default)]
+pub struct Workspace {
+  /// Workspace metadata (name, version, description)
   pub metadata: Metadata,
 
-  /// Project paths (root, assets, database).
-  ///
-  /// Auto-discovered from workspace root. Immutable after creation;
-  /// modify by creating new Paths instance if needed.
-  pub paths: Paths,
-
-  /// Project configuration (database, server settings).
-  ///
-  /// Loaded from environment variables with defaults. Override using
-  /// `with_db()`, `with_port()`, or `with_ip()`.
-  pub configuration: Configuration,
+  /// Packages registered in this workspace
+  pub packages: Vec<Package>,
 }
 
-impl Default for Environment {
-  /// Creates project environment with auto-discovered workspace configuration.
-  ///
-  /// # Initialization Order
-  /// 1. Create `Metadata` from workspace Cargo.toml
-  /// 2. Create `Paths` by discovering workspace root
-  /// 3. Create `Configuration` from environment variables
-  /// 4. **Special handling**: If `DATABASE_URL` env var is empty,
-  ///    override to use `{workspace}/assets/db`
-  ///
-  /// # Database Path Fallback
-  /// This is a key feature: if no `DATABASE_URL` is set, the database
-  /// automatically defaults to the discovered workspace assets directory.
-  /// This provides sensible out-of-the-box behavior without requiring
-  /// configuration for simple `SQLite` setups.
-  ///
-  /// # Performance
-  /// ~5-50ms on first call (workspace discovery + file I/O)
-  /// <1µs on subsequent calls (all values cached)
-  ///
-  /// # Examples
-  /// ```no_run
-  /// use env::project::prelude::*;
-  /// let project = Project::default();
-  /// // If DATABASE_URL not set, project.configuration.db will be
-  /// // something like "/home/user/project/assets/db"
-  /// ```
-  fn default() -> Self {
-    let metadata = Metadata::default();
-    let paths = Paths::default();
-    let configuration = if Configuration::default().db.is_empty() {
-      Configuration {
-        db: paths.database.to_string_lossy().into_owned(),
-        ..Default::default()
-      }
-    } else {
-      Configuration::default()
-    };
-
-    Self {
-      metadata,
-      paths,
-      configuration,
-    }
-  }
-}
-
-impl Environment {
-  /// Creates a new default project environment.
-  ///
-  /// Equivalent to `Project::default()`. Use builder methods to customize.
+impl Workspace {
+  /// Creates a new empty workspace with default metadata.
   #[must_use]
   pub fn new() -> Self {
     Self::default()
   }
 
-  /// Sets the project name, overriding the Cargo.toml value.
+  //╔═══════════════════════════════════════════════════════════╗
+  //║ Metadata Builders                                         ║
+  //╚═══════════════════════════════════════════════════════════╝
+
+  /// Sets the workspace name.
   ///
   /// # Examples
   /// ```no_run
-  /// use env::project::prelude::*;
-  /// let project = Project::new().with_name("custom-name");
+  /// use craole_cc_project::prelude::*;
+  /// let workspace = Workspace::new().with_name("my-workspace");
   /// ```
   #[must_use]
   pub fn with_name(mut self, name: impl Into<String>) -> Self {
@@ -172,12 +83,12 @@ impl Environment {
     self
   }
 
-  /// Sets the project version, overriding the Cargo.toml value.
+  /// Sets the workspace version.
   ///
   /// # Examples
   /// ```no_run
-  /// use env::project::prelude::*;
-  /// let project = Project::new().with_version("2.0.0");
+  /// use craole_cc_project::prelude::*;
+  /// let workspace = Workspace::new().with_version("2.0.0");
   /// ```
   #[must_use]
   pub fn with_version(mut self, version: impl Into<String>) -> Self {
@@ -185,49 +96,142 @@ impl Environment {
     self
   }
 
-  /// Sets the project description, overriding the Cargo.toml value.
+  /// Sets the workspace description.
   #[must_use]
   pub fn with_description(mut self, description: impl Into<String>) -> Self {
     self.metadata = self.metadata.with_description(description);
     self
   }
 
-  /// Sets the database URL/path, overriding the `DATABASE_URL` environment variable.
+  /// Sets all metadata at once.
   ///
   /// # Examples
   /// ```no_run
-  /// use env::project::prelude::*;
-  /// let project = Project::new().with_db("postgres://localhost/mydb");
+  /// use craole_cc_project::prelude::*;
+  ///
+  /// let metadata = Metadata::new()
+  ///   .with_name("my-workspace")
+  ///   .with_version("1.0.0");
+  ///
+  /// let workspace = Workspace::new().with_metadata(metadata);
   /// ```
   #[must_use]
-  pub fn with_db(mut self, database_url: impl Into<String>) -> Self {
-    self.configuration = self.configuration.with_db(database_url);
+  pub fn with_metadata(mut self, metadata: Metadata) -> Self {
+    self.metadata = metadata;
     self
   }
 
-  /// Sets the server port, overriding the `PORT` environment variable.
+  //╔═══════════════════════════════════════════════════════════╗
+  //║ Package Management                                        ║
+  //╚═══════════════════════════════════════════════════════════╝
+
+  /// Registers multiple packages, replacing existing ones.
   ///
   /// # Examples
   /// ```no_run
-  /// use env::project::prelude::*;
-  /// let project = Project::new().with_port(8080_u16);
+  /// use craole_cc_project::prelude::*;
+  ///
+  /// let workspace = Workspace::new().with_packages(vec![
+  ///   Package::new().with_name("api"),
+  ///   Package::new().with_name("cli"),
+  /// ]);
   /// ```
   #[must_use]
-  pub fn with_port(mut self, port: impl Into<u16>) -> Self {
-    self.configuration = self.configuration.with_port(port);
+  pub fn with_packages(mut self, packages: impl IntoIterator<Item = Package>) -> Self {
+    self.packages = packages.into_iter().collect();
     self
   }
 
-  /// Sets the server bind IP address, overriding the `IP` environment variable.
+  /// Adds a single package.
   ///
   /// # Examples
   /// ```no_run
-  /// use env::project::prelude::*;
-  /// let project = Project::new().with_ip("0.0.0.0");
+  /// use craole_cc_project::prelude::*;
+  ///
+  /// let workspace = Workspace::new().with_package(Package::new().with_name("api"));
   /// ```
   #[must_use]
-  pub fn with_ip(mut self, ip: impl Into<String>) -> Self {
-    self.configuration = self.configuration.with_ip(ip);
+  pub fn with_package(mut self, package: Package) -> Self {
+    self.packages.push(package);
     self
+  }
+
+  /// Convenience method to add a package by name only.
+  ///
+  /// # Examples
+  /// ```no_run
+  /// use craole_cc_project::prelude::*;
+  ///
+  /// let workspace = Workspace::new()
+  ///   .with_package_name("api")
+  ///   .with_package_name("cli");
+  /// ```
+  #[must_use]
+  pub fn with_package_name(mut self, name: impl Into<String>) -> Self {
+    self.packages.push(Package::new().with_name(name));
+    self
+  }
+
+  //╔═══════════════════════════════════════════════════════════╗
+  //║ Package Queries                                           ║
+  //╚═══════════════════════════════════════════════════════════╝
+
+  /// Finds a package by name.
+  ///
+  /// # Examples
+  /// ```no_run
+  /// use craole_cc_project::prelude::*;
+  ///
+  /// let workspace = Workspace::new().with_package_name("api");
+  ///
+  /// if let Some(pkg) = workspace.find_package("api") {
+  ///   println!("Found: {}", pkg.metadata.name);
+  /// }
+  /// ```
+  pub fn find_package(&self, name: &str) -> Option<&Package> {
+    self.packages.iter().find(|p| p.metadata.name == name)
+  }
+
+  /// Returns mutable reference to a package by name.
+  pub fn find_package_mut(&mut self, name: &str) -> Option<&mut Package> {
+    self.packages.iter_mut().find(|p| p.metadata.name == name)
+  }
+
+  /// Returns the number of registered packages.
+  #[must_use]
+  pub fn package_count(&self) -> usize {
+    self.packages.len()
+  }
+
+  /// Checks if a package is registered.
+  #[must_use]
+  pub fn has_package(&self, name: &str) -> bool {
+    self.find_package(name).is_some()
+  }
+
+  /// Returns an iterator over all packages.
+  pub fn packages(&self) -> impl Iterator<Item = &Package> {
+    self.packages.iter()
+  }
+
+  /// Returns package names as a vector.
+  pub fn package_names(&self) -> Vec<&str> {
+    self
+      .packages
+      .iter()
+      .map(|p| p.metadata.name.as_str())
+      .collect()
+  }
+}
+
+impl Display for Workspace {
+  fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+    write!(
+      f,
+      "{} v{} ({} packages)",
+      self.metadata.name,
+      self.metadata.version,
+      self.package_count()
+    )
   }
 }

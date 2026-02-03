@@ -12,17 +12,14 @@
 //! # Examples
 //!
 //! ```no_run
-//! use env::project::prelude::*;
+//! use craole_cc_project::prelude::*;
 //!
-//! let metadata = ProjectMetadata::default();
+//! let metadata = WorkspaceMetadata::default();
 //! println!("Project: {} v{}", metadata.name, metadata.version);
 //! println!("Description: {}", metadata.description);
 //! ```
 
-use {
-  super::utils::*,
-  crate::_prelude::*,
-};
+use crate::_prelude::*;
 
 /// Static cache for project metadata TOML table.
 ///
@@ -99,9 +96,9 @@ fn load_metadata() -> CargoToml {
 ///
 /// # Examples
 /// ```no_run
-/// use env::project::prelude::*;
+/// use craole_cc_project::prelude::*;
 ///
-/// let metadata = ProjectMetadata::new();
+/// let metadata = WorkspaceMetadata::new();
 /// if !metadata.name.is_empty() {
 ///   println!("Project: {}", metadata.name);
 /// }
@@ -180,8 +177,8 @@ impl Metadata {
   ///
   /// # Examples
   /// ```no_run
-  /// use env::project::prelude::*;
-  /// let metadata = ProjectMetadata::new().with_name("my-project");
+  /// use craole_cc_project::prelude::*;
+  /// let metadata = WorkspaceMetadata::new().with_name("my-project");
   /// ```
   #[must_use]
   pub fn with_name(mut self, name: impl Into<String>) -> Self {

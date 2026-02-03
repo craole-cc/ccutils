@@ -22,17 +22,19 @@
 //!
 //! ## Programmatic Access
 //! ```no_run
-//! use env::prelude::*;
+//! use craole_cc_project::prelude::*;
 //!
-//! let port = getenv!(port);
-//! let db = getenv!(db);
-//! println!("Server: {}:{}", getenv!(ip), port);
+//! let prj = get();
+//! let port = prj.workspace.configuration.port;
+//! let db = &prj.workspace.configuration.db;
+//! let ip = &prj.workspace.configuration.ip;
+//! println!("Server: {}:{}", ip, port);
 //! println!("Database: {}", db);
 //! ```
 //!
 //! ## Builder Pattern
 //! ```no_run
-//! use env::project::prelude::*;
+//! use craole_cc_project::prelude::*;
 //!
 //! let config = Configuration::new()
 //!   .with_port(8080_u16)
@@ -71,7 +73,7 @@ use crate::_prelude::*;
 ///
 /// # Examples
 /// ```no_run
-/// use env::project::prelude::*;
+/// use craole_cc_project::infrastructure::*;
 ///
 /// let config = Configuration::default();
 /// println!(
@@ -224,7 +226,7 @@ impl Default for Configuration {
   ///
   /// # Examples
   /// ```no_run
-  /// use env::project::prelude::*;
+  /// use craole_cc_project::infrastructure::*;
   /// let config = Configuration::default();
   /// // If PORT="invalid", this panics with "PORT must be a valid number"
   /// ```
@@ -257,7 +259,7 @@ impl Configuration {
   ///
   /// # Examples
   /// ```no_run
-  /// use env::project::prelude::*;
+  /// use craole_cc_project::infrastructure::*;
   /// let config = Configuration::new();
   /// ```
   #[must_use]
@@ -272,7 +274,7 @@ impl Configuration {
   ///
   /// # Examples
   /// ```no_run
-  /// use env::project::prelude::*;
+  /// use craole_cc_project::infrastructure::*;
   ///
   /// // Use PostgreSQL in production
   /// let config = Configuration::new().with_db("postgres://user:pass@db.example.com/myapp");
@@ -284,7 +286,7 @@ impl Configuration {
   /// # Builder Chaining
   /// Returns `Self` for method chaining:
   /// ```no_run
-  /// use env::project::prelude::*;
+  /// use craole_cc_project::infrastructure::*;
   /// let config = Configuration::new()
   ///   .with_db("postgres://localhost/mydb")
   ///   .with_port(5432_u16)
@@ -298,26 +300,30 @@ impl Configuration {
 
   /// Sets the server port, overriding the `PORT` environment variable.
   ///
+  /// Accepts any integer type that can be converted to `u16`.
+  ///
   /// # Examples
   /// ```no_run
-  /// use env::project::prelude::*;
+  /// use craole_cc_project::infrastructure::*;
   ///
-  /// // Development
+  /// // Integer literals (inferred as i32) work automatically
+  /// let config = Configuration::new().with_port(3000);
+  /// let config = Configuration::new().with_port(8080);
+  ///
+  /// // Explicit types also work
   /// let config = Configuration::new().with_port(3000_u16);
-  ///
-  /// // Production (high port)
-  /// let config = Configuration::new().with_port(8080_u16);
-  ///
-  /// // Production (privileged port, requires root)
-  /// let config = Configuration::new().with_port(80_u16);
+  /// let config = Configuration::new().with_port(80u8);
   /// ```
   ///
-  /// # Note
-  /// This accepts `impl Into<u16>`, so you can pass any type that converts to u16.
-  /// Examples: `3000u16`, `3000_u16`, or integer literals.
+  /// # Panics
+  /// Panics if the value is outside u16 range (0-65535).
   #[must_use]
-  pub fn with_port(mut self, port: impl Into<u16>) -> Self {
-    self.port = port.into();
+  pub fn with_port<P>(mut self, port: P) -> Self
+  where
+    P: TryInto<u16>,
+    <P as TryInto<u16>>::Error: std::fmt::Debug,
+  {
+    self.port = port.try_into().expect("Port must be 0-65535");
     self
   }
 
@@ -325,7 +331,7 @@ impl Configuration {
   ///
   /// # Examples
   /// ```no_run
-  /// use env::project::prelude::*;
+  /// use craole_cc_project::infrastructure::*;
   ///
   /// // Development (localhost only)
   /// let config = Configuration::new().with_ip("localhost");

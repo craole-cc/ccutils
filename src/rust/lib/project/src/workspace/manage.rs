@@ -16,6 +16,14 @@ impl WorkspaceManager {
   }
 
   /// Create a new workspace at the given path.
+  ///
+  /// # Errors
+  ///
+  /// Returns an error if the workspace directory cannot be created or if the Cargo.toml file cannot be written.
+  ///
+  /// # Panics
+  ///
+  /// Panics if the TOML serialization fails (which should not happen with valid TOML structures).
   pub fn create(name: &str, path: &Path) -> Result<PathBuf> {
     let workspace_path = path.join(name);
     create_dir_all(&workspace_path)?;
@@ -40,11 +48,19 @@ impl WorkspaceManager {
   }
 
   /// Add a member to the workspace.
+  ///
+  /// # Errors
+  ///
+  /// Returns an error if the Cargo.toml file cannot be read or written, or if the workspace structure is invalid.
+  ///
+  /// # Panics
+  ///
+  /// Panics if the TOML serialization fails (which should not happen with valid TOML structures).
   pub fn add_member(&self, member_path: &str) -> Result<()> {
     let cargo_toml_path = self.root.join("Cargo.toml");
     let contents = read_to_string(&cargo_toml_path)?;
     let mut toml: TomlTable =
-      from_toml_str(&contents).map_err(|e| IoError::new(ErrorKind::InvalidData, e))?;
+      from_toml_str(&contents).map_err(|e| IOError::new(IOErrorKind::InvalidData, e))?;
 
     // Get or create workspace.members array
     let members = toml
@@ -56,7 +72,7 @@ impl WorkspaceManager {
           .or_insert_with(|| TomlValue::Array(vec![]))
           .as_array_mut()
       })
-      .ok_or_else(|| IoError::new(ErrorKind::InvalidData, "Invalid workspace structure"))?;
+      .ok_or_else(|| IOError::new(IOErrorKind::InvalidData, "Invalid workspace structure"))?;
 
     // Add member if not already present
     let member_value = TomlValue::String(member_path.to_string());
@@ -74,11 +90,19 @@ impl WorkspaceManager {
   }
 
   /// Remove a member from the workspace.
+  ///
+  /// # Errors
+  ///
+  /// Returns an error if the Cargo.toml file cannot be read or written, or if the workspace structure is invalid.
+  ///
+  /// # Panics
+  ///
+  /// Panics if the TOML serialization fails (which should not happen with valid TOML structures).
   pub fn remove_member(&self, member_path: &str) -> Result<()> {
     let cargo_toml_path = self.root.join("Cargo.toml");
     let contents = read_to_string(&cargo_toml_path)?;
     let mut toml: TomlTable =
-      from_toml_str(&contents).map_err(|e| IoError::new(ErrorKind::InvalidData, e))?;
+      from_toml_str(&contents).map_err(|e| IOError::new(IOErrorKind::InvalidData, e))?;
 
     // Get workspace.members array
     let members = toml
@@ -86,7 +110,7 @@ impl WorkspaceManager {
       .and_then(|w| w.as_table_mut())
       .and_then(|w| w.get_mut("members"))
       .and_then(|m| m.as_array_mut())
-      .ok_or_else(|| IoError::new(ErrorKind::NotFound, "No workspace members found"))?;
+      .ok_or_else(|| IOError::new(IOErrorKind::NotFound, "No workspace members found"))?;
 
     // Remove member
     members.retain(|m| m.as_str() != Some(member_path));

@@ -4,6 +4,9 @@
 
 pub use super::{
   super::{
+    core::*,
+    infrastructure::prelude::*,
+    metadata::prelude::*,
     package::prelude::*,
     workspace::prelude::*,
   },

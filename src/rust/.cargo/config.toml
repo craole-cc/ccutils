@@ -1,18 +1,62 @@
 [alias]
+#╔═══════════════════════════════════════════════════════════╗
+#║ Aliases                                                   ║
+#╚═══════════════════════════════════════════════════════════╝
 b = "build"
 br = "build --release"
+bw = "build --workspace"
 c = "check"
+cw = "check --workspace"
 cl = "clippy --workspace"
 t = "test --workspace"
-r = "run"
-rr = "run --release"
 w = "watch -x check"
-wr = "watch -x run"
-wa = "watch -x 'check --workspace'"
+ww = "watch -x 'check --workspace'"
+
+#╔═══════════════════════════════════════════════════════════╗
+#║ craole-cc-project                                         ║
+#╚═══════════════════════════════════════════════════════════╝
+prj = "test -p craole-cc-project"
+prj-t = "test -p craole-cc-project"
+prj-d = "doc -p craole-cc-project --open"
+prj-x = "run -p craole-cc-project --example "
+
+#╔═══════════════════════════════════════════════════════════╗
+#║ craole-cc-log                                             ║
+#╚═══════════════════════════════════════════════════════════╝
+log-lib = "run -p craole-cc-log"
+log-x = "run -p craole-cc-log --example"
+log-t = "test -p craole-cc-log"
+log-d = "doc -p craole-cc-log --open"
+
+#╔═══════════════════════════════════════════════════════════╗
+#║ ephelog (log binary)                                      ║
+#╚═══════════════════════════════════════════════════════════╝
+log = "run -p ephelog"
+logr = "run -p ephelog --release"
+
+#╔═══════════════════════════════════════════════════════════╗
+#║ craole-cc-cache (future)                                  ║
+#╚═══════════════════════════════════════════════════════════╝
+cache = "run -p craole-cc-cache"
+cache-x = "run -p craole-cc-cache --example"
+cache-t = "test -p craole-cc-cache"
+
+#╔═══════════════════════════════════════════════════════════╗
+#║ craole-cc-env (future)                                    ║
+#╚═══════════════════════════════════════════════════════════╝
+env = "run -p craole-cc-env"
+env-x = "run -p craole-cc-env --example"
+env-t = "test -p craole-cc-env"
+
+#╔═══════════════════════════════════════════════════════════╗
+#║ craole-cc-cli (future)                                    ║
+#╚═══════════════════════════════════════════════════════════╝
+cli = "run -p craole-cc-cli"
+cli-x = "run -p craole-cc-cli --example"
+cli-t = "test -p craole-cc-cli"
 
 [build]
 jobs = 4
 
 [term]
 color = "always"
-
