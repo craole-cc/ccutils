@@ -11,20 +11,19 @@ pkgs.mkShell {
     lsd
     tokei
     onefetch
-    # zoxide
-    # treefmt
-    # shfmt # Shellscript Formatter
-    # shellcheck # Shellscript Linter
-    # taplo # Toml Formatter
-    # stylua # Lua Formatter
-    # yamlfmt # YamlFormatter
-    # typst # Typesetting system
-    # typstfmt # Typst Formatter
-    # typstyle # Typst Linter
-    # actionlint # GitHub Actions
-    # editorconfig-checker # EditorConfig
-    # eclint # EditorConfig
+    zoxide
+    treefmt
+    shfmt # Shellscript Formatter
+    shellcheck # Shellscript Linter
+    taplo # Toml Formatter
+    stylua # Lua Formatter
+    yamlfmt # YamlFormatter
+    typst # Typesetting system
+    typstyle # Typst Linter
+    actionlint # GitHub Actions
+    editorconfig-checker # EditorConfig
+    eclint # EditorConfig
     markdownlint-cli2 # Markdown
-    # keep-sorted # Sorter
+    keep-sorted # Sorter
   ];
 }

@@ -2,13 +2,13 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    neovim.url = "github:nix-community/neovim-nightly-overlay";
+    # neovim.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs = {
     nixpkgs,
     flake-utils,
-    neovim,
+    # neovim,
     ...
   }:
     flake-utils.lib.eachDefaultSystem (
@@ -22,37 +22,10 @@
         };
       in {
         devShells.default = pkgs.mkShell {
-          # buildInputs = with pkgs; [
-          #   getoptions
-          #   pre-commit
-          #   eza
-          #   bat
-          #   fd
-          #   btop
-          #   ripgrep
-          #   fzf
-          #   lsd
-          #   delta
-          #   yazi
-          #   tlrc
-          #   tokei
-          #   zoxide
-          #   tldr
-          #   neovim
-          #   helix
-          #   direnv
-          #   mise
-          #   fend
-          #   fastfetch
-          #   lesspipe
-          #   glib
-          #   treefmt
-          #   coreutils-prefixed
-          # ];
           inputsFrom = [(import ./shell.nix {inherit pkgs;})];
           shellHook = ''
-            fastfetch
             onefetch
+            alias exa='exa --icons'
 
             # if [ t1 ]; then
             #   if [ -n "$VISUAL" ] ;then
