@@ -126,27 +126,66 @@ pub fn try_get() -> Option<&'static Environment> {
 
 /// Top-level application environment container.
 ///
-/// Combines project-level configuration (workspace, paths, server config)
-/// with package-level metadata (current crate info).
+/// Combines domain models (workspace, package) with infrastructure (config, paths).
 ///
 /// # Fields
-/// - `workspace` - Workspace configuration: metadata, paths, server settings
-/// - `package` - Running package metadata: name, version, description
+/// - `kind` - Environment operation mode
+/// - `workspace` - Workspace domain model (metadata, packages)
+/// - `package` - Current package domain model (metadata)
+/// - `config` - Runtime configuration (database, server settings)
+/// - `paths` - Filesystem paths (workspace root, assets, etc.)
 ///
 /// # Builder Pattern
 /// All `with_*` methods return `Self` for method chaining:
 /// ```no_run
 /// use craole_cc_project::prelude::*;
-/// let prj = Environment::new()
+/// let env = Environment::new()
 ///   .with_pkg_name("my-app")
 ///   .with_pkg_version("1.0.0")
-///   .with_port(8080);
+///   .with_port(8080)
+///   .with_db("postgres://localhost/mydb");
 /// ```
-#[derive(Default, Debug, Clone)]
+#[derive(Debug, Clone)]
 pub struct Environment {
+  /// Environment operation mode
   pub kind: Kind,
+
+  // ═══ DOMAIN ═══
+  /// Workspace domain model
   pub workspace: Workspace,
+
+  /// Current package domain model
   pub package: Package,
+
+  // ═══ INFRASTRUCTURE ═══
+  /// Runtime configuration (env vars)
+  pub config: Configuration,
+
+  /// Filesystem paths (discovered at runtime)
+  pub paths: Paths,
+}
+
+impl Default for Environment {
+  fn default() -> Self {
+    let kind = Kind::detect();
+    let workspace = Workspace::default();
+    let package = Package::default();
+    let paths = Paths::default();
+
+    // Special handling: if DATABASE_URL is empty, use workspace/assets/db
+    let mut config = Configuration::new();
+    if config.db.is_empty() {
+      config.db = paths.database.to_string_lossy().into_owned();
+    }
+
+    Self {
+      kind,
+      workspace,
+      package,
+      config,
+      paths,
+    }
+  }
 }
 
 impl Environment {
@@ -185,64 +224,131 @@ impl Environment {
     }
   }
 
-  /// Sets the project name (stored in package metadata).
-  ///
-  /// **Note:** This sets package name, not project name. For the actual project/workspace name,
-  /// modify `craole_cc_project::workspace.metadata.name` directly or use workspace-level builder methods.
+  //╔═══════════════════════════════════════════════════════════╗
+  //║ Package Shortcuts (convenience)                          ║
+  //╚═══════════════════════════════════════════════════════════╝
+
+  /// Sets the package name (shortcut for `with_pkg_name`).
   #[must_use]
   pub fn with_name(mut self, name: impl Into<String>) -> Self {
     self.package = self.package.with_name(name);
     self
   }
 
-  /// Sets the project version (stored in package metadata).
+  /// Sets the package version (shortcut for `with_pkg_version`).
   #[must_use]
   pub fn with_version(mut self, version: impl Into<String>) -> Self {
     self.package = self.package.with_version(version);
     self
   }
 
-  /// Sets the project description (stored in package metadata).
+  /// Sets the package description (shortcut for `with_pkg_description`).
   #[must_use]
   pub fn with_description(mut self, description: impl Into<String>) -> Self {
     self.package = self.package.with_description(description);
     self
   }
 
-  /// Sets the database URL/path for the workspace.
+  //╔═══════════════════════════════════════════════════════════╗
+  //║ Infrastructure Builders                                   ║
+  //╚═══════════════════════════════════════════════════════════╝
+
+  /// Sets the database URL/path.
   ///
-  /// Used to override the default database location (`{workspace}/assets/db`).
+  /// # Examples
+  /// ```no_run
+  /// use craole_cc_project::prelude::*;
+  /// let env = Environment::new().with_db("postgres://localhost/mydb");
+  /// ```
   #[must_use]
   pub fn with_db(mut self, database_url: impl Into<String>) -> Self {
-    self.workspace = self.workspace.with_db(database_url);
+    self.config = self.config.with_db(database_url);
     self
   }
 
   /// Sets the server port.
   ///
-  /// Overrides the `PORT` environment variable (default: 3000).
+  /// # Examples
+  /// ```no_run
+  /// use craole_cc_project::prelude::*;
+  /// let env = Environment::new().with_port(8080);
+  /// ```
   #[must_use]
   pub fn with_port<P>(mut self, port: P) -> Self
   where
     P: TryInto<u16>,
     <P as TryInto<u16>>::Error: Debug,
   {
-    self.workspace = self.workspace.with_port(port);
+    self.config = self.config.with_port(port);
     self
   }
 
   /// Sets the server bind IP address.
   ///
-  /// Overrides the `IP` environment variable (default: "localhost").
+  /// # Examples
+  /// ```no_run
+  /// use craole_cc_project::prelude::*;
+  /// let env = Environment::new().with_ip("0.0.0.0");
+  /// ```
   #[must_use]
   pub fn with_ip(mut self, ip: impl Into<String>) -> Self {
-    self.workspace = self.workspace.with_ip(ip);
+    self.config = self.config.with_ip(ip);
     self
   }
 
-  /// Sets the package name (current running crate).
+  //╔═══════════════════════════════════════════════════════════╗
+  //║ Workspace Delegation                                      ║
+  //╚═══════════════════════════════════════════════════════════╝
+
+  /// Sets the workspace name.
+  #[must_use]
+  pub fn with_workspace_name(mut self, name: impl Into<String>) -> Self {
+    self.workspace = self.workspace.with_name(name);
+    self
+  }
+
+  /// Sets the workspace version.
+  #[must_use]
+  pub fn with_workspace_version(mut self, version: impl Into<String>) -> Self {
+    self.workspace = self.workspace.with_version(version);
+    self
+  }
+
+  /// Sets the workspace description.
+  #[must_use]
+  pub fn with_workspace_description(mut self, description: impl Into<String>) -> Self {
+    self.workspace = self.workspace.with_description(description);
+    self
+  }
+
+  /// Adds a package to the workspace.
+  #[must_use]
+  pub fn with_workspace_package(mut self, package: Package) -> Self {
+    self.workspace = self.workspace.with_package(package);
+    self
+  }
+
+  /// Adds a package by name to the workspace.
+  #[must_use]
+  pub fn with_workspace_package_name(mut self, name: impl Into<String>) -> Self {
+    self.workspace = self.workspace.with_package_name(name);
+    self
+  }
+
+  //╔═══════════════════════════════════════════════════════════╗
+  //║ Package Delegation                                        ║
+  //╚═══════════════════════════════════════════════════════════╝
+
+  /// Sets the package name (for the currently running crate).
   ///
-  /// This is the name of the binary/library being executed, distinct from workspace name.
+  /// # Examples
+  /// ```no_run
+  /// use craole_cc_project::prelude::*;
+  ///
+  /// let env = Environment::new()
+  ///   .with_pkg_name(env!("CARGO_PKG_NAME"))
+  ///   .with_pkg_version(env!("CARGO_PKG_VERSION"));
+  /// ```
   #[must_use]
   pub fn with_pkg_name(mut self, name: impl Into<String>) -> Self {
     self.package = self.package.with_name(name);
