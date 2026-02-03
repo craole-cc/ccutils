@@ -40,7 +40,7 @@
 //!   .with_db("sqlite:///data/app.db");
 //! ```
 
-use super::super::_prelude::*;
+use crate::_prelude::*;
 
 /// Server and runtime configuration loaded from environment variables.
 ///

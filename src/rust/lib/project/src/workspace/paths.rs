@@ -26,7 +26,10 @@
 //! println!("Database: {}", paths.database.display());
 //! ```
 
-use super::super::_prelude::*;
+use {
+  super::utils::*,
+  crate::_prelude::*,
+};
 
 /// Project directory structure and path management.
 ///
@@ -118,7 +121,7 @@ impl Default for Paths {
   /// assert!(paths.database.ends_with("db"));
   /// ```
   fn default() -> Self {
-    let project = find_project_path();
+    let project = find_cargo_root();
     let package = project.clone();
     let assets = project.join("assets");
     let database = assets.join("db");

@@ -30,19 +30,19 @@
 //!
 //! ```no_run
 //! use env::project::prelude::*;
-//! let root = find_project_path();
+//! let root = find_cargo_root();
 //! println!("Project root: {}", root.display());
 //!
 //! let is_workspace = is_workspace_toml(&root.join("Cargo.toml"));
 //! println!("Is workspace: {}", is_workspace);
 //!
-//! let metadata = read_toml_metadata(&root.join("Cargo.toml"));
+//! let metadata = read_cargo_metadata(&root.join("Cargo.toml"));
 //! if let Some(meta) = metadata {
 //!   println!("Metadata: {:?}", meta);
 //! }
 //! ```
 
-use super::super::_prelude::*;
+use crate::_prelude::*;
 
 /// Find the workspace root directory with fast detection methods first, then fallbacks.
 ///
@@ -65,10 +65,10 @@ use super::super::_prelude::*;
 /// # Examples
 /// ```no_run
 /// use env::project::prelude::*;
-/// let root = find_project_path();
+/// let root = find_cargo_root();
 /// assert!(root.join("Cargo.toml").exists());
 /// ```
-pub fn find_project_path() -> PathBuf {
+pub fn find_cargo_root() -> PathBuf {
   // Methods 0 & 1: Explicit override via environment variables
   let env_vars = [
     "PROJECT_ROOT",
@@ -100,9 +100,9 @@ pub fn find_project_path() -> PathBuf {
   }
 
   // Method 4: Use cargo_metadata as last resort
-  #[cfg(feature = "metadata")]
+  #[cfg(feature = "full")]
   {
-    if let Some(root) = find_project_path_via_cargo_meta() {
+    if let Some(root) = find_cargo_root_via_cargo_metadata() {
       return root;
     }
   }
@@ -246,9 +246,9 @@ pub fn is_workspace_toml(path: &Path) -> bool {
 ///
 /// # Feature
 /// Requires `metadata` feature to be enabled
-#[cfg(feature = "metadata")]
+#[cfg(feature = "full")]
 #[must_use]
-pub fn find_project_path_via_cargo_meta() -> Option<PathBuf> {
+pub fn find_cargo_root_via_cargo_metadata() -> Option<PathBuf> {
   use cargo_metadata::MetadataCommand;
 
   MetadataCommand::new()
@@ -282,7 +282,7 @@ pub fn find_project_path_via_cargo_meta() -> Option<PathBuf> {
 ///   std::path::Path,
 /// };
 ///
-/// let metadata = read_toml_metadata(Path::new("Cargo.toml"));
+/// let metadata = read_cargo_metadata(Path::new("Cargo.toml"));
 /// if let Some(meta) = metadata {
 ///   if let Some(name) = meta.get("name") {
 ///     println!("Package name: {:?}", name);
@@ -295,7 +295,7 @@ pub fn find_project_path_via_cargo_meta() -> Option<PathBuf> {
 /// - TOML parse: 1-10ms
 /// - Total: ~5-15ms
 #[must_use]
-pub fn read_toml_metadata(cargo_toml_path: &Path) -> Option<CargoToml> {
+pub fn read_cargo_metadata(cargo_toml_path: &Path) -> Option<CargoToml> {
   let contents = read_to_string(cargo_toml_path).ok()?;
   let toml_value = from_toml_str::<TomlValue>(&contents).ok()?;
   let root_table = toml_value.as_table()?;

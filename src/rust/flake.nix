@@ -288,12 +288,6 @@
           printf "  ✓ Created .mise.toml with workspace tasks\n"
         fi
 
-        #> Create crates directory structure
-        if [ ! -d crates ]; then
-          mkdir -p crates
-          printf "  ✓ Created crates/ directory for workspace members\n"
-        fi
-
         #> Create example README if it doesn't exist
         if [ ! -f README.md ]; then
           cat > README.md <<'EOF'

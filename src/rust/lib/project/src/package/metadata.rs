@@ -4,13 +4,13 @@
 //! This metadata is typically populated from compile-time environment variables using
 //! the `env!()` macro, allowing each crate to declare its own identity.
 //!
-//! # Relationship to Project Metadata
+//! # Relationship to Workspace Metadata
 //!
 //! There are two levels of metadata:
-//! - **Project**: Workspace-level metadata (read from workspace Cargo.toml)
+//! - **Workspace**: Project-level metadata (read from workspace Cargo.toml)
 //! - **Package**: Individual crate metadata (this module, typically from `env!()` macros)
 //!
-//! By default, package metadata is initialized by cloning project metadata,
+//! By default, package metadata is initialized by cloning workspace metadata,
 //! but this is typically overridden with the actual crate's compile-time values.
 //!
 //! # Compile-Time Integration
@@ -164,7 +164,7 @@ impl Default for Metadata {
   /// // Will have the workspace's name, version, description
   /// ```
   fn default() -> Self {
-    let project = ProjectMetadata::default();
+    let project = WorkspaceMetadata::default();
     Self {
       name: project.name,
       version: project.version,

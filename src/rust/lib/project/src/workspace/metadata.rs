@@ -19,7 +19,10 @@
 //! println!("Description: {}", metadata.description);
 //! ```
 
-use super::super::_prelude::*;
+use {
+  super::utils::*,
+  crate::_prelude::*,
+};
 
 /// Static cache for project metadata TOML table.
 ///
@@ -27,14 +30,52 @@ use super::super::_prelude::*;
 /// even if accessed from multiple threads or multiple times.
 static METADATA: OnceLock<CargoToml> = OnceLock::new();
 
+/// Get cached workspace metadata (without tracing).
 #[cfg(not(feature = "tracing"))]
 pub fn get() -> &'static CargoToml {
-  (METADATA.get_or_init(CargoToml::new)) as _
+  METADATA.get_or_init(load_metadata)
 }
 
+/// Get cached workspace metadata (with tracing).
+#[cfg(feature = "tracing")]
+#[tracing::instrument(level = "trace", name = "get_workspace_metadata")]
+pub fn get() -> &'static CargoToml {
+  METADATA.get_or_init(|| {
+    trace!("Loading workspace metadata from Cargo.toml");
+    let result = load_metadata();
+    debug!("Workspace metadata loaded successfully");
+    result
+  })
+}
+
+/// Set metadata cache (without tracing).
 #[cfg(not(feature = "tracing"))]
 pub fn set(data: CargoToml) -> &'static CargoToml {
   METADATA.get_or_init(|| data)
+}
+
+/// Set metadata cache (with tracing).
+#[cfg(feature = "tracing")]
+#[tracing::instrument(level = "trace", name = "set_workspace_metadata", skip(data))]
+pub fn set(data: CargoToml) -> &'static CargoToml {
+  trace!("Setting workspace metadata cache");
+  METADATA.get_or_init(|| {
+    debug!("Workspace metadata cache initialized");
+    data
+  })
+}
+
+/// Load metadata from workspace Cargo.toml using your utils.
+fn load_metadata() -> CargoToml {
+  let root = find_cargo_root();
+  let toml = root.join("Cargo.toml");
+
+  read_cargo_metadata(&toml).unwrap_or_else(|| {
+    #[cfg(feature = "tracing")]
+    warn!("Failed to read workspace metadata, using empty map");
+
+    TomlMap::new()
+  })
 }
 
 /// Project metadata extracted from workspace Cargo.toml.
@@ -77,7 +118,7 @@ impl Default for Metadata {
   ///
   /// # Process
   /// 1. Calls `read_project_toml()` which:
-  ///    - Finds the project root using `find_project_path()`
+  ///    - Finds the project root using `find_cargo_root()`
   ///    - Loads and parses `{root}/Cargo.toml`
   ///    - Caches the result in `METADATA` `OnceLock`
   /// 2. Extracts name/version/description from appropriate section:
@@ -165,7 +206,7 @@ impl Metadata {
   /// Load and cache the project Cargo.toml metadata.
   ///
   /// Uses the static `METADATA` cache to ensure the file is only read once.
-  /// Calls `read_toml_metadata()` from `project::utils` to do the actual work.
+  /// Calls `read_cargo_metadata()` from `project::utils` to do the actual work.
   ///
   /// # Returns
   /// `&'static CargoToml` - The parsed [package] or [workspace.package] section
@@ -179,10 +220,10 @@ impl Metadata {
   /// Thread-safe; multiple threads coordinate safely during first initialization.
   fn read_project_toml() -> &'static CargoToml {
     METADATA.get_or_init(|| {
-      let project_root = find_project_path();
+      let project_root = find_cargo_root();
       let cargo_toml_path = project_root.join("Cargo.toml");
 
-      read_toml_metadata(&cargo_toml_path).unwrap_or_else(|| {
+      read_cargo_metadata(&cargo_toml_path).unwrap_or_else(|| {
         eprintln!(
           "Failed to read metadata from Cargo.toml at {}",
           cargo_toml_path.display()

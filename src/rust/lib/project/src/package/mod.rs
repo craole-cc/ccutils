@@ -71,10 +71,12 @@
 //!
 //! See individual module documentation for detailed examples and explanations.
 
+mod builder;
 mod core;
 mod metadata;
 
 pub use {
+  builder::*,
   core::*,
   metadata::*,
 };
@@ -95,6 +97,7 @@ pub use {
 /// ```
 pub mod prelude {
   pub use super::{
+    Builder as PackageBuilder,
     Environment as Package,
     Metadata as PackageMetadata,
   };
