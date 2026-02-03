@@ -16,8 +16,9 @@ pkgs.mkShell {
     tlrc
     tokei
     onefetch
-    thefuck
     zoxide
+    neovim
+    helix
     tldr
     lesspipe
     glib

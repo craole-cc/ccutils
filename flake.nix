@@ -22,35 +22,34 @@
         };
       in {
         devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            getoptions
-            pre-commit
-            eza
-            bat
-            fd
-            btop
-            ripgrep
-            fzf
-            lsd
-            delta
-            yazi
-            tlrc
-            tokei
-            thefuck
-            zoxide
-            tldr
-            neovim
-            helix
-            direnv
-            mise
-            fend
-            fastfetch
-            lesspipe
-            glib
-            treefmt
-            coreutils-prefixed
-          ];
-          # inputsFrom = [ (import ./shell.nix { inherit pkgs; }) ];
+          # buildInputs = with pkgs; [
+          #   getoptions
+          #   pre-commit
+          #   eza
+          #   bat
+          #   fd
+          #   btop
+          #   ripgrep
+          #   fzf
+          #   lsd
+          #   delta
+          #   yazi
+          #   tlrc
+          #   tokei
+          #   zoxide
+          #   tldr
+          #   neovim
+          #   helix
+          #   direnv
+          #   mise
+          #   fend
+          #   fastfetch
+          #   lesspipe
+          #   glib
+          #   treefmt
+          #   coreutils-prefixed
+          # ];
+          inputsFrom = [(import ./shell.nix {inherit pkgs;})];
           shellHook = ''
             fastfetch
             onefetch
