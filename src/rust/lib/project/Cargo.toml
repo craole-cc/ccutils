@@ -1,6 +1,6 @@
 [package]
 name = "craole-cc-project"
-version = "0.1.0"
+version = "0.1.1"
 description = "Cargo workspace and package scaffolding - part of the Craole CC development toolkit"
 keywords = ["cargo", "workspace", "scaffold", "craole", "cc"]
 readme = "README.md"
