@@ -1,0 +1,25 @@
+[workspace]
+default-members = ["bin/*", "lib/*"]
+members = ["bin/*", "lib/*"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+authors = ["Your Name <your.email@example.com>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/yourusername/yourproject"
+
+[workspace.dependencies]
+# Shared dependencies go here
+# Example:
+# serde = { version = "1.0", features = ["derive"] }
+# tokio = { version = "1", features = ["full"] }
+
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1

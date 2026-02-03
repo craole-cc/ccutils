@@ -1,0 +1,19 @@
+[formatter.rust]
+command = "rustfmt"
+options = ["--edition", "2024"]
+includes = ["*.rs"]
+
+[formatter.toml]
+command = "taplo"
+options = ["format"]
+includes = ["*.toml"]
+
+[formatter.markdown]
+command = "deno"
+options = ["fmt"]
+includes = ["*.md", "*.json"]
+
+[formatter.yaml]
+command = "yamlfmt"
+includes = ["*.yaml", "*.yml"]
+
