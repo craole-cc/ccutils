@@ -11,7 +11,7 @@ pkgs.mkShell {
     lsd
     tokei
     onefetch
-    zoxide
+    # zoxide
     # treefmt
     # shfmt # Shellscript Formatter
     # shellcheck # Shellscript Linter
