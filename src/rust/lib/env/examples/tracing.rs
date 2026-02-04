@@ -138,12 +138,12 @@ fn main() {
     workspace = %env.workspace.metadata.name
   );
 
-  let _guard = workspace_span.enter();
+  let guard = workspace_span.enter();
   info!("Starting workspace operations");
 
   simulate_workspace_operations(env);
 
-  drop(_guard); // Exit span
+  drop(guard); // Exit span
   println!("  Workspace operations completed (check trace logs)");
   println!();
 
