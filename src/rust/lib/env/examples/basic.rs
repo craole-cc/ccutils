@@ -5,7 +5,7 @@
 use prjenv::prelude::*;
 
 fn main() {
-  println!("🚀 Craole CC Project - Basic Example\n");
+  println!("🚀 prjenv - Basic Example\n");
 
   //╔═══════════════════════════════════════════════════════════╗
   //║ Example 1: Auto-detected Environment                      ║

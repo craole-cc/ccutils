@@ -41,7 +41,7 @@ opt-level = 3
 [workspace.dependencies]
 # -- Internal
 # ephelog = { path = "lib/log" }
-prjenv = { path = "lib/project" }
+prjenv = { path = "lib/env" }
 
 # -- Tracing & Error Handling
 miette = "7.6.0"
@@ -49,5 +49,5 @@ thiserror = "2.0.18"
 tracing = "0.1.41"
 
 # -- Information Management
-toml = "0.9.8"
+toml = "0.9.11"
 dotenvy = "0.15.7"

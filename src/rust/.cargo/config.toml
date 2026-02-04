@@ -1,62 +1,151 @@
-[alias]
-#╔═══════════════════════════════════════════════════════════╗
-#║ Aliases                                                   ║
-#╚═══════════════════════════════════════════════════════════╝
-b = "build"
-br = "build --release"
-bw = "build --workspace"
-c = "check"
-cw = "check --workspace"
-cl = "clippy --workspace"
-t = "test --workspace"
-w = "watch -x check"
-ww = "watch -x 'check --workspace'"
-
-#╔═══════════════════════════════════════════════════════════╗
-#║ prjenv                                         ║
-#╚═══════════════════════════════════════════════════════════╝
-prj = "test -p prjenv"
-prj-t = "test -p prjenv"
-prj-d = "doc -p prjenv --open"
-prj-x = "run -p prjenv --example "
-
-#╔═══════════════════════════════════════════════════════════╗
-#║ prjenv                                             ║
-#╚═══════════════════════════════════════════════════════════╝
-log-lib = "run -p prjenv"
-log-x = "run -p prjenv --example"
-log-t = "test -p prjenv"
-log-d = "doc -p prjenv --open"
-
-#╔═══════════════════════════════════════════════════════════╗
-#║ ephelog (log binary)                                      ║
-#╚═══════════════════════════════════════════════════════════╝
-log = "run -p ephelog"
-logr = "run -p ephelog --release"
-
-#╔═══════════════════════════════════════════════════════════╗
-#║ craole-cc-cache (future)                                  ║
-#╚═══════════════════════════════════════════════════════════╝
-cache = "run -p craole-cc-cache"
-cache-x = "run -p craole-cc-cache --example"
-cache-t = "test -p craole-cc-cache"
-
-#╔═══════════════════════════════════════════════════════════╗
-#║ craole-cc-env (future)                                    ║
-#╚═══════════════════════════════════════════════════════════╝
-env = "run -p craole-cc-env"
-env-x = "run -p craole-cc-env --example"
-env-t = "test -p craole-cc-env"
-
-#╔═══════════════════════════════════════════════════════════╗
-#║ craole-cc-cli (future)                                    ║
-#╚═══════════════════════════════════════════════════════════╝
-cli = "run -p craole-cc-cli"
-cli-x = "run -p craole-cc-cli --example"
-cli-t = "test -p craole-cc-cli"
-
 [build]
 jobs = 4
 
 [term]
 color = "always"
+
+[alias]
+#╔═══════════════════════════════════════════════════════════╗
+#║ Global Aliases                                            ║
+#╚═══════════════════════════════════════════════════════════╝
+# -- Benchmark
+p = "bench"                                   # Run benchmarks
+pq = "bench --quiet"                          # Run benchmarks with minimal output
+
+# -- Build
+b = "build --verbose --message-format human"  # Build with verbose output
+ba = "b --workspace"                          # Build all workspace members
+br = "b --release"                            # Build with release optimizations
+
+# -- Clean
+c = "clean --verbose"                        # Remove build artifacts
+gc = "c"                                     # Remove build artifacts
+
+# -- Documentation
+d = "doc --document-private-items"            # Generate docs including private items
+do = "d --open"                               # Generate and open docs in browser
+
+# -- Exemplify
+x = "rq --example"                            # Run example quietly
+xv = "rv --example"                           # Run example verbosely
+
+# -- Install
+i = "install --force"                        # Install from path (overwrites existing)
+ip = "i --path"                              # Install from path (overwrites existing)
+id = "i --debug --path"                      # Install debug build from path
+il = "i --locked --path"                     # Install with locked dependencies
+ild = "i --locked --debug --path"            # Install debug build with locked dependencies
+idl = "idl"                                  # Install debug build with locked dependencies
+
+# -- Lint (Clippy)
+l = "clippy --all-targets --no-deps"          # Lint all targets (lib, bins, tests, benches, examples)
+lf = "l --fix"                                # Automatically apply lint suggestions
+la = "l --workspace"                          # Lint entire workspace
+lr = "l --release"                            # Lint with release profile
+
+# -- Run
+r = "run"                                     # Run binary
+rq = "run --quiet"                            # Run binary quietly
+rr = "rv --release"                           # Run release build with verbose output
+rv = "run --verbose"                          # Run with verbose output
+
+# -- Test
+t = "test"                                    # Run tests
+ta = "test --workspace"                       # Test all workspace members
+tq = "test --quiet"                           # Run tests quietly
+tv = "test --verbose"                         # Run tests with verbose output
+
+# -- Watch
+w = "watch --quiet --clear --exec"            # Watch files and execute command on change
+wl = "w l"                                    # Watch and run clippy
+wlr = "w lr"                                  # Watch and run clippy with release profile
+wr = "w rq"                                   # Watch and run quietly
+wrr = "w rr"                                  # Watch and run release build
+wt = "w tq"                                   # Watch and run tests quietly
+wtv = "w tv"                                  # Watch and run tests verbosely
+wv = "w rv"                                   # Watch and run verbosely
+wx = "w x"                                    # Watch and run example quietly
+wxv = "w xv"                                  # Watch and run example verbosely
+
+#╔═══════════════════════════════════════════════════════════╗
+#║ ccutil {bin/cli}                                          ║
+#╚═══════════════════════════════════════════════════════════╝
+# -- Profile: Development
+ccu-b = "b --package ccutil"                   # Build ccutil
+ccu-c = "c --package ccutil"                   # Clean ccutil build artifacts
+ccu-l = "l --package ccutil"                   # Lint ccutil
+ccu-lf = "lf --package ccutil"                 # Fix linting issues in ccutil
+ccu-r = "rq --package ccutil"                  # Run ccutil quietly
+ccu-rv = "rv --package ccutil"                 # Run ccutil verbosely
+
+# -- Profile: Testing
+ccu-t = "tq --package ccutil"                  # Test ccutil quietly
+ccu-tv = "tv --package ccutil"                 # Test ccutil verbosely
+
+# -- Profile: Benchmark
+ccu-p = "p --package ccutil"                   # Benchmark ccutil
+ccu-pq = "pq --package ccutil"                 # Benchmark ccutil quietly
+
+# -- Profile: Release
+ccu-br = "br --package ccutil"                 # Build ccutil with release optimizations
+ccu-lr = "lr --package ccutil"                 # Lint ccutil with release profile
+
+# -- Mode: Documentation
+ccu-d = "d --package ccutil"                   # Generate ccutil documentation
+ccu-do = "do --package ccutil"                 # Generate and open ccutil docs
+
+# -- Mode: Example
+ccu-x = "x --package ccutil"                   # Run ccutil example quietly
+ccu-xv = "xv --package ccutil"                 # Run ccutil example verbosely
+
+# -- Mode: Install
+ccu-i = "ip bin/cli"                          # Install ccutil system-wide
+ccu-id = "id bin/cli"                         # Install ccutil (debug build)
+ccu-il = "il bin/cli"                         # Install ccutil (locked dependencies)
+ccu-ild = "ild bin/cli"                       # Install ccutil (debug with locked dependencies)
+
+# -- Mode: Watch
+ccu-wl = "wl --package ccutil"                # Watch and lint ccutil
+ccu-wlr = "wlr --package ccutil"              # Watch and lint ccutil (release)
+ccu-wr = "wr --package ccutil"                # Watch and run ccutil quietly
+ccu-wrr = "wrr --package ccutil"              # Watch and run ccutil (release)
+ccu-wrv = "wrv --package ccutil"              # Watch and run ccutil verbosely
+ccu-wt = "wt --package ccutil"                # Watch and test ccutil quietly
+ccu-wtv = "wtv --package ccutil"              # Watch and test ccutil verbosely
+ccu-wx = "wx --package ccutil"                # Watch and run ccutil example quietly
+ccu-wxv = "wxv --package ccutil"              # Watch and run ccutil example verbosely
+
+
+#╔═══════════════════════════════════════════════════════════╗
+#║ prjenv {lib/env}                                          ║
+#╚═══════════════════════════════════════════════════════════╝
+# -- Profile: Development
+prj-b = "b --package prjenv"                  # Build prjenv library
+prj-c = "c --package prjenv"                  # Clean prjenv build artifacts
+prj-l = "l --package prjenv"                  # Lint prjenv library
+prj-t = "tq --package prjenv"                 # Test prjenv quietly
+prj-tv = "tv --package prjenv"                # Test prjenv verbosely
+
+# -- Profile: Benchmark
+prj-p = "p --package prjenv"                  # Benchmark prjenv
+prj-pq = "pq --package prjenv"                # Benchmark prjenv quietly
+
+# -- Profile: Release
+prj-br = "br --package prjenv"                # Build prjenv with release optimizations
+prj-lr = "lr --package prjenv"                # Lint prjenv with release profile
+
+# -- Mode: Documentation
+prj-d = "d --package prjenv"                  # Generate prjenv documentation
+prj-do = "do --package prjenv"                # Generate and open prjenv docs
+
+# -- Mode: Example
+prj-x = "x --package prjenv"                   # Run prjenv example quietly
+prj-xv = "xv --package prjenv"                 # Run prjenv example verbosely
+prj-x-basic = "prj-rq --example basic"
+prj-x-macro = "prj-rq --example macros --feature macros"
+
+# -- Mode: Watch
+prj-wl = "wl --package prjenv"                # Watch and lint prjenv
+prj-wlr = "wlr --package prjenv"              # Watch and lint prjenv (release)
+prj-wt = "wt --package prjenv"                # Watch and test prjenv quietly
+prj-wtv = "wtv --package prjenv"              # Watch and test prjenv verbosely

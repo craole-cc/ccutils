@@ -1,5 +1,6 @@
 [package]
 name = "ccutil"
+default-run = "ccutil"
 description = "CLI for ccutils devtools"
 version = { workspace = true }
 edition = { workspace = true }

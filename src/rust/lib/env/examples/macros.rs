@@ -9,7 +9,7 @@
 use prjenv::prelude::*;
 
 fn main() {
-  println!("🚀 Craole CC Project - Macro Example\n");
+  println!("🚀 prjenv - Macro Example\n");
 
   //╔═══════════════════════════════════════════════════════════╗
   //║ Example 1: Auto-Initialize with setenv!()                 ║
