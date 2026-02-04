@@ -11,18 +11,17 @@ repository = { workspace = true }
 license = { workspace = true }
 categories = { workspace = true }
 
+[badges]
+maintenance = { status = "actively-developed" }
+
 [lints]
 workspace = true
 
 [features]
-default = [
-  "full",
-  # "macros",
-  #
-]
+default = []
 full = ["tracing", "macros"]
-tracing = ["dep:tracing"]
 macros = []
+tracing = ["dep:tracing"]
 
 [dependencies]
 dotenvy = { workspace = true }

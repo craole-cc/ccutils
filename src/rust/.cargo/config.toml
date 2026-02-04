@@ -1,107 +1,113 @@
-[build]
-jobs = 4
-
-[term]
-color = "always"
-
 [alias]
 #╔═══════════════════════════════════════════════════════════╗
 #║ Global Aliases                                            ║
 #╚═══════════════════════════════════════════════════════════╝
+# -- Basic
+a = "add"           #? Adds dependencies to Cargo.toml
+nb = "new --bin"    #? Creates new binary project
+nl = "new --lib"    #? Creates new library project
+s = "search"        #? Searches crates.io for packages
+u = "update"        #? Updates dependencies to latest compatible versions
+
 # -- Benchmark
-m = "bench"                                   # Run benchmarks
-mq = "bench --quiet"                          # Run benchmarks with minimal output
+m = "bench"
+mq = "bench --quiet"
 
 # -- Build
-b = "build --verbose --message-format human"  # Build
-bv = "build --verbose --message-format json-render-diagnostics"  # Build with verbose output
-ba = "b --workspace"                          # Build all workspace members
-br = "b --release"                            # Build with release optimizations
+b = "build --verbose --message-format human"
+bv = "build --verbose --message-format json-render-diagnostics"
+ba = "b --workspace"    #? Build all workspace members
+br = "b --release"      #? Build with release optimizations
 
 # -- Check (fast compilation check)
-k = "check --verbose"                              # Quick compilation check
-ka = "k --workspace"
+k = "check --verbose"   #? Quick compilation check without codegen
+ka = "k --workspace"    #? Check all workspace members
 
 # -- Clean
-c = "clean --verbose"                        # Remove build artifacts
-gc = "c"                                     # Remove build artifacts
+c = "clean --verbose"   #? Remove build artifacts
+gc = "c"                #? Alias for clean (git-style)
 
 # -- Documentation
-d = "doc --document-private-items"            # Generate docs including private items
-do = "d --open"                               # Generate and open docs in browser
+d = "doc --document-private-items"   #? Generates docs including private items
+do = "d --open"                      #? Generates and open docs in browser
 
 # -- Exemplify
-x = "rq --example"                            # Run example quietly
-xv = "rv --example"                           # Run example verbosely
+x = "rq --example"    #? Runs example quietly
+xv = "rv --example"   #? Runs example with verbose output
+
+# -- Information
+i = "info"            #? Displays crate information from crates.io
+iv = "i --verbose"    #? Displays detailed crate information
 
 # -- Install
-i = "install --force"                        # Install from path (overwrites existing)
-ip = "i --path"                              # Install from path (overwrites existing)
-id = "i --debug --path"                      # Install debug build from path
-il = "i --locked --path"                     # Install with locked dependencies
-ild = "i --locked --debug --path"            # Install debug build with locked dependencies
-idl = "idl"                                  # Install debug build with locked dependencies
+in = "install --force"               #? Installs crate (overwrites existing)
+ip = "in --path"                     #? Installs from local path
+id = "in --debug --path"             #? Installs debug build
+il = "in --locked --path"            #? Installs with locked dependencies
+ild = "in --locked --debug --path"   #? Installs debug build with locked dependencies
+idl = "ild"                          #? Alias for locked debug install
 
 # -- Lint (Clippy)
-l = "clippy --all-targets --no-deps"          # Lint all targets (lib, bins, tests, benches, examples)
-lf = "l --fix"                                # Automatically apply lint suggestions
-la = "l --workspace"                          # Lint entire workspace
-lr = "l --release"                            # Lint with release profile
+l = "clippy --all-targets --no-deps"   #? Lint all targets without checking dependencies
+lf = "l --fix"                         #? Automatically apply lint suggestions
+la = "l --workspace"                   #? Lint entire workspace
+lr = "l --release"                     #? Lint with release profile optimizations
 
 # -- Publish
-p = "publish"                                   # Run benchmarks
-pd = "p --dry-run"                          # Run benchmarks with minimal output
+pl = "login"         #? Authenticate with crates.io
+p = "publish"        #? Publish crate to crates.io
+pd = "p --dry-run"   #? Verify package without uploading
 
 # -- Run
-r = "run"                                     # Run binary
-rq = "run --quiet"                            # Run binary quietly
-rr = "rv --release"                           # Run release build with verbose output
-rv = "run --verbose"                          # Run with verbose output
+r = "run"              #? Runs the default binary
+rq = "run --quiet"     #? Runs binary with minimal output
+rr = "rv --release"    #? Runs release build with verbose output
+rv = "run --verbose"   #? Runs with detailed compilation output
 
 # -- Test
-t = "test"                                    # Run tests
-ta = "test --workspace"                       # Test all workspace members
-tq = "test --quiet"                           # Run tests quietly
-tv = "test --verbose"                         # Run tests with verbose output
+t = "test"                #? Runs all tests
+ta = "test --workspace"   #? Tests all workspace members
+tq = "test --quiet"       #? Runs tests with minimal output
+tv = "test --verbose"     #? Runs tests with detailed output
 
 # -- Watch
-w = "watch --quiet --clear --exec"            # Watch files and execute command on change
-wl = "w l"                                    # Watch and run clippy
-wlr = "w lr"                                  # Watch and run clippy with release profile
-wr = "w rq"                                   # Watch and run quietly
-wrr = "w rr"                                  # Watch and run release build
-wt = "w tq"                                   # Watch and run tests quietly
-wtv = "w tv"                                  # Watch and run tests verbosely
-wv = "w rv"                                   # Watch and run verbosely
-wx = "w x"                                    # Watch and run example quietly
-wxv = "w xv"                                  # Watch and run example verbosely
+w = "watch --quiet --clear --exec"   #? Watchs files and executes command on change
+wl = "w l"                           #? Watches linting
+wlr = "w lr"                         #? Watches linting the release profile
+wr = "w rq"                          #? Watches development build
+wrr = "w rr"                         #? Watches release build verbosely
+wv = "w rv"                          #? run development build verbosely
+wt = "w tq"                          #? Watches tests
+wtv = "w tv"                         #? Watches test verbosely
+wx = "w x"                           #? Watches examples
+wxv = "w xv"                         #? Watches examples verbosely
 
 #╔═══════════════════════════════════════════════════════════╗
 #║ ccutil {bin/cli}                                          ║
 #╚═══════════════════════════════════════════════════════════╝
 # -- Profile: Development
-ccu-b = "b --package ccutil"                   # Build ccutil
-ccu-c = "c --package ccutil"                   # Clean ccutil build artifacts
-ccu-l = "l --package ccutil"                   # Lint ccutil
-ccu-lf = "lf --package ccutil"                 # Fix linting issues in ccutil
-ccu-r = "rq --package ccutil"                  # Run ccutil quietly
-ccu-rv = "rv --package ccutil"                 # Run ccutil verbosely
+ccu-b = "b --package ccutil"     #? Builds ccutil
+ccu-c = "c --package ccutil"     #? Cleans ccutil build artifacts
+ccu-l = "l --package ccutil"     #? Lints ccutil
+ccu-lf = "lf --package ccutil"   #? Fixes linting issues in ccutil
+ccu-r = "rq --package ccutil"    #? Runs ccutil quietly
+ccu-rv = "rv --package ccutil"   #? Runs ccutil verbosely
 
 # -- Profile: Testing
-ccu-t = "tq --package ccutil"                  # Test ccutil quietly
-ccu-tv = "tv --package ccutil"                 # Test ccutil verbosely
+ccu-t = "tq --package ccutil"    #? Tests ccutil quietly
+ccu-tv = "tv --package ccutil"   #? Tests ccutil verbosely
 
 # -- Profile: Benchmark
-ccu-m = "m --package ccutil"                   # Benchmark ccutil
-ccu-mq = "mq --package ccutil"                 # Benchmark ccutil quietly
+ccu-m = "m --package ccutil"     #? Benchmarks ccutil
+ccu-mq = "mq --package ccutil"   #? Benchmarks ccutil quietly
 
 # -- Profile: Release
-ccu-br = "br --package ccutil"                 # Build ccutil with release optimizations
-ccu-lr = "lr --package ccutil"                 # Lint ccutil with release profile
+ccu-br = "br --package ccutil"   #? Builds ccutil with release optimizations
+ccu-lr = "lr --package ccutil"   #? Lints ccutil with release profile
 
 # -- Mode: Documentation
-ccu-d = "d --package ccutil"                   # Generate ccutil documentation
-ccu-do = "do --package ccutil"                 # Generate and open ccutil docs
+ccu-d = "d --package ccutil"     #? Generates ccutil documentation
+ccu-do = "do --package ccutil"   #? Generates and open ccutil docs
 
 # -- Mode: Example
 ccu-xb = "x basic --package ccutil --no-features"
@@ -109,38 +115,40 @@ ccu-xm = "x macros --package ccutil --features macros"
 ccu-xt = "x tracing --package ccutil --features tracing"
 ccu-xf = "x full --package ccutil --features full"
 
+# -- Mode: Info
+ccu-i = "i ccutil"   #? Displays information about ccutil
+
 # -- Mode: Install
-ccu-i = "ip bin/cli"                          # Install ccutil system-wide
-ccu-id = "id bin/cli"                         # Install ccutil (debug build)
-ccu-il = "il bin/cli"                         # Install ccutil (locked dependencies)
-ccu-ild = "ild bin/cli"                       # Install ccutil (debug with locked dependencies)
+ccu-in = "ip bin/cli"     #? Installs ccutil system-wide
+ccu-id = "id bin/cli"     #? Installs ccutil (debug build)
+ccu-il = "il bin/cli"     #? Installs ccutil (locked dependencies)
+ccu-ild = "ild bin/cli"   #? Installs ccutil (debug with locked dependencies)
 
 # -- Mode: Publish
-ccu-p = "p --package ccutil"                   # Publish ccutil
-ccu-pd = "pd --package ccutil"                 # Simulate publishing ccutil
+ccu-p = "p --package ccutil"     #? Publish ccutil
+ccu-pd = "pd --package ccutil"   #? Simulates publishing ccutil
 
 # -- Mode: Watch
-ccu-wl = "wl --package ccutil"                # Watch and lint ccutil
-ccu-wlr = "wlr --package ccutil"              # Watch and lint ccutil (release)
-ccu-wr = "wr --package ccutil"                # Watch and run ccutil quietly
-ccu-wrr = "wrr --package ccutil"              # Watch and run ccutil (release)
-ccu-wrv = "wrv --package ccutil"              # Watch and run ccutil verbosely
-ccu-wt = "wt --package ccutil"                # Watch and test ccutil quietly
-ccu-wtv = "wtv --package ccutil"              # Watch and test ccutil verbosely
-ccu-wx = "wx --package ccutil"                # Watch and run ccutil example quietly
-ccu-wxv = "wxv --package ccutil"              # Watch and run ccutil example verbosely
-
+ccu-wl = "wl --package ccutil"     #? Watches linting ccutil
+ccu-wlr = "wlr --package ccutil"   #? Watches linting ccutil (release)
+ccu-wr = "wr --package ccutil"     #? Watches ccutil quietly
+ccu-wrr = "wrr --package ccutil"   #? Watches ccutil (release)
+ccu-wrv = "wrv --package ccutil"   #? Watches ccutil verbosely
+ccu-wt = "wt --package ccutil"     #? Watches ccutil tests quietly
+ccu-wtv = "wtv --package ccutil"   #? Watches ccutil tests verbosely
+ccu-wx = "wx --package ccutil"     #? Watches ccutil examples quietly
+ccu-wxv = "wxv --package ccutil"   #? Watches ccutil examples verbosely
 
 #╔═══════════════════════════════════════════════════════════╗
 #║ prjenv {lib/env}                                          ║
 #╚═══════════════════════════════════════════════════════════╝
 # -- Profile: Development
-prj-b = "b --package prjenv"                  # Build prjenv library
-prj-c = "c --package prjenv"                  # Clean prjenv build artifacts
-prj-l = "l --package prjenv"                  # Lint prjenv library
-prj-lf = "lf --package prjenv"                  # Lint prjenv library
-prj-t = "tq --package prjenv"                 # Test prjenv quietly
-prj-tv = "tv --package prjenv"                # Test prjenv verbosely
+prj-b = "b --package prjenv"     #? Builds prjenv library
+prj-c = "c --package prjenv"     #? Cleans prjenv build artifacts
+prj-l = "l --package prjenv"     #? Lints prjenv library
+prj-lf = "lf --package prjenv"   #? Lints prjenv library
+prj-t = "tq --package prjenv"    #? Tests prjenv quietly
+prj-tv = "tv --package prjenv"   #? Tests prjenv verbosely
 
 # -- Profile: Benchmark
 prj-m = "m --package prjenv"                  # Benchmark prjenv
@@ -159,6 +167,9 @@ prj-xa = "x advanced --package prjenv --features full"
 prj-xb = "x basic --package prjenv"
 prj-xm = "x macros --package prjenv --features macros"
 prj-xt = "x tracing --package prjenv --features tracing"
+
+# -- Mode: Info
+prj-i = "i prjenv"                             # Display information about prjenv
 
 # -- Mode: Publish
 prj-p = "p --package prjenv"                   # Publish prjenv

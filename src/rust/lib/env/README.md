@@ -28,14 +28,43 @@ defaults with zero configuration.
   `macros` feature)
 - 🔍 **Tracing Support** - Built-in instrumentation (with `tracing` feature)
 
-## Quick Start
+## Installation
 
-Add to your `Cargo.toml`:
+Add `prjenv` to your project either by:
 
-```toml
-[dependencies]
-prjenv = "0.1"
-```
+1. Using the command - `cargo add`
+
+   ```sh
+   # Default features
+   cargo add prjenv
+
+   # Single feature
+   cargo add prjenv --features "macros"
+
+   # Multiple features
+   cargo add prjenv --features "macros tracing"
+
+   # All features
+   cargo add prjenv --features "full"
+   ```
+
+2. Editing the `Cargo.toml` file manually
+
+   ```toml
+   [dependencies]
+   prjenv = "0.1.0"
+
+   # Single feature
+   prjenv = { version = "0.1.0", features = ["macros"] }
+
+   # Multiple features
+   prjenv = { version = "0.1.0", features = ["macros", "tracing"] }
+
+   # All features
+   prjenv = { version = "0.1.0", features = ["full"] }
+   ```
+
+## Usage
 
 ### Basic Usage
 
