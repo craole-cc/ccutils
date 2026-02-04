@@ -63,7 +63,7 @@
 //!   .with_db("sqlite:///data/app.db");
 //! ```
 
-use crate::_prelude::*;
+use crate::prelude::*;
 
 /// Server and runtime configuration loaded from environment variables.
 ///

@@ -2,7 +2,7 @@
 //!
 //! Creates new package directory structures with Cargo.toml and source files.
 
-use crate::_prelude::*;
+use crate::prelude::*;
 
 /// Package scaffolding configuration.
 ///

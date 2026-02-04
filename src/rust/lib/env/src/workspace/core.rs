@@ -28,7 +28,7 @@
 //! println!("Packages: {}", workspace.package_count());
 //! ```
 
-use crate::_prelude::*;
+use crate::prelude::*;
 
 /// Workspace domain model.
 ///

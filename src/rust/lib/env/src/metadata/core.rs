@@ -3,7 +3,7 @@
 //! Pure value object representing name, version, and description.
 //! Used by both Workspace and Package.
 
-use crate::_prelude::*;
+use crate::prelude::*;
 
 /// Metadata for workspace or package.
 ///

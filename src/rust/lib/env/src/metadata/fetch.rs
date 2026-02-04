@@ -2,7 +2,7 @@
 //!
 //! Handles reading and parsing Cargo.toml files to extract metadata.
 
-use crate::_prelude::*;
+use crate::prelude::*;
 
 /// Load metadata from a Cargo.toml file.
 ///

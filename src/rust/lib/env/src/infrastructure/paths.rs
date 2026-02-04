@@ -26,7 +26,7 @@
 //! println!("Database: {}", paths.database.display());
 //! ```
 
-use crate::_prelude::*;
+use crate::prelude::*;
 
 /// Project directory structure and path management.
 ///

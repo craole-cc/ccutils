@@ -1,6 +1,6 @@
 //! Workspace management operations (create, add/remove members).
 
-use crate::_prelude::*;
+use crate::prelude::*;
 
 /// Workspace manager for creation and member management.
 pub struct WorkspaceManager {

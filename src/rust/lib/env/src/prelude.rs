@@ -1,7 +1,10 @@
 //! Internal imports shared across all modules.
 //!
-//! Import with `use crate::_prelude::*;` in internal modules.
+//! Import with `use crate::prelude::*;` in internal modules.
 
+// Optional convenience macros
+#[cfg(feature = "macros")]
+pub use crate::macros::*;
 // Optional tracing support
 #[cfg(feature = "tracing")]
 pub use tracing::{
@@ -12,7 +15,13 @@ pub use tracing::{
   warn,
 };
 pub use {
-  crate::prelude::*,
+  crate::{
+    core::*,
+    infrastructure::prelude::*,
+    metadata::prelude::*,
+    package::prelude::*,
+    workspace::prelude::*,
+  },
   dotenvy::dotenv,
   std::{
     env::{
@@ -66,7 +75,7 @@ pub use {
 ///
 /// # Examples
 /// ```ignore
-/// use crate::_prelude::*;
+/// use crate::prelude::*;
 ///
 /// let cargo_toml: CargoToml = from_toml_str(contents)?;
 /// if let Some(name) = cargo_toml.get("name") {

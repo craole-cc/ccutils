@@ -7,7 +7,7 @@ use {
     Metadata,
     load_workspace_metadata,
   },
-  crate::_prelude::*,
+  crate::prelude::*,
 };
 
 /// Static cache for workspace metadata.

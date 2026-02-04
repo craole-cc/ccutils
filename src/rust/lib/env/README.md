@@ -4,7 +4,7 @@
 
 [![Crates.io](https://img.shields.io/crates/v/prjenv.svg)](https://crates.io/crates/prjenv)
 [![Documentation](https://docs.rs/prjenv/badge.svg)](https://docs.rs/prjenv)
-[![License](https://img.shields.io/crates/l/prjenv.svg)](../../../../LICENSE-APACHE)
+[![License](https://img.shields.io/crates/l/prjenv.svg)](../../../../README.md)
 
 `prjenv` provides a unified API for accessing workspace and package metadata,
 runtime configuration, and filesystem paths in Rust projects. It automatically
@@ -265,7 +265,11 @@ This project is licensed under either of:
 
 at your option.
 
-## Contributing
+## Contribution
+
+Unless explicitly stated otherwise, any contribution intentionally submitted for
+inclusion in the work, as defined in the Apache-2.0 license, shall be dual
+licensed as above, without any additional terms or conditions.
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 

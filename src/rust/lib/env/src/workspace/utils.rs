@@ -42,7 +42,7 @@
 //! }
 //! ```
 
-use crate::_prelude::*;
+use crate::prelude::*;
 
 /// Find the workspace root directory with fast detection methods first, then fallbacks.
 ///

@@ -16,7 +16,7 @@
 //! println!("Package: {}", package.metadata.display_name());
 //! ```
 
-use crate::_prelude::*;
+use crate::prelude::*;
 
 /// Package domain model.
 ///

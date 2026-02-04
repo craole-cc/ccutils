@@ -52,7 +52,7 @@
 //! Returns `&'static Project` - valid for the entire program lifetime. Perfect for use
 //! in macros like `getenv!()` which need static references.
 
-use crate::_prelude::*;
+use crate::prelude::*;
 
 /// Global static environment instance, protected by `OnceLock` for safe one-time initialization
 pub static ENV: OnceLock<Environment> = OnceLock::new();

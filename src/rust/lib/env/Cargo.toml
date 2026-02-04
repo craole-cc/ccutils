@@ -11,9 +11,6 @@ repository = { workspace = true }
 license = { workspace = true }
 categories = { workspace = true }
 
-[badges]
-maintenance = { status = "actively-developed" }
-
 [lints]
 workspace = true
 
