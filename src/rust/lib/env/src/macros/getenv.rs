@@ -2,7 +2,7 @@
 
 /// Provides access to initialized environment configuration and metadata.
 ///
-/// Must be called after [`setenv!`](crate::setenv) has been invoked. Returns references to
+/// Must be called after [`setenv!`](crate::prelude::setenv) has been invoked. Returns references to
 /// nested environment data through various accessor patterns.
 ///
 /// # Workspace Metadata Accessors
@@ -83,19 +83,19 @@
 ///
 /// # Panics
 ///
-/// Panics if called before [`setenv!`](crate::setenv) has been invoked.
+/// Panics if called before [`setenv!`](crate::prelude::setenv) has been invoked.
 /// Always initialize the environment at application startup.
 ///
 /// # Implementation Note
 ///
-/// This macro expands to calls to [`get()`](crate::get), which retrieves
+/// This macro expands to calls to [`get()`](crate::prelude::get), which retrieves
 /// the static environment instance. Each accessor then dereferences the
 /// appropriate field path.
 ///
 /// # See Also
 ///
-/// - [`setenv!`](crate::setenv) - Initialize environment
-/// - [`get()`](crate::get) - Core API for retrieving environment
+/// - [`setenv!`](crate::prelude::setenv) - Initialize environment
+/// - [`get()`](crate::prelude::get) - Core API for retrieving environment
 #[macro_export]
 macro_rules! getenv {
   () => {

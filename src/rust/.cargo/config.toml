@@ -9,8 +9,8 @@ color = "always"
 #║ Global Aliases                                            ║
 #╚═══════════════════════════════════════════════════════════╝
 # -- Benchmark
-p = "bench"                                   # Run benchmarks
-pq = "bench --quiet"                          # Run benchmarks with minimal output
+m = "bench"                                   # Run benchmarks
+mq = "bench --quiet"                          # Run benchmarks with minimal output
 
 # -- Build
 b = "build --verbose --message-format human"  # Build
@@ -47,6 +47,10 @@ l = "clippy --all-targets --no-deps"          # Lint all targets (lib, bins, tes
 lf = "l --fix"                                # Automatically apply lint suggestions
 la = "l --workspace"                          # Lint entire workspace
 lr = "l --release"                            # Lint with release profile
+
+# -- Publish
+p = "publish"                                   # Run benchmarks
+pd = "p --dry-run"                          # Run benchmarks with minimal output
 
 # -- Run
 r = "run"                                     # Run binary
@@ -88,8 +92,8 @@ ccu-t = "tq --package ccutil"                  # Test ccutil quietly
 ccu-tv = "tv --package ccutil"                 # Test ccutil verbosely
 
 # -- Profile: Benchmark
-ccu-p = "p --package ccutil"                   # Benchmark ccutil
-ccu-pq = "pq --package ccutil"                 # Benchmark ccutil quietly
+ccu-m = "m --package ccutil"                   # Benchmark ccutil
+ccu-mq = "mq --package ccutil"                 # Benchmark ccutil quietly
 
 # -- Profile: Release
 ccu-br = "br --package ccutil"                 # Build ccutil with release optimizations
@@ -110,6 +114,10 @@ ccu-i = "ip bin/cli"                          # Install ccutil system-wide
 ccu-id = "id bin/cli"                         # Install ccutil (debug build)
 ccu-il = "il bin/cli"                         # Install ccutil (locked dependencies)
 ccu-ild = "ild bin/cli"                       # Install ccutil (debug with locked dependencies)
+
+# -- Mode: Publish
+ccu-p = "p --package ccutil"                   # Publish ccutil
+ccu-pd = "pd --package ccutil"                 # Simulate publishing ccutil
 
 # -- Mode: Watch
 ccu-wl = "wl --package ccutil"                # Watch and lint ccutil
@@ -135,8 +143,8 @@ prj-t = "tq --package prjenv"                 # Test prjenv quietly
 prj-tv = "tv --package prjenv"                # Test prjenv verbosely
 
 # -- Profile: Benchmark
-prj-p = "p --package prjenv"                  # Benchmark prjenv
-prj-pq = "pq --package prjenv"                # Benchmark prjenv quietly
+prj-m = "m --package prjenv"                  # Benchmark prjenv
+prj-mq = "mq --package prjenv"                # Benchmark prjenv quietly
 
 # -- Profile: Release
 prj-br = "br --package prjenv"                # Build prjenv with release optimizations
@@ -151,6 +159,10 @@ prj-xa = "x advanced --package prjenv --features full"
 prj-xb = "x basic --package prjenv"
 prj-xm = "x macros --package prjenv --features macros"
 prj-xt = "x tracing --package prjenv --features tracing"
+
+# -- Mode: Publish
+prj-p = "p --package prjenv"                   # Publish prjenv
+prj-pd = "pd --package prjenv"                 # Simulate publishing prjenv
 
 # -- Mode: Watch
 prj-wl = "wl --package prjenv"                # Watch and lint prjenv
