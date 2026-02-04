@@ -29,7 +29,7 @@
 //! # Examples
 //!
 //! ```no_run
-//! use craole_cc_project::prelude::*;
+//! use prjenv::prelude::*;
 //! let root = find_cargo_root();
 //! println!("Project root: {}", root.display());
 //!
@@ -64,7 +64,7 @@ use crate::_prelude::*;
 ///
 /// # Examples
 /// ```no_run
-/// use craole_cc_project::prelude::*;
+/// use prjenv::prelude::*;
 /// let root = find_cargo_root();
 /// assert!(root.join("Cargo.toml").exists());
 /// ```
@@ -99,15 +99,7 @@ pub fn find_cargo_root() -> PathBuf {
     return root;
   }
 
-  // Method 4: Use cargo_metadata as last resort
-  #[cfg(feature = "full")]
-  {
-    if let Some(root) = find_cargo_root_via_cargo_metadata() {
-      return root;
-    }
-  }
-
-  // Final fallback: CARGO_MANIFEST_DIR or current directory
+  // Method 4: CARGO_MANIFEST_DIR or current directory
   var("CARGO_MANIFEST_DIR")
     .map(PathBuf::from)
     .or_else(|_| current_dir())
@@ -201,7 +193,7 @@ fn search_from_current_dir() -> Option<PathBuf> {
 /// # Examples
 /// ```no_run
 /// use {
-///   craole_cc_project::prelude::*,
+///   prjenv::prelude::*,
 ///   std::path::Path,
 /// };
 ///
@@ -231,33 +223,6 @@ pub fn is_workspace_toml(path: &Path) -> bool {
   }
 }
 
-/// Fallback workspace detection using `cargo_metadata` (slower but guaranteed correct).
-///
-/// Invokes `cargo metadata` command to query the workspace root. This is more reliable
-/// than heuristics but significantly slower (~50-100ms).
-///
-/// Only available with `metadata` feature enabled.
-///
-/// # Returns
-/// `Option<PathBuf>` - The workspace root, or None if metadata command fails
-///
-/// # Performance
-/// ~50-100ms (spawns cargo subprocess)
-///
-/// # Feature
-/// Requires `metadata` feature to be enabled
-#[cfg(feature = "full")]
-#[must_use]
-pub fn find_cargo_root_via_cargo_metadata() -> Option<PathBuf> {
-  use cargo_metadata::MetadataCommand;
-
-  MetadataCommand::new()
-    .no_deps() // Skip dependency resolution for speed
-    .exec()
-    .ok()
-    .map(|metadata| metadata.workspace_root.into_std_path_buf())
-}
-
 /// Read and parse a Cargo.toml file, returning the appropriate package metadata.
 ///
 /// Automatically detects whether the Cargo.toml is a workspace or package file
@@ -278,7 +243,7 @@ pub fn find_cargo_root_via_cargo_metadata() -> Option<PathBuf> {
 /// # Examples
 /// ```no_run
 /// use {
-///   craole_cc_project::prelude::*,
+///   prjenv::prelude::*,
 ///   std::path::Path,
 /// };
 ///

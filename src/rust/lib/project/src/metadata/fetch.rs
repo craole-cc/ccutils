@@ -17,15 +17,13 @@ use crate::_prelude::*;
 ///
 /// # Examples
 /// ```no_run
-/// use {
-///   craole_cc_project::metadata::*,
-///   std::path::Path,
-/// };
+/// use prjenv::prelude::*;
 ///
-/// let metadata = load_from_file(Path::new("Cargo.toml"));
+/// let metadata = load_metadata_from_file(Path::new("Cargo.toml"));
 /// println!("{}", metadata.display_name());
 /// ```
 #[cfg(not(feature = "tracing"))]
+#[must_use]
 pub fn load_from_file(toml_path: &Path) -> Metadata {
   load_from_file_impl(toml_path)
 }
@@ -85,6 +83,7 @@ fn extract_metadata(toml: &CargoToml) -> Metadata {
 /// Load workspace metadata from discovered workspace root.
 ///
 /// Combines workspace discovery with metadata loading.
+#[must_use]
 pub fn load_workspace_metadata() -> Metadata {
   let root = find_cargo_root();
   load_from_file(&root.join("Cargo.toml"))

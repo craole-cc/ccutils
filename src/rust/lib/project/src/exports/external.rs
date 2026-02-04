@@ -2,15 +2,10 @@
 //!
 //! Import with `use devtools-project::prelude::*;` in user code.
 
-pub use super::{
-  super::{
-    core::*,
-    infrastructure::prelude::*,
-    metadata::prelude::*,
-    package::prelude::*,
-    workspace::prelude::*,
-  },
-  internal::{
+#[cfg(feature = "macros")]
+pub use crate::macros::*;
+pub use {
+  super::internal::{
     TomlMap,
     TomlTable,
     TomlValue,
@@ -18,11 +13,11 @@ pub use super::{
     to_toml_string,
     to_toml_string_pretty,
   },
+  crate::{
+    core::*,
+    infrastructure::prelude::*,
+    metadata::prelude::*,
+    package::prelude::*,
+    workspace::prelude::*,
+  },
 };
-// Re-export common types
-pub use std::path::{
-  Path,
-  PathBuf,
-};
-// Re-export TOML for users creating/modifying Cargo.toml
-pub use toml;

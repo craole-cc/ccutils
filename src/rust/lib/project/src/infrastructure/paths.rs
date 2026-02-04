@@ -18,9 +18,9 @@
 //! # Examples
 //!
 //! ```no_run
-//! use craole_cc_project::prelude::*;
+//! use prjenv::prelude::*;
 //!
-//! let paths = WorkspacePaths::default();
+//! let paths = Paths::default();
 //! println!("Project root: {}", paths.project.display());
 //! println!("Assets: {}", paths.assets.display());
 //! println!("Database: {}", paths.database.display());
@@ -49,11 +49,11 @@ use crate::_prelude::*;
 /// # Examples
 /// ```no_run
 /// use {
-///   craole_cc_project::prelude::*,
+///   prjenv::prelude::*,
 ///   std::path::PathBuf,
 /// };
 ///
-/// let mut paths = WorkspacePaths::default();
+/// let mut paths = Paths::default();
 /// println!("Assets: {}", paths.assets.display());
 ///
 /// // Customize if needed
@@ -112,8 +112,8 @@ impl Default for Paths {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
-  /// let paths = WorkspacePaths::default();
+  /// use prjenv::prelude::*;
+  /// let paths = Paths::default();
   /// assert!(paths.assets.ends_with("assets"));
   /// assert!(paths.database.ends_with("db"));
   /// ```

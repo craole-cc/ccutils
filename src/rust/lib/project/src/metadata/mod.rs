@@ -7,22 +7,15 @@ mod core;
 mod fetch;
 
 pub use {
-  self::core::Metadata,
-  cache::{
-    get_cached_workspace,
-    set_cached_workspace,
-  },
-  fetch::{
-    // extract_metadata,
-    load_from_file,
-    load_workspace_metadata,
-  },
+  core::*,
+  cache::*,
+  fetch::*,
 };
 
 pub mod prelude {
   pub use super::{
     Metadata,
-    get_cached_workspace,
-    load_from_file,
+    get_cached_workspace as get_cached_workspace_metadata,
+    load_from_file as load_metadata_from_file
   };
 }

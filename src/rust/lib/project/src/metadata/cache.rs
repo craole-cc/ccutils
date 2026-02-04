@@ -1,4 +1,4 @@
-//! Metadata caching using OnceLock.
+//! Metadata caching using `OnceLock`.
 //!
 //! Provides static cache for workspace metadata to avoid repeated file I/O.
 
@@ -19,7 +19,7 @@ static WORKSPACE_METADATA: OnceLock<Metadata> = OnceLock::new();
 ///
 /// # Examples
 /// ```no_run
-/// use craole_cc_project::metadata::*;
+/// use prjenv::metadata::*;
 ///
 /// let metadata = get_cached_workspace();
 /// println!("Workspace: {}", metadata.display_name());
@@ -50,7 +50,7 @@ pub fn get_cached_workspace() -> &'static Metadata {
 ///
 /// # Examples
 /// ```no_run
-/// use craole_cc_project::metadata::*;
+/// use prjenv::metadata::*;
 ///
 /// let custom = Metadata::new()
 ///   .with_name("test-workspace")
@@ -68,7 +68,7 @@ pub fn set_cached_workspace(metadata: Metadata) -> &'static Metadata {
 ///
 /// # Examples
 /// ```no_run
-/// use craole_cc_project::metadata::*;
+/// use prjenv::metadata::*;
 ///
 /// if let Some(metadata) = try_get_cached_workspace() {
 ///   println!("Already loaded: {}", metadata.display_name());

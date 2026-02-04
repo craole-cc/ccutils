@@ -10,7 +10,7 @@ use crate::_prelude::*;
 ///
 /// # Examples
 /// ```no_run
-/// use craole_cc_project::prelude::*;
+/// use prjenv::prelude::*;
 ///
 /// let scaffold = PackageScaffold::new("my-package")
 ///   .version("0.1.0")
@@ -36,7 +36,7 @@ impl Scaffold {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// let scaffold = PackageScaffold::new("my-cli");
   /// ```
@@ -170,7 +170,7 @@ impl Scaffold {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// let scaffold = PackageScaffold::new("my-cli")
   ///   .binary()

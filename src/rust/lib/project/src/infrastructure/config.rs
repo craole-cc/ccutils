@@ -22,7 +22,7 @@
 //!
 //! ## Programmatic Access
 //! ```no_run
-//! use craole_cc_project::prelude::*;
+//! use prjenv::prelude::*;
 //!
 //! let env = get();
 //! let port = env.config.port;
@@ -34,7 +34,7 @@
 //!
 //! ## Builder Pattern
 //! ```no_run
-//! use craole_cc_project::infrastructure::*;
+//! use prjenv::infrastructure::*;
 //!
 //! let config = Configuration::new()
 //!   .with_port(8080)
@@ -72,7 +72,7 @@ use crate::_prelude::*;
 ///
 /// # Examples
 /// ```no_run
-/// use craole_cc_project::infrastructure::*;
+/// use prjenv::infrastructure::*;
 ///
 /// let config = Configuration::default();
 /// println!(
@@ -88,16 +88,16 @@ pub struct Configuration {
   /// If empty, the `Environment` struct will fall back to `{workspace}/assets/db`.
   ///
   /// # Common Values
-  /// - **SQLite** (file-based):
+  /// - **`SQLite`** (file-based):
   ///   - `sqlite:///data/app.db` (absolute path)
   ///   - `sqlite://./data/app.db` (relative path)
   ///   - `/var/lib/app/app.db` (simple file path)
   ///
-  /// - **PostgreSQL**:
+  /// - **`PostgreSQL`**:
   ///   - `postgres://user:password@localhost/dbname`
   ///   - `postgresql://user:password@host:5432/dbname`
   ///
-  /// - **MySQL**:
+  /// - **`MySQL`**:
   ///   - `mysql://user:password@localhost/dbname`
   ///   - `mysql://user:password@host:3306/dbname`
   ///
@@ -121,7 +121,7 @@ pub struct Configuration {
   ///   - Required for production behind reverse proxies
   ///   - Accessible from network (rely on firewall rules)
   ///
-  /// - **"::1"** (IPv6 loopback)
+  /// - **"`::1`"** (IPv6 loopback)
   ///   - IPv6 equivalent of 127.0.0.1
   ///
   /// - **"::"** (all IPv6 interfaces)
@@ -216,7 +216,7 @@ impl Configuration {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::infrastructure::*;
+  /// use prjenv::infrastructure::*;
   /// let config = Configuration::new();
   /// // If PORT="invalid", this panics with "PORT must be a valid number"
   /// ```
@@ -249,7 +249,7 @@ impl Configuration {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::infrastructure::*;
+  /// use prjenv::infrastructure::*;
   ///
   /// // Use PostgreSQL in production
   /// let config = Configuration::new().with_db("postgres://user:pass@db.example.com/myapp");
@@ -269,7 +269,7 @@ impl Configuration {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::infrastructure::*;
+  /// use prjenv::infrastructure::*;
   ///
   /// // Integer literals (inferred as i32) work automatically
   /// let config = Configuration::new().with_port(3000);
@@ -296,7 +296,7 @@ impl Configuration {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::infrastructure::*;
+  /// use prjenv::infrastructure::*;
   ///
   /// // Development (localhost only)
   /// let config = Configuration::new().with_ip("localhost");
@@ -322,11 +322,11 @@ impl Configuration {
     self
   }
 
-  /// Sets the RUST_LOG filter directives.
+  /// Sets the `RUST_LOG` filter directives.
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::infrastructure::*;
+  /// use prjenv::infrastructure::*;
   ///
   /// let config = Configuration::new().with_rust_log("debug");
   ///

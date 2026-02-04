@@ -6,7 +6,7 @@
 //! # Examples
 //!
 //! ```no_run
-//! use craole_cc_project::prelude::*;
+//! use prjenv::prelude::*;
 //!
 //! let package = Package::new()
 //!   .with_name(env!("CARGO_PKG_NAME"))
@@ -27,7 +27,7 @@ use crate::_prelude::*;
 ///
 /// # Builder Pattern
 /// ```no_run
-/// use craole_cc_project::prelude::*;
+/// use prjenv::prelude::*;
 ///
 /// let package = Package::new()
 ///   .with_name("my-cli")
@@ -49,19 +49,19 @@ impl Package {
 
   /// Creates a package with metadata.
   #[must_use]
-  pub fn with_metadata(metadata: Metadata) -> Self {
+  pub const fn with_metadata(metadata: Metadata) -> Self {
     Self { metadata }
   }
 
   //╔═══════════════════════════════════════════════════════════╗
-  //║ Metadata Builders (delegation)                           ║
+  //║ Metadata Builders (delegation)                            ║
   //╚═══════════════════════════════════════════════════════════╝
 
   /// Sets the package name.
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// let package = Package::new().with_name(env!("CARGO_PKG_NAME"));
   /// ```
@@ -75,7 +75,7 @@ impl Package {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// let package = Package::new().with_version(env!("CARGO_PKG_VERSION"));
   /// ```
@@ -89,7 +89,7 @@ impl Package {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// let package = Package::new().with_description(env!("CARGO_PKG_DESCRIPTION"));
   /// ```

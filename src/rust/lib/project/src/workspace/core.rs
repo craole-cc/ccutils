@@ -13,7 +13,7 @@
 //! # Examples
 //!
 //! ```no_run
-//! use craole_cc_project::prelude::*;
+//! use prjenv::prelude::*;
 //!
 //! let workspace = Workspace::new()
 //!   .with_name("my-workspace")
@@ -41,7 +41,7 @@ use crate::_prelude::*;
 ///
 /// # Builder Pattern
 /// ```no_run
-/// use craole_cc_project::prelude::*;
+/// use prjenv::prelude::*;
 ///
 /// let workspace = Workspace::new()
 ///   .with_name("my-workspace")
@@ -74,7 +74,7 @@ impl Workspace {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   /// let workspace = Workspace::new().with_name("my-workspace");
   /// ```
   #[must_use]
@@ -87,7 +87,7 @@ impl Workspace {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   /// let workspace = Workspace::new().with_version("2.0.0");
   /// ```
   #[must_use]
@@ -107,7 +107,7 @@ impl Workspace {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// let metadata = Metadata::new()
   ///   .with_name("my-workspace")
@@ -129,7 +129,7 @@ impl Workspace {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// let workspace = Workspace::new().with_packages(vec![
   ///   Package::new().with_name("api"),
@@ -146,7 +146,7 @@ impl Workspace {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// let workspace = Workspace::new().with_package(Package::new().with_name("api"));
   /// ```
@@ -160,7 +160,7 @@ impl Workspace {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// let workspace = Workspace::new()
   ///   .with_package_name("api")
@@ -180,7 +180,7 @@ impl Workspace {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// let workspace = Workspace::new().with_package_name("api");
   ///
@@ -188,6 +188,7 @@ impl Workspace {
   ///   println!("Found: {}", pkg.metadata.name);
   /// }
   /// ```
+  #[must_use]
   pub fn find_package(&self, name: &str) -> Option<&Package> {
     self.packages.iter().find(|p| p.metadata.name == name)
   }
@@ -199,7 +200,7 @@ impl Workspace {
 
   /// Returns the number of registered packages.
   #[must_use]
-  pub fn package_count(&self) -> usize {
+  pub const fn package_count(&self) -> usize {
     self.packages.len()
   }
 
@@ -215,6 +216,7 @@ impl Workspace {
   }
 
   /// Returns package names as a vector.
+  #[must_use]
   pub fn package_names(&self) -> Vec<&str> {
     self
       .packages

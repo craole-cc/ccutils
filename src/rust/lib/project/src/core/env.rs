@@ -15,13 +15,13 @@
 //!
 //! ## Option 1: Default Initialization (Auto-detect)
 //! ```no_run
-//! use craole_cc_project::prelude::*;
+//! use prjenv::prelude::*;
 //! let prj = get(); // Auto-detects kind, initializes with defaults
 //! ```
 //!
 //! ## Option 2: Explicit Mode
 //! ```no_run
-//! use craole_cc_project::prelude::*;
+//! use prjenv::prelude::*;
 //! let prj = set(
 //!   Environment::workspace()
 //!     .with_name(env!("CARGO_PKG_NAME"))
@@ -34,7 +34,7 @@
 //! ```no_run
 //! # #[cfg(feature = "macros")]
 //! # {
-//! use craole_cc_project::prelude::*;
+//! use prjenv::prelude::*;
 //! setenv!(); // Auto-populates from env! macros in calling crate
 //!
 //! # }
@@ -72,7 +72,7 @@ pub static ENV: OnceLock<Environment> = OnceLock::new();
 ///
 /// # Examples
 /// ```no_run
-/// use craole_cc_project::prelude::*;
+/// use prjenv::prelude::*;
 /// let prj = get();
 /// println!("Workspace: {}", prj.workspace.metadata.name);
 /// println!("Package: {}", prj.package.metadata.name);
@@ -102,7 +102,7 @@ pub fn get() -> &'static Environment {
 ///
 /// # Examples
 /// ```no_run
-/// use craole_cc_project::prelude::*;
+/// use prjenv::prelude::*;
 /// // Configure before any other code uses get()
 /// set(
 ///   Environment::new()
@@ -138,7 +138,7 @@ pub fn try_get() -> Option<&'static Environment> {
 /// # Builder Pattern
 /// All `with_*` methods return `Self` for method chaining:
 /// ```no_run
-/// use craole_cc_project::prelude::*;
+/// use prjenv::prelude::*;
 /// let env = Environment::new()
 ///   .with_pkg_name("my-app")
 ///   .with_pkg_version("1.0.0")
@@ -257,7 +257,7 @@ impl Environment {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   /// let env = Environment::new().with_db("postgres://localhost/mydb");
   /// ```
   #[must_use]
@@ -270,7 +270,7 @@ impl Environment {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   /// let env = Environment::new().with_port(8080);
   /// ```
   #[must_use]
@@ -287,7 +287,7 @@ impl Environment {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   /// let env = Environment::new().with_ip("0.0.0.0");
   /// ```
   #[must_use]
@@ -343,7 +343,7 @@ impl Environment {
   ///
   /// # Examples
   /// ```no_run
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// let env = Environment::new()
   ///   .with_pkg_name(env!("CARGO_PKG_NAME"))
@@ -367,5 +367,22 @@ impl Environment {
   pub fn with_pkg_description(mut self, description: impl Into<String>) -> Self {
     self.package = self.package.with_description(description);
     self
+  }
+
+  /// Returns a formatted summary of the environment.
+  #[must_use]
+  pub fn summary(&self) -> String {
+    match self.kind {
+      Kind::Workspace => {
+        format!(
+          "{} ({} packages, running {})",
+          self.workspace.metadata.display_name(),
+          self.workspace.package_count(),
+          self.package.metadata.display_name()
+        )
+      }
+      Kind::Standalone => self.package.metadata.display_name(),
+      Kind::Library => format!("Library: {}", self.package.metadata.display_name()),
+    }
   }
 }

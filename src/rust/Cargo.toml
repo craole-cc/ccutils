@@ -12,6 +12,7 @@ authors = ["Craig 'Craole' Cole <craig.craole.cole@gmail.com>"]
 categories = ["development-tools"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
+keywords = ["development-tools"]
 
 [workspace.lints.rust]
 unsafe_code = { level = "deny", priority = 0 }
@@ -39,8 +40,8 @@ opt-level = 3
 
 [workspace.dependencies]
 # -- Internal
-# ephelog = { path = "bin/log" }
-craole-cc-log = { path = "lib/log" }
+# ephelog = { path = "lib/log" }
+prjenv = { path = "lib/project" }
 
 # -- Tracing & Error Handling
 miette = "7.6.0"
@@ -48,6 +49,5 @@ thiserror = "2.0.18"
 tracing = "0.1.41"
 
 # -- Information Management
-cargo_metadata = "0.23.0"
 toml = "0.9.8"
-dotenv = "0.14.1"
+dotenvy = "0.15.7"

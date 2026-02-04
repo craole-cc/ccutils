@@ -13,20 +13,20 @@ w = "watch -x check"
 ww = "watch -x 'check --workspace'"
 
 #╔═══════════════════════════════════════════════════════════╗
-#║ craole-cc-project                                         ║
+#║ prjenv                                         ║
 #╚═══════════════════════════════════════════════════════════╝
-prj = "test -p craole-cc-project"
-prj-t = "test -p craole-cc-project"
-prj-d = "doc -p craole-cc-project --open"
-prj-x = "run -p craole-cc-project --example "
+prj = "test -p prjenv"
+prj-t = "test -p prjenv"
+prj-d = "doc -p prjenv --open"
+prj-x = "run -p prjenv --example "
 
 #╔═══════════════════════════════════════════════════════════╗
-#║ craole-cc-log                                             ║
+#║ prjenv                                             ║
 #╚═══════════════════════════════════════════════════════════╝
-log-lib = "run -p craole-cc-log"
-log-x = "run -p craole-cc-log --example"
-log-t = "test -p craole-cc-log"
-log-d = "doc -p craole-cc-log --open"
+log-lib = "run -p prjenv"
+log-x = "run -p prjenv --example"
+log-t = "test -p prjenv"
+log-d = "doc -p prjenv --open"
 
 #╔═══════════════════════════════════════════════════════════╗
 #║ ephelog (log binary)                                      ║

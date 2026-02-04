@@ -1,0 +1,9 @@
+D:\Projects\GitHub\CC\libs\env\target\debug\deps\cargo_metadata-7b5a98300e1bfda5.d: C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\lib.rs C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\dependency.rs C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\diagnostic.rs C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\errors.rs C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\messages.rs
+
+D:\Projects\GitHub\CC\libs\env\target\debug\deps\libcargo_metadata-7b5a98300e1bfda5.rmeta: C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\lib.rs C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\dependency.rs C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\diagnostic.rs C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\errors.rs C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\messages.rs
+
+C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\lib.rs:
+C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\dependency.rs:
+C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\diagnostic.rs:
+C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\errors.rs:
+C:\Users\Administrator\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\cargo_metadata-0.23.1\src\messages.rs:

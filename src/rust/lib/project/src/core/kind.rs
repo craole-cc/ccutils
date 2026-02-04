@@ -39,7 +39,7 @@ impl Kind {
   ///
   /// # Examples
   /// ```
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// let kind = Kind::detect();
   /// match kind {
@@ -63,7 +63,7 @@ impl Kind {
   ///
   /// # Examples
   /// ```
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// if Kind::Workspace.is_workspace() {
   ///   println!("Multi-package workspace");
@@ -78,7 +78,7 @@ impl Kind {
   ///
   /// # Examples
   /// ```
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// if Kind::Standalone.is_standalone() {
   ///   println!("Single package");
@@ -93,7 +93,7 @@ impl Kind {
   ///
   /// # Examples
   /// ```
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// if Kind::Library.is_library() {
   ///   println!("Running as imported library");
@@ -108,7 +108,7 @@ impl Kind {
   ///
   /// # Examples
   /// ```
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// assert_eq!(Kind::Workspace.as_str(), "workspace");
   /// assert_eq!(Kind::Standalone.as_str(), "standalone");
@@ -127,7 +127,7 @@ impl Kind {
   ///
   /// # Examples
   /// ```
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// assert_eq!(Kind::parse("workspace"), Some(Kind::Workspace));
   /// assert_eq!(Kind::parse("STANDALONE"), Some(Kind::Standalone));
@@ -149,7 +149,7 @@ impl Kind {
   ///
   /// # Examples
   /// ```
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// assert!(Kind::Workspace.should_discover_workspace());
   /// assert!(Kind::Standalone.should_discover_workspace());
@@ -166,7 +166,7 @@ impl Kind {
   ///
   /// # Examples
   /// ```
-  /// use craole_cc_project::prelude::*;
+  /// use prjenv::prelude::*;
   ///
   /// let kind = Kind::Workspace;
   /// if kind.can_access_filesystem() {

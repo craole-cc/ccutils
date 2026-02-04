@@ -1,4 +1,4 @@
-# craole-cc-project
+# prjenv
 
 **Part of the [Craole CC Dev Toolkit](https://github.com/craole-cc/devtools)** - Development utilities by Craig "Craole" Cole.
 
@@ -15,13 +15,13 @@ Cargo workspace and package scaffolding and management toolkit.
 
 ```toml
 [dependencies]
-craole-cc-project = "0.1"
+prjenv = "0.1"
 ```
 
 ## Quick Start
 
 ```rust
-use craole_cc_project::prelude::*;
+use prjenv::prelude::*;
 
 // Find workspace root
 let root = find_cargo_root();
@@ -93,11 +93,11 @@ The Craole CC toolkit provides a suite of Rust development utilities designed to
 
 ### Published Crates
 
-- 🏗️ **[`craole-cc-project`](https://crates.io/crates/craole-cc-project)** - Workspace scaffolding and package management *(you are here)*
+- 🏗️ **[`prjenv`](https://crates.io/crates/prjenv)** - Workspace scaffolding and package management *(you are here)*
 
 ### Coming Soon
 
-- 📝 **[`craole-cc-log`](https://crates.io/crates/craole-cc-log)** - Logging with sane defaults
+- 📝 **[`prjenv`](https://crates.io/crates/prjenv)** - Logging with sane defaults
   *Re-exports `tracing` with opinionated configuration, `miette` for beautiful error reporting, and utilities for structured logging*
   **Binary:** `ephelog` - Ephemeral log viewer and analyzer
 
@@ -124,7 +124,7 @@ Enables `cargo_metadata` for robust workspace detection via cargo's native metad
 
 ```toml
 [dependencies]
-craole-cc-project = { version = "0.1", features = ["full"] }
+prjenv = { version = "0.1", features = ["full"] }
 ```
 
 ### `tracing`
@@ -133,8 +133,8 @@ Adds instrumented logging for debugging scaffolding operations.
 
 ```toml
 [dependencies]
-craole-cc-project = { version = "0.1", features = ["tracing"] }
-craole-cc-log = "0.1"  # Recommended for tracing support
+prjenv = { version = "0.1", features = ["tracing"] }
+prjenv = "0.1"  # Recommended for tracing support
 ```
 
 ## API Examples
@@ -142,7 +142,7 @@ craole-cc-log = "0.1"  # Recommended for tracing support
 ### Find Workspace Root
 
 ```rust
-use craole_cc_project::prelude::*;
+use prjenv::prelude::*;
 
 let root = find_cargo_root();
 println!("Workspace: {}", root.display());
@@ -151,7 +151,7 @@ println!("Workspace: {}", root.display());
 ### Create and Add a Package
 
 ```rust
-use craole_cc_project::prelude::*;
+use prjenv::prelude::*;
 
 // Build a new library crate
 let pkg_path = PackageBuilder::new("my-awesome-lib")
@@ -173,7 +173,7 @@ println!("Created and registered: {}", pkg_path.display());
 ### Read Workspace Metadata
 
 ```rust
-use craole_cc_project::prelude::*;
+use prjenv::prelude::*;
 
 let root = find_cargo_root();
 let cargo_toml = root.join("Cargo.toml");

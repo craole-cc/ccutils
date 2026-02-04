@@ -3,9 +3,6 @@
 mod env;
 mod kind;
 
-#[cfg(feature = "macros")]
-mod macros;
-
 pub use {
   env::*,
   kind::*,

@@ -8,10 +8,13 @@
 
 mod core;
 mod exports;
-mod infrastructure;
-mod metadata;
-mod package;
-mod workspace;
+pub mod infrastructure;
+pub mod metadata;
+pub mod package;
+pub mod workspace;
+
+#[cfg(feature = "macros")]
+pub mod macros;
 
 /// Internal prelude for use within this crate.
 ///

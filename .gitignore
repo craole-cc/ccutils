@@ -1,9 +1,46 @@
-!.vscode/
-.direnv/
-[aA]rchive/
+# -- Keep assets
+!assets/
+!assets/icons/
+!assets/css/
+!assets/html/
+!assets/db/*.sql
+
+# -- Ignore other asset types you might generate
+assets/**/*.log
+assets/**/*.tmp
+assets/**/*.db
+
+# -- Local archives or backups
+[aA]archive/
 [aA]rchives/
+[tT]emp/
+[tT]mp/
+[rR]eview/
 [dD]ownload/
 [dD]ownloads/
 [rR]eview/
-[tT]arget/
-[tT]emp/
+
+# -- Environment variables
+*.env
+private
+
+# -- Databases
+*.db
+*.sqlite3
+
+# -- Cache and temp files
+.direnv/
+*.log
+*.tmp
+.cache/
+
+# -- IDE/editor folders
+!.helix/
+!.idea/
+!.vscode/
+!.zed/
+
+# -- OS and editor files
+.DS_Store
+Thumbs.db
+

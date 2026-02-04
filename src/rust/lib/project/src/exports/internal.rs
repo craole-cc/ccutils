@@ -13,7 +13,7 @@ pub use tracing::{
 };
 pub use {
   crate::prelude::*,
-  dotenv::dotenv,
+  dotenvy::dotenv,
   std::{
     env::{
       current_dir,
