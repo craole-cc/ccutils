@@ -86,7 +86,7 @@ mod tests {
 
   /// For tests, just use a fresh process or accept that cache persists.
   ///
-  /// Since OnceLock is process-global and doesn't support clearing,
+  /// Since `OnceLock` is process-global and doesn't support clearing,
   /// tests that need isolation should use `cargo test -- --test-threads=1`
   /// or run in separate processes.
   ///
