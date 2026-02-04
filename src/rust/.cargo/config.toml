@@ -130,6 +130,7 @@ ccu-wxv = "wxv --package ccutil"              # Watch and run ccutil example ver
 prj-b = "b --package prjenv"                  # Build prjenv library
 prj-c = "c --package prjenv"                  # Clean prjenv build artifacts
 prj-l = "l --package prjenv"                  # Lint prjenv library
+prj-lf = "lf --package prjenv"                  # Lint prjenv library
 prj-t = "tq --package prjenv"                 # Test prjenv quietly
 prj-tv = "tv --package prjenv"                # Test prjenv verbosely
 
