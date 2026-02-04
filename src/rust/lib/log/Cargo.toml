@@ -1,0 +1,17 @@
+[package]
+name = "ephelog"
+description = "Opinionated ephemeral logger"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+categories.workspace = true
+license.workspace = true
+readme.workspace = true
+keywords.workspace = true
+
+[dependencies]
+
+[lints]
+workspace = true

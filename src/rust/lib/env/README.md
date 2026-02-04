@@ -1,213 +1,251 @@
 # prjenv
 
-**Part of the [Craole CC Dev Toolkit](https://github.com/craole-cc/devtools)** - Development utilities by Craig "Craole" Cole.
+> Cargo workspace/package environment detection and configuration management
 
-Cargo workspace and package scaffolding and management toolkit.
+[![Crates.io](https://img.shields.io/crates/v/prjenv.svg)](https://crates.io/crates/prjenv)
+[![Documentation](https://docs.rs/prjenv/badge.svg)](https://docs.rs/prjenv)
+[![License](https://img.shields.io/crates/l/prjenv.svg)](../../../../LICENSE-APACHE)
+
+`prjenv` provides a unified API for accessing workspace and package metadata,
+runtime configuration, and filesystem paths in Rust projects. It automatically
+detects your environment (workspace/standalone/library) and provides sensible
+defaults with zero configuration.
 
 ## Features
 
-- 🔍 **Read** workspace and package metadata
-- 🏗️ **Scaffold** new packages with templates
-- 📦 **Manage** workspace members (add/remove)
-- ✏️ **Manipulate** Cargo.toml files programmatically
+- 🚀 **Zero-config** - Works out of the box with sensible defaults
+- 🏗️ **Environment Detection** - Automatically detects workspace, standalone, or
+  library mode
+- 📦 **Metadata Access** - Easy access to package and workspace metadata
+- ⚙️ **Configuration Management** - Centralized runtime configuration from
+  environment variables
+- 📂 **Path Discovery** - Automatic workspace root and standard directory
+  discovery
+- 🔧 **Builder Pattern** - Fluent API for custom configurations
+- 🧵 **Thread-Safe** - Static initialization with `OnceLock` for zero-cost
+  access
+- 📝 **Optional Macros** - Convenient macros for common operations (with
+  `macros` feature)
+- 🔍 **Tracing Support** - Built-in instrumentation (with `tracing` feature)
 
-## Installation
+## Quick Start
+
+Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
 prjenv = "0.1"
 ```
 
-## Quick Start
+### Basic Usage
 
 ```rust
 use prjenv::prelude::*;
 
-// Find workspace root
-let root = find_cargo_root();
+fn main() {
+  let env = get();
 
-// Scaffold a new package
-PackageBuilder::new("my-lib")
-    .description("A new library")
-    .scaffold("./lib/my-lib")?;
-
-// Add to workspace
-let manager = WorkspaceManager::new(&root);
-manager.add_member("lib/my-lib")?;
+  println!("Workspace: {}", env.workspace.metadata.name);
+  println!("Package: {}", env.package.metadata.name);
+  println!("Database: {}", env.config.db);
+  println!("Server: {}:{}", env.config.ip, env.config.port);
+}
 ```
 
-## Examples
+### With Macros
 
-The `examples/` folder contains working, copy-paste ready examples:
+Enable the `macros` feature:
 
-### Basic Usage (No Extra Dependencies)
-
-```bash
-cargo run --example basic
+```toml
+[dependencies]
+prjenv = { version = "0.1", features = ["macros"] }
 ```
 
-Creates library and binary packages with complete Cargo.toml files. **No additional dependencies needed** - just works!
+```rust
+use prjenv::prelude::*;
 
-**Output:**
+fn main() {
+  // Initialize from compile-time environment variables
+  setenv!();
 
-```sh
-📁 Workspace root: /path/to/workspace
-🏠 Is workspace: true
-📚 Library: Ok("./example-lib")
-⚙️  Binary: Ok("./example-bin")
+  // Access configuration
+  let name = getenv!(pkg_name);
+  let version = getenv!(pkg_version);
+  let port = getenv!(port);
+
+  println!("{} v{} running on port {}", name, version, port);
+}
 ```
 
-**Files created:**
+### Custom Configuration
 
-```md
-example-lib/
-├── Cargo.toml
-└── src/lib.rs
+```rust
+use prjenv::prelude::*;
 
-example-bin/
-├── Cargo.toml
-└── src/main.rs
+fn main() {
+  let env = Environment::workspace()
+    .with_pkg_name(env!("CARGO_PKG_NAME"))
+    .with_pkg_version(env!("CARGO_PKG_VERSION"))
+    .with_db("postgres://localhost/mydb")
+    .with_port(8080)
+    .with_ip("0.0.0.0");
+
+  set(env);
+
+  // Now accessible globally
+  let cfg = get();
+  println!("Server: {}:{}", cfg.config.ip, cfg.config.port);
+}
 ```
 
-### Full Workspace Management
+## Environment Variables
 
-```bash
-cargo run --example workspace
-```
+`prjenv` reads the following environment variables with sensible defaults:
 
-Complete workspace operations: scaffold packages and add them to your workspace Cargo.toml.
+| Variable       | Default                 | Description                          |
+| -------------- | ----------------------- | ------------------------------------ |
+| `DATABASE_URL` | `{workspace}/assets/db` | Database connection URL or file path |
+| `IP`           | `localhost`             | Server bind address                  |
+| `PORT`         | `3000`                  | Server bind port                     |
+| `RUST_LOG`     | (empty)                 | Tracing filter directives            |
 
-### Advanced (With Tracing)
+## Features
 
-```bash
-cargo run --example advanced --features=tracing
-```
+### Default Features
 
-Production-ready example with proper error handling using `miette` and `thiserror`.
+None - minimal footprint by default.
 
-**View all examples:** [examples/](https://github.com/craole-cc/devtools/tree/main/src/rust/lib/project/examples)
+### Optional Features
 
-## Crates in the Craole CC Dev Toolkit
-
-The Craole CC toolkit provides a suite of Rust development utilities designed to work seamlessly together:
-
-### Published Crates
-
-- 🏗️ **[`prjenv`](https://crates.io/crates/prjenv)** - Workspace scaffolding and package management *(you are here)*
-
-### Coming Soon
-
-- 📝 **[`prjenv`](https://crates.io/crates/prjenv)** - Logging with sane defaults
-  *Re-exports `tracing` with opinionated configuration, `miette` for beautiful error reporting, and utilities for structured logging*
-  **Binary:** `ephelog` - Ephemeral log viewer and analyzer
-
-- 💾 **[`craole-cc-cache`](https://crates.io/crates/craole-cc-cache)** - Intelligent caching utilities
-  *Fast, type-safe caching with TTL, LRU, and persistence support*
-
-- 🌍 **[`craole-cc-env`](https://crates.io/crates/craole-cc-env)** - Environment management
-  *Runtime configuration, workspace paths, and compile-time metadata handling*
-
-- ⚡ **[`craole-cc-cli`](https://crates.io/crates/craole-cc-cli)** - CLI framework
-  *Opinionated CLI builder with clap integration and interactive prompts*
-
-See all projects at [github.com/craole-cc/devtools](https://github.com/craole-cc/devtools)
-
-## Feature Flags
-
-### Default (minimal)
-
-Basic TOML manipulation and metadata reading without external dependencies.
-
-### `full`
-
-Enables `cargo_metadata` for robust workspace detection via cargo's native metadata command (~50-100ms overhead).
+- **`macros`** - Enables `setenv!()` and `getenv!()` convenience macros
+- **`tracing`** - Adds instrumentation for debugging and monitoring
+- **`full`** - Enables all features: `macros` + `tracing`
 
 ```toml
 [dependencies]
 prjenv = { version = "0.1", features = ["full"] }
 ```
 
-### `tracing`
+## Examples
 
-Adds instrumented logging for debugging scaffolding operations.
-
-```toml
-[dependencies]
-prjenv = { version = "0.1", features = ["tracing"] }
-prjenv = "0.1"  # Recommended for tracing support
-```
-
-## API Examples
-
-### Find Workspace Root
+### Auto-detection
 
 ```rust
 use prjenv::prelude::*;
 
-let root = find_cargo_root();
-println!("Workspace: {}", root.display());
-```
+let env = get();
 
-### Create and Add a Package
-
-```rust
-use prjenv::prelude::*;
-
-// Build a new library crate
-let pkg_path = PackageBuilder::new("my-awesome-lib")
-    .version("0.1.0")
-    .description("My awesome library")
-    .author("Your Name <you@example.com>")
-    .dependency("serde", "1.0")
-    .library()
-    .scaffold("./lib")?;
-
-// Add to workspace Cargo.toml
-let root = find_cargo_root();
-let manager = WorkspaceManager::new(&root);
-manager.add_member("lib/my-awesome-lib")?;
-
-println!("Created and registered: {}", pkg_path.display());
-```
-
-### Read Workspace Metadata
-
-```rust
-use prjenv::prelude::*;
-
-let root = find_cargo_root();
-let cargo_toml = root.join("Cargo.toml");
-
-if let Some(metadata) = read_cargo_metadata(&cargo_toml) {
-    if let Some(name) = metadata.get("name") {
-        println!("Workspace: {}", name);
-    }
+match env.kind {
+  Kind::Workspace => println!("Running in workspace with {} packages",
+    env.workspace.package_count()),
+  Kind::Standalone => println!("Standalone package: {}",
+    env.package.metadata.name),
+  Kind::Library => println!("Library mode - minimal initialization"),
 }
 ```
 
-## Why Craole CC?
+### Package Scaffolding
 
-The Craole CC toolkit is designed with these principles:
+```rust
+use prjenv::prelude::*;
 
-- 🎯 **Opinionated** - Sensible defaults that just work
-- 🔧 **Composable** - Mix and match crates as needed
-- 📦 **Zero-config** - Minimal setup, maximum productivity
-- 🚀 **Fast** - Performance-conscious implementations
-- 🦀 **Idiomatic Rust** - Follows ecosystem best practices
+let package = PackageScaffold::new("my-service")
+  .version("1.0.0")
+  .description("My microservice")
+  .author("Development Team")
+  .dependency("tokio", "1.0")
+  .binary()
+  .create("packages")?;
 
-## Contributing
+println!("Created package at: {}", package.display());
+```
 
-Contributions are welcome! Please see [CONTRIBUTING.md](../../../../CONTRIBUTING.md) for guidelines.
+### Workspace Management
+
+```rust
+use prjenv::prelude::*;
+
+let workspace = Workspace::new()
+  .with_name("my-workspace")
+  .with_package_name("api")
+  .with_package_name("cli")
+  .with_package_name("web");
+
+println!("Workspace has {} packages", workspace.package_count());
+
+if let Some(api) = workspace.find_package("api") {
+  println!("Found API package: {}", api.metadata.display_name());
+}
+```
+
+## Architecture
+
+`prjenv` separates concerns into distinct layers:
+
+- **Core** - Environment types and global state management
+- **Metadata** - Package/workspace metadata (name, version, description)
+- **Infrastructure** - Configuration (env vars) and paths (filesystem)
+- **Domain** - Workspace and package models
+- **Macros** - Optional convenience macros
+
+## Performance
+
+- **Initialization**: ~5-50ms on first call (workspace discovery + file I/O)
+- **Subsequent access**: <1µs (static `OnceLock` cache)
+- **Metadata loading**: ~5-15ms (file read + TOML parse, cached)
+- **Path discovery**: ~1-2ms typical (directory walking, cached)
+
+## Thread Safety
+
+All public APIs are thread-safe:
+
+- Uses `OnceLock` for one-time initialization
+- Multiple threads can safely call `get()` or `set()` concurrently
+- First caller wins (idempotent behavior)
+
+## Examples
+
+Run the included examples:
+
+```bash
+# Basic usage
+cargo run --example basic
+
+# With macros
+cargo run --example macros --features macros
+
+# With tracing
+RUST_LOG=trace cargo run --example tracing --features tracing
+
+# Advanced (all features)
+cargo run --example advanced --features full
+```
+
+## Documentation
+
+Full API documentation is available at [docs.rs/prjenv](https://docs.rs/prjenv).
 
 ## License
 
-Licensed under either of:
+This project is licensed under either of:
 
-- Apache License, Version 2.0 [LICENSE-APACHE](../../../../LICENSE-APACHE)
-- MIT license [LICENSE-MIT](../../../../LICENSE-MIT)
+- Apache License, Version 2.0 ([LICENSE-APACHE](../../../../LICENSE-APACHE) or
+  http://www.apache.org/licenses/LICENSE-2.0)
+- MIT license ([LICENSE-MIT](../../../../LICENSE-MIT) or
+  http://opensource.org/licenses/MIT)
 
 at your option.
 
-### Contribution
+## Contributing
 
-Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Similar Projects
+
+- [`cargo_metadata`](https://crates.io/crates/cargo_metadata) - Low-level cargo
+  metadata queries
+- [`project-root`](https://crates.io/crates/project-root) - Simple project root
+  detection
+
+`prjenv` provides a higher-level, more ergonomic API with additional features
+like configuration management and package scaffolding.

@@ -16,6 +16,7 @@ pub mod prelude {
     Workspace,
     WorkspaceManager,
     find_cargo_root,
-    read_cargo_metadata,is_workspace_toml,
+    is_workspace_toml,
+    read_cargo_metadata,
   };
 }

@@ -45,8 +45,8 @@ fn main() {
   let ip = getenv!(ip);
   let port = getenv!(port);
 
-  println!("  Database: {}", db);
-  println!("  Server: {}:{}", ip, port);
+  println!("  Database: {db}");
+  println!("  Server: {ip}:{port}");
   println!();
 
   //╔═══════════════════════════════════════════════════════════╗

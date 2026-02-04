@@ -13,9 +13,14 @@ p = "bench"                                   # Run benchmarks
 pq = "bench --quiet"                          # Run benchmarks with minimal output
 
 # -- Build
-b = "build --verbose --message-format human"  # Build with verbose output
+b = "build --verbose --message-format human"  # Build
+bv = "build --verbose --message-format json-render-diagnostics"  # Build with verbose output
 ba = "b --workspace"                          # Build all workspace members
 br = "b --release"                            # Build with release optimizations
+
+# -- Check (fast compilation check)
+k = "check --verbose"                              # Quick compilation check
+ka = "k --workspace"
 
 # -- Clean
 c = "clean --verbose"                        # Remove build artifacts
@@ -95,8 +100,10 @@ ccu-d = "d --package ccutil"                   # Generate ccutil documentation
 ccu-do = "do --package ccutil"                 # Generate and open ccutil docs
 
 # -- Mode: Example
-ccu-x = "x --package ccutil"                   # Run ccutil example quietly
-ccu-xv = "xv --package ccutil"                 # Run ccutil example verbosely
+ccu-xb = "x basic --package ccutil --no-features"
+ccu-xm = "x macros --package ccutil --features macros"
+ccu-xt = "x tracing --package ccutil --features tracing"
+ccu-xf = "x full --package ccutil --features full"
 
 # -- Mode: Install
 ccu-i = "ip bin/cli"                          # Install ccutil system-wide
@@ -139,13 +146,17 @@ prj-d = "d --package prjenv"                  # Generate prjenv documentation
 prj-do = "do --package prjenv"                # Generate and open prjenv docs
 
 # -- Mode: Example
-prj-x = "x --package prjenv"                   # Run prjenv example quietly
-prj-xv = "xv --package prjenv"                 # Run prjenv example verbosely
-prj-x-basic = "prj-rq --example basic"
-prj-x-macro = "prj-rq --example macros --feature macros"
+prj-xa = "x advanced --package prjenv --features full"
+prj-xb = "x basic --package prjenv"
+prj-xm = "x macros --package prjenv --features macros"
+prj-xt = "x tracing --package prjenv --features tracing"
 
 # -- Mode: Watch
 prj-wl = "wl --package prjenv"                # Watch and lint prjenv
 prj-wlr = "wlr --package prjenv"              # Watch and lint prjenv (release)
 prj-wt = "wt --package prjenv"                # Watch and test prjenv quietly
 prj-wtv = "wtv --package prjenv"              # Watch and test prjenv verbosely
+prj-wxa = "w prj-xa"
+prj-wxb = "w prj-xb"
+prj-wxt = "w prj-xt"
+prj-wxm = "w prj-xm"

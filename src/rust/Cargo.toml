@@ -40,13 +40,18 @@ opt-level = 3
 
 [workspace.dependencies]
 # -- Internal
-# ephelog = { path = "lib/log" }
+ccutil = { path = "bin/cli" }
+ephelog = { path = "lib/log" }
 prjenv = { path = "lib/env" }
 
 # -- Tracing & Error Handling
 miette = "7.6.0"
 thiserror = "2.0.18"
 tracing = "0.1.41"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# -- Testing
+temp-env = "0.3.6"
 
 # -- Information Management
 toml = "0.9.11"

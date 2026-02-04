@@ -12,6 +12,27 @@
 //! | `PORT` | u16 | `3000` | Server bind port (must be valid u16, panics if invalid) |
 //! | `RUST_LOG` | String | (empty by default) | Tracing filter directives |
 //!
+//! # Panics
+//!
+//! ⚠️ **IMPORTANT**: `Configuration::default()` and `Configuration::new()` will **panic** if:
+//! - The `PORT` environment variable is set but cannot be parsed as a valid u16 (0-65535)
+//!
+//! This is intentional - invalid port configuration should fail immediately during
+//! application startup rather than at first connection attempt.
+//!
+//! ```should_panic
+//! # use temp_env::with_var;
+//! # with_var("PORT", Some("invalid"), || {
+//! use prjenv::infrastructure::*;
+//! // This will panic with "PORT must be a valid number"
+//! let config = Configuration::new();
+//! # });
+//! ```
+//!
+//! To avoid panics, ensure `PORT` is either:
+//! - Not set (uses default of 3000)
+//! - Set to a valid number 0-65535
+//!
 //! # Examples
 //!
 //! ## Runtime Override
@@ -63,6 +84,14 @@ use crate::_prelude::*;
 ///
 /// # Thread Safety
 /// Can be cloned safely; all fields are `String` or primitive types.
+///
+/// # Panics
+///
+/// ⚠️ **`Default::default()` will panic** if the `PORT` environment variable is set
+/// but cannot be parsed as a valid u16 (0-65535).
+///
+/// This is intentional to fail fast on misconfiguration. See module-level docs
+/// for details and mitigation strategies.
 ///
 /// # Validation
 /// - **Port must be u16**: If `PORT` env var is set, it must parse as a valid u16 (0-65535).
@@ -143,9 +172,10 @@ pub struct Configuration {
   /// If the port is already in use or requires elevated privileges, the bind will
   /// fail at startup (appropriate to fail fast during setup).
   ///
-  /// # Validation
-  /// If `PORT` environment variable is set but not a valid u16, `Default::default()`
-  /// panics with "PORT must be a valid number". This is intentional - port configuration
+  /// # Validation & Panics
+  ///
+  /// ⚠️ If `PORT` environment variable is set but not a valid u16, `Default::default()`
+  /// **panics** with "PORT must be a valid number". This is intentional - port configuration
   /// errors should fail immediately during application startup.
   pub port: u16,
 
@@ -210,7 +240,8 @@ impl Configuration {
   /// 4. `PORT` → defaults to "3000", parsed as u16
   ///
   /// # Panics
-  /// If `PORT` environment variable is set but cannot be parsed as u16.
+  ///
+  /// ⚠️ **Panics** if `PORT` environment variable is set but cannot be parsed as u16.
   /// This is intentional - invalid port configuration should fail immediately
   /// during startup rather than at first connection attempt.
   ///
@@ -218,7 +249,15 @@ impl Configuration {
   /// ```no_run
   /// use prjenv::infrastructure::*;
   /// let config = Configuration::new();
-  /// // If PORT="invalid", this panics with "PORT must be a valid number"
+  /// ```
+  ///
+  /// ```should_panic
+  /// # use temp_env::with_var;
+  /// # with_var("PORT", Some("not_a_number"), || {
+  /// use prjenv::infrastructure::*;
+  /// // This will panic with "PORT must be a valid number"
+  /// let config = Configuration::new();
+  /// # });
   /// ```
   ///
   /// # Performance

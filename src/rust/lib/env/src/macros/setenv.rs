@@ -3,7 +3,7 @@
 /// Initializes the project environment with package metadata.
 ///
 /// Extracts metadata from compile-time cargo environment variables or accepts
-/// a pre-configured [`Environment`](crate::Environment) object.
+/// a pre-configured [`Environment`](crate::prelude::Environment) object.
 ///
 /// # Variants
 ///
@@ -30,7 +30,7 @@
 ///
 /// # Idempotency
 ///
-/// This macro (and the underlying [`set()`](crate::set) function) is idempotent.
+/// This macro (and the underlying [`set()`](crate::prelude::set) function) is idempotent.
 /// Only the **first call** sets the environment; subsequent calls return the
 /// already-initialized value.
 ///
@@ -71,14 +71,14 @@
 ///
 /// # Implementation Note
 ///
-/// This macro expands to a call to [`set()`](crate::set), which uses an
+/// This macro expands to a call to [`set()`](crate::prelude::set), which uses an
 /// `OnceLock` for thread-safe, one-time initialization.
 ///
 /// # See Also
 ///
-/// - [`getenv!`](crate::getenv) - Access initialized environment
-/// - [`get()`](crate::get) - Core API for retrieving environment
-/// - [`set()`](crate::set) - Core API for setting environment
+/// - [`getenv!`](crate::prelude::getenv) - Access initialized environment
+/// - [`get()`](crate::prelude::get) - Core API for retrieving environment
+/// - [`set()`](crate::prelude::set) - Core API for setting environment
 #[macro_export]
 macro_rules! setenv {
   () => {
