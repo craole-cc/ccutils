@@ -2,7 +2,7 @@
 //!
 //! Demonstrates the `setenv!` and `getenv!` macros when the `macros` feature is enabled.
 //!
-//! Run with: cargo run --example with_macros --features macros
+//! Run with: cargo run --example `with_macros` --features macros
 
 #![cfg(feature = "macros")]
 
@@ -31,9 +31,9 @@ fn main() {
   let version = getenv!(pkg_version);
   let desc = getenv!(pkg_desc);
 
-  println!("  Package: {}", name);
-  println!("  Version: {}", version);
-  println!("  Description: {}", desc);
+  println!("  Package: {name}");
+  println!("  Version: {version}");
+  println!("  Description: {desc}");
   println!();
 
   //╔═══════════════════════════════════════════════════════════╗

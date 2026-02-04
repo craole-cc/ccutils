@@ -9,9 +9,28 @@ use prjenv::prelude::*;
 fn main() {
   println!("🚀 prjenv - Advanced Example (with all features)\n");
 
-  //╔═══════════════════════════════════════════════════════════╗
-  //║ Example 1: Macro-Based Initialization                     ║
-  //╚═══════════════════════════════════════════════════════════╝
+  macro_initialization();
+  environment_inspection();
+  workspace_management();
+  complex_configuration();
+  environment_kinds();
+  package_scaffolding();
+  environment_builder();
+  metadata_operations();
+  path_management();
+  environment_detection();
+
+  println!("\n✅ Advanced example completed successfully!");
+  println!("\n💡 This example demonstrates:");
+  println!("   • Workspace and package management");
+  println!("   • Complex configuration scenarios");
+  println!("   • Environment kind detection");
+  println!("   • Package scaffolding");
+  println!("   • Metadata manipulation");
+  println!("   • Path management");
+}
+
+fn macro_initialization() {
   #[cfg(feature = "macros")]
   {
     println!("📦 Macro-Based Initialization:");
@@ -21,24 +40,22 @@ fn main() {
     let pkg_version = getenv!(pkg_version);
     let port = getenv!(port);
 
-    println!("  Package: {} v{}", pkg_name, pkg_version);
-    println!("  Port: {}", port);
+    println!("  Package: {pkg_name} v{pkg_version}");
+    println!("  Port: {port}");
     println!();
   }
+}
 
-  //╔═══════════════════════════════════════════════════════════╗
-  //║ Example 2: Full Environment Inspection                    ║
-  //╚═══════════════════════════════════════════════════════════╝
+fn environment_inspection() {
   println!("🔍 Full Environment Inspection:");
 
   let env = get();
   println!("  Kind: {:?}", env.kind);
   println!("  Summary: {}", env.summary());
   println!();
+}
 
-  //╔═══════════════════════════════════════════════════════════╗
-  //║ Example 3: Workspace Management                           ║
-  //╚═══════════════════════════════════════════════════════════╝
+fn workspace_management() {
   println!("📚 Workspace with Multiple Packages:");
 
   let workspace = Workspace::new()
@@ -86,10 +103,9 @@ fn main() {
   }
 
   println!();
+}
 
-  //╔═══════════════════════════════════════════════════════════╗
-  //║ Example 4: Complex Configuration                          ║
-  //╚═══════════════════════════════════════════════════════════╝
+fn complex_configuration() {
   println!("⚙️  Complex Configuration:");
 
   let config = Configuration::new()
@@ -102,10 +118,9 @@ fn main() {
   println!("  Server: {}:{}", config.ip, config.port);
   println!("  Logging: {}", config.rust_log);
   println!();
+}
 
-  //╔═══════════════════════════════════════════════════════════╗
-  //║ Example 5: Environment Kinds                              ║
-  //╚═══════════════════════════════════════════════════════════╝
+fn environment_kinds() {
   println!("🏗️  Different Environment Kinds:");
 
   let kinds = [Kind::Workspace, Kind::Standalone, Kind::Library];
@@ -123,10 +138,9 @@ fn main() {
   }
 
   println!();
+}
 
-  //╔═══════════════════════════════════════════════════════════╗
-  //║ Example 6: Package Scaffolding                            ║
-  //╚═══════════════════════════════════════════════════════════╝
+fn package_scaffolding() {
   println!("🏗️  Package Scaffolding:");
 
   let microservice = PackageScaffold::new("user-service")
@@ -149,10 +163,9 @@ fn main() {
   );
   println!("  Dependencies: {:?}", microservice.dependencies);
   println!();
+}
 
-  //╔═══════════════════════════════════════════════════════════╗
-  //║ Example 7: Full Environment Builder                       ║
-  //╚═══════════════════════════════════════════════════════════╝
+fn environment_builder() {
   println!("🎯 Complete Environment Configuration:");
 
   let production_env = Environment::workspace()
@@ -187,10 +200,9 @@ fn main() {
     production_env.workspace.package_count()
   );
   println!();
+}
 
-  //╔═══════════════════════════════════════════════════════════╗
-  //║ Example 8: Metadata Operations                            ║
-  //╚═══════════════════════════════════════════════════════════╝
+fn metadata_operations() {
   println!("📝 Metadata Operations:");
 
   let metadata = Metadata::from_parts("my-service", "1.2.3", "A microservice example");
@@ -199,10 +211,9 @@ fn main() {
   println!("  Has name: {}", metadata.has_name());
   println!("  Is empty: {}", metadata.is_empty());
   println!();
+}
 
-  //╔═══════════════════════════════════════════════════════════╗
-  //║ Example 9: Path Management                                ║
-  //╚═══════════════════════════════════════════════════════════╝
+fn path_management() {
   println!("📂 Path Management:");
 
   let paths = Paths::default();
@@ -211,31 +222,22 @@ fn main() {
   println!("  Assets: {}", paths.assets.display());
   println!("  Database: {}", paths.database.display());
   println!();
+}
 
-  //╔═══════════════════════════════════════════════════════════╗
-  //║ Example 10: Environment Detection                         ║
-  //╚═══════════════════════════════════════════════════════════╝
+fn environment_detection() {
   println!("🔎 Environment Detection:");
 
   let detected_kind = Kind::detect();
-  println!("  Detected kind: {}", detected_kind);
+  println!("  Detected kind: {detected_kind}");
   println!("  From string parsing:");
 
   let test_strings = ["workspace", "standalone", "library", "invalid"];
   for s in &test_strings {
     match Kind::parse(s) {
-      Some(k) => println!("    '{}' → {}", s, k),
-      None => println!("    '{}' → Invalid", s),
+      Some(k) => println!("    '{s}' → {k}"),
+      None => println!("    '{s}' → Invalid"),
     }
   }
 
   println!();
-  println!("✅ Advanced example completed successfully!");
-  println!("\n💡 This example demonstrates:");
-  println!("   • Workspace and package management");
-  println!("   • Complex configuration scenarios");
-  println!("   • Environment kind detection");
-  println!("   • Package scaffolding");
-  println!("   • Metadata manipulation");
-  println!("   • Path management");
 }

@@ -1,6 +1,6 @@
 //! Tracing example demonstrating logging and instrumentation
 //!
-//! Run with: RUST_LOG=trace cargo run --example tracing --features tracing
+//! Run with: `RUST_LOG=trace` cargo run --example tracing --features tracing
 
 #![cfg(feature = "tracing")]
 
@@ -76,7 +76,7 @@ fn main() {
     "Checked Cargo.toml"
   );
 
-  println!("  Is workspace: {}", is_workspace);
+  println!("  Is workspace: {is_workspace}");
   println!();
 
   //╔═══════════════════════════════════════════════════════════╗
@@ -141,7 +141,7 @@ fn main() {
   let _guard = workspace_span.enter();
   info!("Starting workspace operations");
 
-  simulate_workspace_operations(&env);
+  simulate_workspace_operations(env);
 
   drop(_guard); // Exit span
   println!("  Workspace operations completed (check trace logs)");
@@ -156,11 +156,11 @@ fn main() {
   match result {
     Ok(value) => {
       info!(value = value, "Operation succeeded");
-      println!("  Success: {}", value);
+      println!("  Success: {value}");
     }
     Err(e) => {
       error!(error = %e, "Operation failed");
-      println!("  Error: {}", e);
+      println!("  Error: {e}");
     }
   }
 
@@ -180,7 +180,7 @@ fn main() {
 
   info!(duration_ms = duration.as_millis(), "Work completed");
 
-  println!("  Duration: {:?}", duration);
+  println!("  Duration: {duration:?}");
   println!();
 
   info!("Tracing example completed");
