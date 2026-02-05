@@ -202,27 +202,36 @@ fn search_from_current_dir() -> Option<PathBuf> {
 /// ```
 #[must_use]
 pub fn is_workspace_toml(path: &Path) -> bool {
-  // Fast path: check file size first (workspace Cargo.toml usually > 100 bytes)
-  // Edition 2021 compatible: nested if instead of let chain
-  if let Ok(file_metadata) = metadata(path)
-    && file_metadata.len() < 50
-  {
-    return false; // Too small to be a workspace Cargo.toml
-  }
-
-  // Read and check for workspace markers
-  if let Ok(contents) = read_to_string(path) {
-    // Quick check: must have [workspace] section
-    if !contents.contains("[workspace]") {
-      return false;
-    }
-
-    // Workspace should have members or resolver
-    contents.contains("members") || contents.contains("resolver")
-  } else {
-    false
+  match metadata(path) {
+    Ok(meta) if meta.len() < 50 => false,
+    Err(_) => false,
+    _ => read_to_string(path).is_ok_and(|contents| {
+      contents.contains("[workspace]")
+        && (contents.contains("members") || contents.contains("resolver"))
+    }),
   }
 }
+// pub fn is_workspace_toml(path: &Path) -> bool {
+//   //> Ensure the Cargo.toml exists and has content
+//   if let Ok(file_metadata) = metadata(path)
+//     && file_metadata.len() < 50
+//   {
+//     return false; //? Too small to be a workspace Cargo.toml
+//   }
+
+//   //> Read and check for workspace markers
+//   if let Ok(contents) = read_to_string(path) {
+//     //? Quick check: must have [workspace] section
+//     if !contents.contains("[workspace]") {
+//       return false;
+//     }
+
+//     //? Workspace should have members or resolver
+//     contents.contains("members") || contents.contains("resolver")
+//   } else {
+//     false
+//   }
+// }
 
 /// Read and parse a Cargo.toml file, returning the appropriate package metadata.
 ///
@@ -266,16 +275,16 @@ pub fn read_cargo_metadata(cargo_toml_path: &Path) -> Option<CargoToml> {
   let toml_value = from_toml_str::<TomlValue>(&contents).ok()?;
   let root_table = toml_value.as_table()?;
 
-  // Check if this is a workspace toml
+  //> Check if this is a workspace toml
   if is_workspace_toml(cargo_toml_path) {
-    // Read from [workspace.package]
+    //> Read from [workspace.package]
     root_table
       .get("workspace")
       .and_then(|w| w.get("package"))
       .and_then(|p| p.as_table())
       .cloned()
   } else {
-    // Read from [package]
+    //> Read from [package]
     root_table
       .get("package")
       .and_then(|p| p.as_table())
