@@ -86,3 +86,6 @@ pub type CargoToml = TomlMap<String, TomlValue>;
 
 /// Result type for project operations.
 pub type Result<T> = StdResult<T, IOError>; // TODO: Why not StdError here?
+
+/// Generic result type for operations with custom error types
+pub type GenericResult<T, E> = StdResult<T, E>;

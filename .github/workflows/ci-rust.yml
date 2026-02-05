@@ -176,10 +176,10 @@ jobs:
         working-directory: src/rust
     steps:
       - uses: actions/checkout@v4
-      - name: Install Rust 1.75.0
+      - name: Install Rust 1.82.0
         uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: 1.75.0
+          toolchain: 1.82.0
       - name: Check with MSRV
         run: cargo check --workspace --all-features
 

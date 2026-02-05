@@ -1,6 +1,6 @@
 //! Tracing example demonstrating logging and instrumentation
 //!
-//! Run with: `RUST_LOG=trace` cargo run --example tracing --features tracing
+//! Run with: `RUST_LOG=trace cargo run --example tracing --features tracing`
 
 #![cfg(feature = "tracing")]
 
@@ -225,16 +225,25 @@ fn simulate_workspace_operations(env: &Environment) {
   );
 }
 
-/// Simulate an operation that might fail
+/// Simulate an operation that might fail - demonstrates error tracing
 #[instrument]
-fn simulate_potential_error() -> Result<String, &'static str> {
+fn simulate_potential_error() -> Result<String> {
   debug!("Attempting operation that might fail");
 
-  // Simulate success for demonstration
-  let value = "Operation successful";
-  trace!(result = value, "Operation completed");
+  // Simulate some condition that could fail
+  let should_fail = false; // Change to true to see error tracing
 
-  Ok(value.to_string())
+  if should_fail {
+    trace!("Operation failed - returning error");
+    Err(IOError::new(
+      IOErrorKind::Other,
+      "Simulated error for tracing demonstration"
+    ))
+  } else {
+    let value = "Operation successful";
+    trace!(result = value, "Operation completed successfully");
+    Ok(value.to_string())
+  }
 }
 
 /// Simulate some work for performance tracing
