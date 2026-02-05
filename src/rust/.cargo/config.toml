@@ -47,27 +47,27 @@ ild = "in --locked --debug --path"   #? Installs debug build with locked depende
 idl = "ild"                          #? Alias for locked debug install
 
 # -- Lint
-l = "clippy --no-deps"   #? Lints with clippy but ignores dependencies
-la = "l --all-targets"   #? Lints all targets
-lf = "la --fix"          #? Automatically applies clippy suggestions
-lff = "lf --allow-dirty"          #? Automatically applies clippy suggestions
-lw = "la --workspace"    #? Lints entire workspace
-lr = "la --release"      #? Lints with release profile optimizations
+l = "clippy --no-deps"    #? Lints with clippy but ignores dependencies
+la = "l --all-targets"    #? Lints all targets
+lf = "la --fix"           #? Automatically applies clippy suggestions
+lff = "lf --allow-dirty"  #? Automatically applies clippy suggestions
+lw = "la --workspace"     #? Lints entire workspace
+lr = "la --release"       #? Lints with release profile optimizations
 k = "check --verbose --message-format human"
 kv = "check --verbose --message-format json-render-diagnostics"
-ka = "k --all-features"  #? Includes all features
-kw = "ka --workspace"    #? Check all workspace members
+ka = "k --all-features"   #? Includes all features
+kw = "ka --workspace"     #? Check all workspace members
 
 # -- Publish
-pl = "login"         #? Authenticate with crates.io
-p = "publish"        #? Publish crate to crates.io
-pd = "p --dry-run"   #? Verify package without uploading
+pl = "login"              #? Authenticate with crates.io
+p = "publish"             #? Publish crate to crates.io
+pd = "p --dry-run"        #? Verify package without uploading
 
 # -- Run
-r = "run"              #? Runs the default binary
-rq = "run --quiet"     #? Runs binary with minimal output
-rr = "rv --release"    #? Runs release build with verbose output
-rv = "run --verbose"   #? Runs with detailed compilation output
+r = "run"                 #? Runs the default binary
+rq = "run --quiet"        #? Runs binary with minimal output
+rr = "rv --release"       #? Runs release build with verbose output
+rv = "run --verbose"      #? Runs with detailed compilation output
 
 # -- Test
 t = "test"                #? Runs all tests
@@ -94,7 +94,7 @@ wxv = "w xv"                         #? Watches examples verbosely
 ccu-b = "b --package ccutil"     #? Builds ccutil
 ccu-c = "c --package ccutil"     #? Cleans ccutil build artifacts
 ccu-l = "la --package ccutil"    #? Lints ccutil via clippy
-ccu-k = "ka --package ccutil"     #? Lints ccutil via check
+ccu-k = "ka --package ccutil"    #? Lints ccutil via check
 ccu-lf = "lf --package ccutil"   #? Fixes linting issues in ccutil
 ccu-r = "rq --package ccutil"    #? Runs ccutil quietly
 ccu-rv = "rv --package ccutil"   #? Runs ccutil verbosely
@@ -149,26 +149,26 @@ ccu-wxv = "wxv --package ccutil"   #? Watches ccutil examples verbosely
 #║ prjenv {lib/env}                                          ║
 #╚═══════════════════════════════════════════════════════════╝
 # -- Profile: Development
-prj-b = "b --package prjenv"     #? Builds prjenv library
-prj-c = "c --package prjenv"     #? Cleans prjenv build artifacts
-prj-l = "la --package prjenv"    #? Lints prjenv via clippy
-prj-k = "ka --package prjenv"     #? Lints prjenv via check
-prj-lf = "lf --package prjenv"   #? Lints prjenv library
+prj-b = "b --package prjenv"       #? Builds prjenv library
+prj-c = "c --package prjenv"       #? Cleans prjenv build artifacts
+prj-l = "la --package prjenv"      #? Lints prjenv via clippy
+prj-k = "ka --package prjenv"      #? Lints prjenv via check
+prj-lf = "lf --package prjenv"     #? Lints prjenv library
 prj-lff = "lff --package prjenv"   #? Lints prjenv library
-prj-t = "tq --package prjenv"    #? Tests prjenv quietly
-prj-tv = "tv --package prjenv"   #? Tests prjenv verbosely
+prj-t = "tq --package prjenv"      #? Tests prjenv quietly
+prj-tv = "tv --package prjenv"     #? Tests prjenv verbosely
 
 # -- Profile: Benchmark
-prj-m = "m --package prjenv"                  # Benchmark prjenv
-prj-mq = "mq --package prjenv"                # Benchmark prjenv quietly
+prj-m = "m --package prjenv"       #? Benchmarks prjenv
+prj-mq = "mq --package prjenv"     #? Benchmarks prjenv quietly
 
 # -- Profile: Release
-prj-br = "br --package prjenv"                # Build prjenv with release optimizations
-prj-lr = "lr --package prjenv"                # Lint prjenv with release profile
+prj-br = "br --package prjenv"     #? Builds prjenv with release optimizations
+prj-lr = "lr --package prjenv"     #? Lints prjenv with release profile
 
 # -- Mode: Documentation
-prj-d = "d --package prjenv"                  # Generate prjenv documentation
-prj-do = "do --package prjenv"                # Generate and open prjenv docs
+prj-d = "d --package prjenv"       #? Generates prjenv documentation
+prj-do = "do --package prjenv"     #? Generates and opens prjenv docs
 
 # -- Mode: Example
 prj-xa = "x advanced --package prjenv --features full"
@@ -177,18 +177,18 @@ prj-xm = "x macros --package prjenv --features macros"
 prj-xt = "x tracing --package prjenv --features tracing"
 
 # -- Mode: Info
-prj-i = "i prjenv"                             # Display information about prjenv
+prj-i = "i prjenv"                  #? Display information about prjenv
 
 # -- Mode: Publish
-prj-p = "p --package prjenv"                   # Publish prjenv
-prj-pd = "pd --package prjenv"                 # Simulate publishing prjenv
+prj-p = "p --package prjenv"        #? Publish prjenv
+prj-pd = "pd --package prjenv"      #? Simulate publishing prjenv
 
 # -- Mode: Watch
-prj-wl = "wl --package prjenv"                # Watch and lint prjenv
-prj-wlr = "wlr --package prjenv"              # Watch and lint prjenv (release)
-prj-wt = "wt --package prjenv"                # Watch and test prjenv quietly
-prj-wtv = "wtv --package prjenv"              # Watch and test prjenv verbosely
-prj-wxa = "w prj-xa"
-prj-wxb = "w prj-xb"
-prj-wxt = "w prj-xt"
-prj-wxm = "w prj-xm"
+prj-wl = "wl --package prjenv"      #? Lints prjenv
+prj-wlr = "wlr --package prjenv"    #? Lints prjenv (release)
+prj-wt = "wt --package prjenv"      #? Test prjenv quietly
+prj-wtv = "wtv --package prjenv"    #? Test prjenv verbosely
+prj-wxa = "w prj-xa"                #? Runs prjenv advanced example
+prj-wxb = "w prj-xb"                #? Runs prjenv basic example
+prj-wxm = "w prj-xm"                #? Runs prjenv macros example
+prj-wxt = "w prj-xt"                #? Runs prjenv tracing example
