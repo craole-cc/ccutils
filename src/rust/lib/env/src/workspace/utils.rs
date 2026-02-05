@@ -203,10 +203,11 @@ fn search_from_current_dir() -> Option<PathBuf> {
 #[must_use]
 pub fn is_workspace_toml(path: &Path) -> bool {
   // Fast path: check file size first (workspace Cargo.toml usually > 100 bytes)
-  if let Ok(file_metadata) = metadata(path)
-    && file_metadata.len() < 50
-  {
-    return false; // Too small to be a workspace Cargo.toml
+  // Edition 2021 compatible: nested if instead of let chain
+  if let Ok(file_metadata) = metadata(path) {
+    if file_metadata.len() < 50 {
+      return false; // Too small to be a workspace Cargo.toml
+    }
   }
 
   // Read and check for workspace markers
