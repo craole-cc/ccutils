@@ -1,9 +1,9 @@
 # prjenv
 
 [![Crates.io](https://img.shields.io/crates/v/prjenv.svg)](https://crates.io/crates/prjenv)
-[![Documentation](https://docs.rs/prjenv/badge.svg)](https://docs.rs/prjenv)
 [![License](https://img.shields.io/crates/l/prjenv.svg)](#license)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/craole-cc/ccutils/ci.yml?branch=main)](https://github.com/craole-cc/ccutils/actions)
+[![Documentation](https://docs.rs/prjenv/badge.svg)](https://docs.rs/prjenv)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/craole-cc/ccutils/ci-rust.yml?event=push)](https://github.com/craole-cc/ccutils/actions/workflows/ci-rust.yml)
 
 > **Environment detection and configuration management for Cargo workspaces and
 > packages.**
