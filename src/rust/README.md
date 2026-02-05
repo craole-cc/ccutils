@@ -36,4 +36,3 @@ cargo run -p crate-name
 ## License
 
 MIT OR Apache-2.0
-
