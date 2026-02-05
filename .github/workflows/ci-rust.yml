@@ -1,18 +1,29 @@
-name: CI
+name: Rust CI
 on:
   push:
     branches: [main, develop]
+    paths:
+      - "src/rust/**"
+      - ".github/workflows/ci-rust.yml"
   pull_request:
     branches: [main, develop]
+    paths:
+      - "src/rust/**"
+      - ".github/workflows/ci-rust.yml"
   workflow_dispatch:
+
 env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: 1
+
 jobs:
   # Check formatting
   fmt:
     name: Rustfmt
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/rust
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust
@@ -21,10 +32,14 @@ jobs:
           components: rustfmt
       - name: Check formatting
         run: cargo fmt --all -- --check
+
   # Run clippy lints
   clippy:
     name: Clippy
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/rust
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust
@@ -35,19 +50,20 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('src/rust/**/Cargo.lock') }}
       - name: Cache cargo index
         uses: actions/cache@v4
         with:
           path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-index-${{ hashFiles('src/rust/**/Cargo.lock') }}
       - name: Cache cargo build
         uses: actions/cache@v4
         with:
-          path: target
-          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+          path: src/rust/target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('src/rust/**/Cargo.lock') }}
       - name: Run clippy
         run: cargo clippy --all-targets --all-features -- -D warnings
+
   # Run tests
   test:
     name: Test Suite
@@ -56,6 +72,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         rust: [stable, beta]
+    defaults:
+      run:
+        working-directory: src/rust
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust
@@ -66,27 +85,31 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('src/rust/**/Cargo.lock') }}
       - name: Cache cargo index
         uses: actions/cache@v4
         with:
           path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-index-${{ hashFiles('src/rust/**/Cargo.lock') }}
       - name: Cache cargo build
         uses: actions/cache@v4
         with:
-          path: target
-          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+          path: src/rust/target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('src/rust/**/Cargo.lock') }}
       - name: Run tests (no features)
         run: cargo test --workspace --verbose
       - name: Run tests (all features)
         run: cargo test --workspace --all-features --verbose
       - name: Run doc tests
         run: cargo test --workspace --doc --all-features
+
   # Check documentation
   docs:
     name: Documentation
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/rust
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust
@@ -95,25 +118,29 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('src/rust/**/Cargo.lock') }}
       - name: Cache cargo index
         uses: actions/cache@v4
         with:
           path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-index-${{ hashFiles('src/rust/**/Cargo.lock') }}
       - name: Cache cargo build
         uses: actions/cache@v4
         with:
-          path: target
-          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+          path: src/rust/target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('src/rust/**/Cargo.lock') }}
       - name: Check documentation
         run: cargo doc --workspace --all-features --no-deps
         env:
           RUSTDOCFLAGS: -D warnings
+
   # Run examples
   examples:
     name: Examples
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/rust
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust
@@ -122,27 +149,31 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('src/rust/**/Cargo.lock') }}
       - name: Cache cargo index
         uses: actions/cache@v4
         with:
           path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-index-${{ hashFiles('src/rust/**/Cargo.lock') }}
       - name: Cache cargo build
         uses: actions/cache@v4
         with:
-          path: target
-          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+          path: src/rust/target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('src/rust/**/Cargo.lock') }}
       - name: Build examples (prjenv)
         run: |
           cargo build --example basic --package prjenv
           cargo build --example macros --package prjenv --features macros
           cargo build --example tracing --package prjenv --features tracing
           cargo build --example advanced --package prjenv --features full
+
   # Minimum supported Rust version check
   msrv:
     name: Minimum Supported Rust Version
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/rust
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust 1.75.0
@@ -151,27 +182,35 @@ jobs:
           toolchain: 1.75.0
       - name: Check with MSRV
         run: cargo check --workspace --all-features
+
   # Coverage (optional, can be commented out if not needed)
   coverage:
     name: Code Coverage
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/rust
     steps:
       - uses: actions/checkout@v4
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
-      - name: Install cargo-tarpaulin
-        run: cargo install cargo-tarpaulin
+        with:
+          components: llvm-tools-preview
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
       - name: Generate coverage
-        run: cargo tarpaulin --workspace --all-features --timeout 300 --out xml
+        run: cargo llvm-cov --workspace --all-features --lcov --output-path lcov.info
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
+          files: src/rust/lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
+
   # All checks passed
   ci-success:
     name: CI Success
-    needs: [fmt, clippy, test, docs, examples, msrv]
+    needs: [fmt, clippy, test, docs, examples, msrv, coverage]
     runs-on: ubuntu-latest
     steps:
       - name: All checks passed
