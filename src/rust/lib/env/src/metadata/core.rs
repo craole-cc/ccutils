@@ -68,7 +68,8 @@ impl Metadata {
   /// Checks if metadata is empty (all fields empty).
   #[must_use]
   pub const fn is_empty(&self) -> bool {
-    self.name.is_empty() && self.version.is_empty() && self.description.is_empty()
+    // self.name.is_empty() && self.version.is_empty() && self.description.is_empty()
+    self.name.len() == 0 && self.version.len() == 0 && self.description.len() == 0
   }
 
   /// Checks if metadata has a name.

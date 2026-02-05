@@ -235,10 +235,7 @@ fn simulate_potential_error() -> Result<String> {
 
   if should_fail {
     trace!("Operation failed - returning error");
-    Err(IOError::new(
-      IOErrorKind::Other,
-      "Simulated error for tracing demonstration"
-    ))
+    Err(IOError::other("Simulated error for tracing demonstration"))
   } else {
     let value = "Operation successful";
     trace!(result = value, "Operation completed successfully");
