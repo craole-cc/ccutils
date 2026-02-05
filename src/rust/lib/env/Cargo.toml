@@ -1,6 +1,6 @@
 [package]
 name = "prjenv"
-version = "0.1.1"
+version = "0.1.2"
 description = "Cargo workspace/package environment detection and configuration management"
 keywords = ["cargo", "workspace", "environment", "config", "scaffolding"]
 readme = "README.md"
@@ -21,12 +21,15 @@ maintenance = { status = "actively-developed" }
 [features]
 default = []
 full = ["tracing", "macros"]
+fmt = ["miette/fancy"]
 macros = []
 tracing = ["dep:tracing"]
 
 [dependencies]
 dotenvy = { workspace = true }
 toml = { workspace = true }
+miette = { workspace = true }
+thiserror = { workspace = true }
 tracing = { workspace = true, optional = true }
 
 [dev-dependencies]

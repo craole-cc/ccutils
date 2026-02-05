@@ -7,6 +7,9 @@
 //! - Manipulating Cargo.toml files
 
 mod core;
+pub use core::*;
+mod error;
+pub use error::*;
 pub mod infrastructure;
 #[cfg(feature = "macros")]
 pub mod macros;
