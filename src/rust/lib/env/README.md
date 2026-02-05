@@ -1,72 +1,22 @@
 # prjenv
 
-> Cargo workspace/package environment detection and configuration management
-
 [![Crates.io](https://img.shields.io/crates/v/prjenv.svg)](https://crates.io/crates/prjenv)
 [![Documentation](https://docs.rs/prjenv/badge.svg)](https://docs.rs/prjenv)
-[![License](https://img.shields.io/crates/l/prjenv.svg)](../../../../README.md)
+[![License](https://img.shields.io/crates/l/prjenv.svg)](#license)
+<!-- [![Build Status](https://img.shields.io/github/actions/workflow/status/craole-cc/devtools/ci.yml?branch=main)](https://github.com/craole-cc/devtools/actions) -->
 
-`prjenv` provides a unified API for accessing workspace and package metadata,
-runtime configuration, and filesystem paths in Rust projects. It automatically
-detects your environment (workspace/standalone/library) and provides sensible
-defaults with zero configuration.
+> **Environment detection and configuration management for Cargo workspaces and packages.**
 
-## Features
+`prjenv` provides a unified interface for working with Cargo project environments:
 
-- 🚀 **Zero-config** - Works out of the box with sensible defaults
-- 🏗️ **Environment Detection** - Automatically detects workspace, standalone, or
-  library mode
-- 📦 **Metadata Access** - Easy access to package and workspace metadata
-- ⚙️ **Configuration Management** - Centralized runtime configuration from
-  environment variables
-- 📂 **Path Discovery** - Automatic workspace root and standard directory
-  discovery
-- 🔧 **Builder Pattern** - Fluent API for custom configurations
-- 🧵 **Thread-Safe** - Static initialization with `OnceLock` for zero-cost
-  access
-- 📝 **Optional Macros** - Convenient macros for common operations (with
-  `macros` feature)
-- 🔍 **Tracing Support** - Built-in instrumentation (with `tracing` feature)
+- 🔍 Auto-detecting workspace vs standalone vs library environments
+- 📦 Reading package and workspace metadata from `Cargo.toml`
+- ⚙️ Managing runtime configuration via environment variables
+- 📂 Discovering filesystem paths (project root, assets, database)
+- 🏗️ Scaffolding new packages with templates
+- 🔧 Macro-based initialization (optional `macros` feature)
 
-## Installation
-
-Add `prjenv` to your project either by:
-
-1. Using the command - `cargo add`
-
-   ```sh
-   # Default features
-   cargo add prjenv
-
-   # Single feature
-   cargo add prjenv --features "macros"
-
-   # Multiple features
-   cargo add prjenv --features "macros tracing"
-
-   # All features
-   cargo add prjenv --features "full"
-   ```
-
-2. Editing the `Cargo.toml` file manually
-
-   ```toml
-   [dependencies]
-   prjenv = "0.1.0"
-
-   # Single feature
-   prjenv = { version = "0.1.0", features = ["macros"] }
-
-   # Multiple features
-   prjenv = { version = "0.1.0", features = ["macros", "tracing"] }
-
-   # All features
-   prjenv = { version = "0.1.0", features = ["full"] }
-   ```
-
-## Usage
-
-### Basic Usage
+## Quick Start
 
 ```rust
 use prjenv::prelude::*;
@@ -74,35 +24,68 @@ use prjenv::prelude::*;
 fn main() {
   let env = get();
 
-  println!("Workspace: {}", env.workspace.metadata.name);
-  println!("Package: {}", env.package.metadata.name);
-  println!("Database: {}", env.config.db);
+  println!("Running: {}", env.summary());
   println!("Server: {}:{}", env.config.ip, env.config.port);
 }
 ```
 
-### With Macros
+## Installation
 
-Enable the `macros` feature:
+```bash
+# Minimal installation (no optional features)
+cargo add prjenv
+
+# With specific features
+cargo add prjenv --features macros
+cargo add prjenv --features "macros,tracing"
+
+# All features
+cargo add prjenv --features full
+```
+
+Or add to `Cargo.toml`:
 
 ```toml
 [dependencies]
+prjenv = "0.1"
+
+# With features
 prjenv = { version = "0.1", features = ["macros"] }
 ```
+
+## Features
+
+| Feature | Description | Default |
+| --- | --- | --- |
+| `full` | Enables all features (`tracing` + `macros`) | ❌ |
+| `tracing` | Adds instrumentation for debugging | ❌ |
+| `macros` | Provides `setenv!()` and `getenv!()` macros | ❌ |
+
+All features are **disabled by default** to minimize dependencies.
+
+## Usage
+
+### Basic Environment Detection
 
 ```rust
 use prjenv::prelude::*;
 
 fn main() {
-  // Initialize from compile-time environment variables
-  setenv!();
+  let env = get();
 
-  // Access configuration
-  let name = getenv!(pkg_name);
-  let version = getenv!(pkg_version);
-  let port = getenv!(port);
-
-  println!("{} v{} running on port {}", name, version, port);
+  match env.kind {
+    Kind::Workspace => {
+      println!("Workspace: {}", env.workspace.metadata.display_name());
+      println!("Packages: {}", env.workspace.package_count());
+      println!("Running: {}", env.package.metadata.display_name());
+    }
+    Kind::Standalone => {
+      println!("Standalone: {}", env.package.metadata.display_name());
+    }
+    Kind::Library => {
+      println!("Library mode");
+    }
+  }
 }
 ```
 
@@ -122,71 +105,94 @@ fn main() {
   set(env);
 
   // Now accessible globally
-  let cfg = get();
-  println!("Server: {}:{}", cfg.config.ip, cfg.config.port);
+  let env = get();
+  println!("Server: {}:{}", env.config.ip, env.config.port);
+}
+```
+
+### With Macros (requires `macros` feature)
+
+```rust
+use prjenv::prelude::*;
+
+fn main() {
+  // Initialize from CARGO_PKG_* environment variables
+  setenv!();
+
+  // Access via convenience macros
+  let name = getenv!(pkg_name);
+  let version = getenv!(pkg_version);
+  let port = getenv!(port);
+
+  println!("Starting {} v{} on port {}", name, version, port);
 }
 ```
 
 ## Environment Variables
 
-`prjenv` reads the following environment variables with sensible defaults:
+`prjenv` reads these environment variables with sensible defaults:
 
-| Variable       | Default                 | Description                          |
-| -------------- | ----------------------- | ------------------------------------ |
-| `DATABASE_URL` | `{workspace}/assets/db` | Database connection URL or file path |
-| `IP`           | `localhost`             | Server bind address                  |
-| `PORT`         | `3000`                  | Server bind port                     |
-| `RUST_LOG`     | (empty)                 | Tracing filter directives            |
+| Variable | Type | Default | Description |
+| --- | --- | --- | --- |
+| `DATABASE_URL` | String | `{workspace}/assets/db` | Database connection URL or file path |
+| `IP` | String | `localhost` | Server bind address |
+| `PORT` | u16 | `3000` | Server bind port |
+| `RUST_LOG` | String | _(empty)_ | Tracing filter directives |
 
-## Features
+### Configuration Precedence
 
-### Default Features
-
-None - minimal footprint by default.
-
-### Optional Features
-
-- **`macros`** - Enables `setenv!()` and `getenv!()` convenience macros
-- **`tracing`** - Adds instrumentation for debugging and monitoring
-- **`full`** - Enables all features: `macros` + `tracing`
-
-```toml
-[dependencies]
-prjenv = { version = "0.1", features = ["full"] }
-```
-
-## Examples
-
-### Auto-detection
+1. Explicitly set values (via builder)
+2. Environment variables
+3. Built-in defaults
 
 ```rust
 use prjenv::prelude::*;
 
-let env = get();
-
-match env.kind {
-  Kind::Workspace => println!("Running in workspace with {} packages",
-    env.workspace.package_count()),
-  Kind::Standalone => println!("Standalone package: {}",
-    env.package.metadata.name),
-  Kind::Library => println!("Library mode - minimal initialization"),
-}
+// Override defaults programmatically
+let config = Configuration::new()
+  .with_db("postgres://localhost/mydb")
+  .with_ip("0.0.0.0")
+  .with_port(8080)
+  .with_rust_log("debug");
 ```
+
+Or via environment:
+
+```bash
+DATABASE_URL=postgres://localhost/mydb \
+IP=0.0.0.0 \
+PORT=8080 \
+RUST_LOG=debug \
+cargo run
+```
+
+## Examples
 
 ### Package Scaffolding
 
 ```rust
 use prjenv::prelude::*;
 
-let package = PackageScaffold::new("my-service")
+let scaffold = PackageScaffold::new("my-service")
   .version("1.0.0")
   .description("My microservice")
   .author("Development Team")
   .dependency("tokio", "1.0")
-  .binary()
-  .create("packages")?;
+  .dependency("axum", "0.7")
+  .binary();
 
-println!("Created package at: {}", package.display());
+let package_path = scaffold.create("packages")?;
+println!("Created: {}", package_path.display());
+# Ok::<(), std::io::Error>(())
+```
+
+This creates:
+
+```sh
+packages/my-service/
+├── Cargo.toml
+└── src/
+    └── main.rs
 ```
 
 ### Workspace Management
@@ -196,89 +202,242 @@ use prjenv::prelude::*;
 
 let workspace = Workspace::new()
   .with_name("my-workspace")
+  .with_version("1.0.0")
   .with_package_name("api")
   .with_package_name("cli")
   .with_package_name("web");
 
-println!("Workspace has {} packages", workspace.package_count());
+println!("Workspace: {}", workspace.metadata.display_name());
+println!("Packages: {}", workspace.package_count());
 
 if let Some(api) = workspace.find_package("api") {
-  println!("Found API package: {}", api.metadata.display_name());
+  println!("Found: {}", api.metadata.display_name());
 }
 ```
 
-## Architecture
+### Accessing Filesystem Paths
 
-`prjenv` separates concerns into distinct layers:
+```rust
+use prjenv::prelude::*;
 
-- **Core** - Environment types and global state management
-- **Metadata** - Package/workspace metadata (name, version, description)
-- **Infrastructure** - Configuration (env vars) and paths (filesystem)
-- **Domain** - Workspace and package models
-- **Macros** - Optional convenience macros
+let env = get();
+let paths = &env.paths;
 
-## Performance
+println!("Project root: {}", paths.project.display());
+println!("Assets dir:   {}", paths.assets.display());
+println!("Database dir: {}", paths.database.display());
 
-- **Initialization**: ~5-50ms on first call (workspace discovery + file I/O)
-- **Subsequent access**: <1µs (static `OnceLock` cache)
-- **Metadata loading**: ~5-15ms (file read + TOML parse, cached)
-- **Path discovery**: ~1-2ms typical (directory walking, cached)
+// Use in your application
+let config_path = paths.assets.join("config.toml");
+let db_path = paths.database.join("app.db");
+```
 
-## Thread Safety
+### Complete Application Setup
 
-All public APIs are thread-safe:
+```rust
+use prjenv::prelude::*;
 
-- Uses `OnceLock` for one-time initialization
-- Multiple threads can safely call `get()` or `set()` concurrently
-- First caller wins (idempotent behavior)
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+  // Initialize with compile-time metadata
+  #[cfg(feature = "macros")]
+  setenv!();
 
-## Examples
+  #[cfg(not(feature = "macros"))]
+  set(Environment::new()
+    .with_pkg_name(env!("CARGO_PKG_NAME"))
+    .with_pkg_version(env!("CARGO_PKG_VERSION")));
 
-Run the included examples:
+  let env = get();
+
+  eprintln!("🚀 Starting: {}", env.summary());
+  eprintln!("📂 Root: {}", env.paths.project.display());
+  eprintln!("⚙️  Server: {}:{}", env.config.ip, env.config.port);
+  eprintln!("💾 Database: {}", env.config.db);
+
+  // Your application logic here
+
+  Ok(())
+}
+```
+
+## Running the Examples
+
+The crate includes several examples demonstrating different features:
 
 ```bash
-# Basic usage
+# Basic usage (no features required)
 cargo run --example basic
 
 # With macros
 cargo run --example macros --features macros
 
-# With tracing
+# With tracing instrumentation
 RUST_LOG=trace cargo run --example tracing --features tracing
 
-# Advanced (all features)
+# Advanced usage (all features)
 cargo run --example advanced --features full
 ```
 
-## Documentation
+## Architecture
 
-Full API documentation is available at [docs.rs/prjenv](https://docs.rs/prjenv).
+`prjenv` is organized into focused modules:
+
+- **`core`** - Environment detection and global state management
+- **`metadata`** - Package and workspace metadata (name, version, description)
+- **`infrastructure`** - Runtime configuration and filesystem paths
+- **`workspace`** - Workspace domain model and management
+- **`package`** - Package domain model and scaffolding
+- **`macros`** - Optional convenience macros (requires `macros` feature)
+
+This separation ensures clear boundaries and makes testing easier.
+
+## Performance Characteristics
+
+- **First `get()` call**: 5-50ms (workspace discovery + file I/O)
+- **Subsequent calls**: <1µs (static `OnceLock` cache)
+- **Metadata loading**: 5-15ms (TOML parsing, cached)
+- **Path discovery**: 1-2ms (directory traversal, cached)
+
+All expensive operations are cached in static storage for zero-cost subsequent access.
+
+## Thread Safety
+
+All public APIs are thread-safe:
+
+- `OnceLock` ensures one-time initialization
+- Multiple threads calling `get()` or `set()` coordinate safely
+- First caller wins (idempotent behavior)
+- No locks after initialization (zero-cost access)
+
+```rust
+use std::thread;
+use prjenv::prelude::*;
+
+// Safe to call from multiple threads
+let handles: Vec<_> = (0..10)
+  .map(|_| thread::spawn(|| {
+    let env = get(); // All threads get the same cached instance
+    env.package.metadata.name.clone()
+  }))
+  .collect();
+
+for handle in handles {
+  println!("{}", handle.join().unwrap());
+}
+```
+
+## Testing
+
+Override environment detection for tests:
+
+```rust
+#[cfg(test)]
+mod tests {
+  use prjenv::prelude::*;
+
+  #[test]
+  fn test_custom_environment() {
+    let env = Environment::library()
+      .with_name("test-package")
+      .with_version("0.0.0")
+      .with_db("sqlite::memory:");
+
+    let env = set(env);
+    assert_eq!(env.package.metadata.name, "test-package");
+    assert_eq!(env.config.db, "sqlite::memory:");
+  }
+}
+```
+
+Or use environment variables:
+
+```bash
+# Override project root for testing
+PROJECT_ROOT=/tmp/test cargo test
+
+# Override configuration
+DATABASE_URL=sqlite::memory: cargo test
+```
+
+## Troubleshooting
+
+### "PORT must be a valid number" panic
+
+The `PORT` environment variable must be a valid `u16` (0-65535):
+
+```bash
+# ❌ Will panic
+PORT=invalid cargo run
+
+# ✅ Correct
+PORT=8080 cargo run
+```
+
+### Workspace not detected
+
+Ensure your workspace `Cargo.toml` has:
+
+```toml
+[workspace]
+members = ["packages/*"]
+resolver = "2"
+```
+
+Or override detection:
+
+```bash
+WORKSPACE_ROOT=/path/to/workspace cargo run
+```
+
+### Database path not found
+
+Create the assets directory:
+
+```bash
+mkdir -p assets/db
+```
+
+Or set explicitly:
+
+```bash
+DATABASE_URL=sqlite:///tmp/app.db cargo run
+```
+
+## Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing`)
+3. Add tests for new functionality
+4. Ensure tests pass (`cargo test --all-features`)
+5. Run formatting (`cargo fmt`)
+6. Run clippy (`cargo clippy --all-features -- -D warnings`)
+7. Submit a pull request
+
+See [CONTRIBUTING.md](../../../../CONTRIBUTING.md) for detailed guidelines.
 
 ## License
 
-This project is licensed under either of:
+Licensed under either of:
 
-- Apache License, Version 2.0 ([LICENSE-APACHE](../../../../LICENSE-APACHE) or
-  http://www.apache.org/licenses/LICENSE-2.0)
-- MIT license ([LICENSE-MIT](../../../../LICENSE-MIT) or
-  http://opensource.org/licenses/MIT)
+- Apache License, Version 2.0 ([LICENSE-APACHE](../../../../LICENSE-APACHE))
+- MIT License ([LICENSE-MIT](../../../../LICENSE-MIT))
 
 at your option.
 
-## Contribution
+### Contribution
 
-Unless explicitly stated otherwise, any contribution intentionally submitted for
-inclusion in the work, as defined in the Apache-2.0 license, shall be dual
-licensed as above, without any additional terms or conditions.
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## Acknowledgments
 
-## Similar Projects
+Built with:
 
-- [`cargo_metadata`](https://crates.io/crates/cargo_metadata) - Low-level cargo
-  metadata queries
-- [`project-root`](https://crates.io/crates/project-root) - Simple project root
-  detection
+- [`toml`](https://crates.io/crates/toml) - TOML parsing
+- [`dotenvy`](https://crates.io/crates/dotenvy) - `.env` file support
+- [`tracing`](https://crates.io/crates/tracing) - Optional instrumentation (with `tracing` feature)
 
-`prjenv` provides a higher-level, more ergonomic API with additional features
-like configuration management and package scaffolding.
+---
+
+**Part of the [ccutils](https://github.com/craole-cc/devtools) suite • Made with ❤️ by [Craole](https://github.com/craole-cc)**

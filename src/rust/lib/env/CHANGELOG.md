@@ -8,6 +8,21 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.1.1] - 2025-02-XX
+
+### Changed
+
+- Improved README documentation with better examples and structure
+- Enhanced code examples with proper error handling patterns
+- Clarified feature documentation and configuration precedence
+- Updated documentation paths and internal links
+
+### Fixed
+
+- Corrected relative paths in documentation
+- Fixed license badge linking to proper section
+- Improved code formatting consistency (2-space indentation)
+
 ## [0.1.0] - 2025-02-04
 
 ### Added
@@ -41,5 +56,6 @@ and this project adheres to
 - README with quick start guide
 - In-code documentation with examples
 
-[Unreleased]: https://github.com/craole-cc/prjenv/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/craole-cc/prjenv/releases/tag/v0.1.0
+[Unreleased]: https://github.com/craole-cc/ccutils/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/craole-cc/ccutils/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/craole-cc/ccutils/releases/tag/v0.1.0
