@@ -3,9 +3,14 @@ members = ["bin/*", "lib/*"]
 exclude = ["bin/review", "bin/archive", "lib/review", "lib/archive"]
 resolver = "2"
 
+[workspace.metadata.rust-toolchain]
+channel = "stable"
+components = ["rustfmt", "clippy", "rust-src"]
+
 [workspace.package]
 version = "0.1.1"
-edition = "2021"
+edition = "2024"
+rust-version = "1.87.0"
 repository = "https://github.com/craole-cc/devtools"
 homepage = "https://github.com/craole-cc"
 authors = ["Craig 'Craole' Cole <craig.craole.cole@gmail.com>"]
@@ -13,6 +18,7 @@ categories = ["development-tools"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 keywords = ["development-tools"]
+
 
 # [workspace.badges]
 # maintenance = { status = "actively-developed" }

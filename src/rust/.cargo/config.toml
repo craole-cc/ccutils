@@ -20,10 +20,7 @@ br = "b --release"      #? Build with release optimizations
 bw = "b --workspace"    #? Build all workspace members
 
 # -- Check (Quick compilation check without codegen)
-k = "check --verbose --message-format human"
-kv = "check --verbose --message-format json-render-diagnostics"
-ka = "k --all-features"  #? Includes all features
-kw = "ka --workspace"    #? Check all workspace members
+
 
 # -- Clean
 c = "clean --verbose"   #? Remove build artifacts
@@ -49,11 +46,16 @@ il = "in --locked --path"            #? Installs with locked dependencies
 ild = "in --locked --debug --path"   #? Installs debug build with locked dependencies
 idl = "ild"                          #? Alias for locked debug install
 
-# -- Lint (Clippy)
-l = "clippy --all-targets --no-deps"   #? Lint all targets without checking dependencies
-lf = "l --fix"                         #? Automatically apply lint suggestions
-la = "l --workspace"                   #? Lint entire workspace
-lr = "l --release"                     #? Lint with release profile optimizations
+# -- Lint
+l = "clippy --no-deps"   #? Lints with clippy but ignores dependencies
+la = "l --all-targets"   #? Lints all targets
+lf = "la --fix"          #? Automatically applies clippy suggestions
+lw = "la --workspace"    #? Lints entire workspace
+lr = "la --release"      #? Lints with release profile optimizations
+k = "check --verbose --message-format human"
+kv = "check --verbose --message-format json-render-diagnostics"
+ka = "k --all-features"  #? Includes all features
+kw = "ka --workspace"    #? Check all workspace members
 
 # -- Publish
 pl = "login"         #? Authenticate with crates.io
@@ -90,7 +92,8 @@ wxv = "w xv"                         #? Watches examples verbosely
 # -- Profile: Development
 ccu-b = "b --package ccutil"     #? Builds ccutil
 ccu-c = "c --package ccutil"     #? Cleans ccutil build artifacts
-ccu-l = "l --package ccutil"     #? Lints ccutil
+ccu-l = "la --package ccutil"    #? Lints ccutil via clippy
+ccu-k = "ka --package ccutil"     #? Lints ccutil via check
 ccu-lf = "lf --package ccutil"   #? Fixes linting issues in ccutil
 ccu-r = "rq --package ccutil"    #? Runs ccutil quietly
 ccu-rv = "rv --package ccutil"   #? Runs ccutil verbosely
@@ -147,8 +150,8 @@ ccu-wxv = "wxv --package ccutil"   #? Watches ccutil examples verbosely
 # -- Profile: Development
 prj-b = "b --package prjenv"     #? Builds prjenv library
 prj-c = "c --package prjenv"     #? Cleans prjenv build artifacts
-prj-l = "l --package prjenv"     #? Lints prjenv library
-prj-k = "ka --package prjenv"     #? Lints prjenv library
+prj-l = "la --package prjenv"    #? Lints prjenv via clippy
+prj-k = "ka --package prjenv"     #? Lints prjenv via check
 prj-lf = "lf --package prjenv"   #? Lints prjenv library
 prj-t = "tq --package prjenv"    #? Tests prjenv quietly
 prj-tv = "tv --package prjenv"   #? Tests prjenv verbosely
