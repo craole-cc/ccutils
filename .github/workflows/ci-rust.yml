@@ -31,8 +31,8 @@ env:
   RUSTFLAGS: "-Dwarnings"
 
 jobs:
-  # Extract MSRV dynamically from Cargo.toml
-  # Outputs: msrv version for use in test matrix
+  #> Extract MSRV dynamically from Cargo.toml
+  #? Outputs: msrv version for use in test matrix
   extract-msrv:
     name: 📌 Extract MSRV
     runs-on: ubuntu-latest
@@ -50,7 +50,7 @@ jobs:
           echo "value=$MSRV" >> $GITHUB_OUTPUT
           echo "MSRV extracted: $MSRV"
 
-  # Code formatting check (stable rustfmt)
+  #~@ Code formatting check (stable rustfmt)
   fmt:
     name: 🔤 Rustfmt
     runs-on: ubuntu-latest
@@ -65,7 +65,7 @@ jobs:
       - name: Check formatting
         run: cargo fmt --all -- --check
 
-  # Linting with Clippy (stable, all targets + features)
+  #~@ Lint with Clippy (stable, all targets + features)
   clippy:
     name: 🔍 Clippy
     runs-on: ubuntu-latest
@@ -83,7 +83,7 @@ jobs:
       - name: Run Clippy
         run: cargo clippy --workspace --all-targets --all-features -- -D warnings
 
-  # Test suite: stable + MSRV across platforms
+  #~@ Test Suite: stable + MSRV across platforms
   test:
     name: 🧪 Tests (${{ matrix.os }}, ${{ matrix.toolchain }})
     runs-on: ${{ matrix.os }}
@@ -112,7 +112,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: cargo test --workspace --doc --all-features
 
-  # Documentation generation check
+  #~@ Documentation generation check
   docs:
     name: 📚 Docs
     runs-on: ubuntu-latest
@@ -130,7 +130,7 @@ jobs:
         env:
           RUSTDOCFLAGS: -D warnings
 
-  # Build and run examples (basic + full features)
+  #~@ Build and run examples (basic + full features)
   examples:
     name: 💡 Examples
     runs-on: ubuntu-latest
@@ -161,7 +161,7 @@ jobs:
           cargo build --example advanced --package prjenv --features full
           cargo run --example advanced --package prjenv --features full
 
-  # Code coverage with llvm-cov
+  #~@ Code coverage with llvm-cov
   coverage:
     name: 📊 Coverage
     runs-on: ubuntu-latest
@@ -186,7 +186,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
 
-  # Final status check (all jobs must pass)
+  #~@ Final status check (all jobs must pass)
   success:
     name: ✅ CI Complete
     runs-on: ubuntu-latest
