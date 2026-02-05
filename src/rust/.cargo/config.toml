@@ -50,6 +50,7 @@ idl = "ild"                          #? Alias for locked debug install
 l = "clippy --no-deps"   #? Lints with clippy but ignores dependencies
 la = "l --all-targets"   #? Lints all targets
 lf = "la --fix"          #? Automatically applies clippy suggestions
+lff = "lf --allow-dirty"          #? Automatically applies clippy suggestions
 lw = "la --workspace"    #? Lints entire workspace
 lr = "la --release"      #? Lints with release profile optimizations
 k = "check --verbose --message-format human"
@@ -153,6 +154,7 @@ prj-c = "c --package prjenv"     #? Cleans prjenv build artifacts
 prj-l = "la --package prjenv"    #? Lints prjenv via clippy
 prj-k = "ka --package prjenv"     #? Lints prjenv via check
 prj-lf = "lf --package prjenv"   #? Lints prjenv library
+prj-lff = "lff --package prjenv"   #? Lints prjenv library
 prj-t = "tq --package prjenv"    #? Tests prjenv quietly
 prj-tv = "tv --package prjenv"   #? Tests prjenv verbosely
 
