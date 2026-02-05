@@ -8,27 +8,11 @@ use {
   prjenv::prelude::*,
   std::{
     thread::sleep,
-    time::{
-      Duration,
-      Instant,
-    },
+    time::{Duration, Instant},
   },
-  tracing::{
-    debug,
-    debug_span,
-    error,
-    info,
-    info_span,
-    instrument,
-    trace,
-    warn,
-  },
+  tracing::{debug, debug_span, error, info, info_span, instrument, trace, warn},
   tracing_subscriber::{
-    EnvFilter,
-    fmt::layer,
-    layer::SubscriberExt,
-    registry,
-    util::SubscriberInitExt,
+    fmt::layer, layer::SubscriberExt, registry, util::SubscriberInitExt, EnvFilter,
   },
 };
 

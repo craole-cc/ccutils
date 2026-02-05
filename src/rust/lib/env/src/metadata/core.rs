@@ -65,11 +65,16 @@ impl Metadata {
   //║ Queries                                                   ║
   //╚═══════════════════════════════════════════════════════════╝
 
+  /// Checks if metadata is valid (has a name).
+  #[must_use]
+  pub const fn is_valid(&self) -> bool {
+    !self.name.is_empty()
+  }
+
   /// Checks if metadata is empty (all fields empty).
   #[must_use]
   pub const fn is_empty(&self) -> bool {
-    // self.name.is_empty() && self.version.is_empty() && self.description.is_empty()
-    self.name.len() == 0 && self.version.len() == 0 && self.description.len() == 0
+    self.name.is_empty() && self.version.is_empty() && self.description.is_empty()
   }
 
   /// Checks if metadata has a name.

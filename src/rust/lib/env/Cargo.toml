@@ -14,6 +14,9 @@ categories = { workspace = true }
 [lints]
 workspace = true
 
+[badges]
+maintenance = { status = "actively-developed" }
+
 [features]
 default = []
 full = ["tracing", "macros"]

@@ -5,14 +5,8 @@
 mod config;
 mod paths;
 
-pub use {
-  config::*,
-  paths::*,
-};
+pub use {config::*, paths::*};
 
 pub mod prelude {
-  pub use super::{
-    Configuration,
-    Paths,
-  };
+  pub use super::{Configuration, Paths};
 }

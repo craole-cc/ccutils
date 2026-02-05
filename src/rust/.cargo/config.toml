@@ -16,12 +16,14 @@ mq = "bench --quiet"
 # -- Build
 b = "build --verbose --message-format human"
 bv = "build --verbose --message-format json-render-diagnostics"
-ba = "b --workspace"    #? Build all workspace members
 br = "b --release"      #? Build with release optimizations
+bw = "b --workspace"    #? Build all workspace members
 
-# -- Check (fast compilation check)
-k = "check --verbose"   #? Quick compilation check without codegen
-ka = "k --workspace"    #? Check all workspace members
+# -- Check (Quick compilation check without codegen)
+k = "check --verbose --message-format human"
+kv = "check --verbose --message-format json-render-diagnostics"
+ka = "k --all-features"  #? Includes all features
+kw = "ka --workspace"    #? Check all workspace members
 
 # -- Clean
 c = "clean --verbose"   #? Remove build artifacts
@@ -146,6 +148,7 @@ ccu-wxv = "wxv --package ccutil"   #? Watches ccutil examples verbosely
 prj-b = "b --package prjenv"     #? Builds prjenv library
 prj-c = "c --package prjenv"     #? Cleans prjenv build artifacts
 prj-l = "l --package prjenv"     #? Lints prjenv library
+prj-k = "ka --package prjenv"     #? Lints prjenv library
 prj-lf = "lf --package prjenv"   #? Lints prjenv library
 prj-t = "tq --package prjenv"    #? Tests prjenv quietly
 prj-tv = "tv --package prjenv"   #? Tests prjenv verbosely

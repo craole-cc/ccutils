@@ -58,7 +58,4 @@ mod setenv;
 
 // Re-export macros (they're already at crate root due to #[macro_export])
 // This allows: use prjenv::macros::*;
-pub use crate::{
-  getenv,
-  setenv,
-};
+pub use crate::{getenv, setenv};

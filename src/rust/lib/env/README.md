@@ -5,9 +5,11 @@
 [![License](https://img.shields.io/crates/l/prjenv.svg)](#license)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/craole-cc/ccutils/ci.yml?branch=main)](https://github.com/craole-cc/ccutils/actions)
 
-> **Environment detection and configuration management for Cargo workspaces and packages.**
+> **Environment detection and configuration management for Cargo workspaces and
+> packages.**
 
-`prjenv` provides a unified interface for working with Cargo project environments:
+`prjenv` provides a unified interface for working with Cargo project
+environments:
 
 - 🔍 Auto-detecting workspace vs standalone vs library environments
 - 📦 Reading package and workspace metadata from `Cargo.toml`
@@ -55,11 +57,11 @@ prjenv = { version = "0.1", features = ["macros"] }
 
 ## Features
 
-| Feature | Description | Default |
-| --- | --- | --- |
-| `full` | Enables all features (`tracing` + `macros`) | ❌ |
-| `tracing` | Adds instrumentation for debugging | ❌ |
-| `macros` | Provides `setenv!()` and `getenv!()` macros | ❌ |
+| Feature   | Description                                 | Default |
+| --------- | ------------------------------------------- | ------- |
+| `full`    | Enables all features (`tracing` + `macros`) | ❌      |
+| `tracing` | Adds instrumentation for debugging          | ❌      |
+| `macros`  | Provides `setenv!()` and `getenv!()` macros | ❌      |
 
 All features are **disabled by default** to minimize dependencies.
 
@@ -132,12 +134,12 @@ fn main() {
 
 `prjenv` reads these environment variables with sensible defaults:
 
-| Variable | Type | Default | Description |
-| --- | --- | --- | --- |
+| Variable       | Type   | Default                 | Description                          |
+| -------------- | ------ | ----------------------- | ------------------------------------ |
 | `DATABASE_URL` | String | `{workspace}/assets/db` | Database connection URL or file path |
-| `IP` | String | `localhost` | Server bind address |
-| `PORT` | u16 | `3000` | Server bind port |
-| `RUST_LOG` | String | _(empty)_ | Tracing filter directives |
+| `IP`           | String | `localhost`             | Server bind address                  |
+| `PORT`         | u16    | `3000`                  | Server bind port                     |
+| `RUST_LOG`     | String | _(empty)_               | Tracing filter directives            |
 
 ### Configuration Precedence
 
@@ -298,7 +300,8 @@ This separation ensures clear boundaries and makes testing easier.
 - **Metadata loading**: 5-15ms (TOML parsing, cached)
 - **Path discovery**: 1-2ms (directory traversal, cached)
 
-All expensive operations are cached in static storage for zero-cost subsequent access.
+All expensive operations are cached in static storage for zero-cost subsequent
+access.
 
 ## Thread Safety
 
@@ -428,7 +431,9 @@ at your option.
 
 ### Contribution
 
-Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
+dual licensed as above, without any additional terms or conditions.
 
 ## Acknowledgments
 
@@ -436,8 +441,10 @@ Built with:
 
 - [`toml`](https://crates.io/crates/toml) - TOML parsing
 - [`dotenvy`](https://crates.io/crates/dotenvy) - `.env` file support
-- [`tracing`](https://crates.io/crates/tracing) - Optional instrumentation (with `tracing` feature)
+- [`tracing`](https://crates.io/crates/tracing) - Optional instrumentation (with
+  `tracing` feature)
 
 ---
 
-**Part of the [ccutils](https://github.com/craole-cc/ccutils) suite • Made with ❤️ by [Craole](https://github.com/craole-cc)**
+**Part of the [ccutils](https://github.com/craole-cc/ccutils) suite • Made with
+❤️ by [Craole](https://github.com/craole-cc)**

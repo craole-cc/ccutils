@@ -14,9 +14,8 @@ license = "MIT OR Apache-2.0"
 readme = "README.md"
 keywords = ["development-tools"]
 
-
-[workspace.badges]
-maintenance = { status = "actively-developed" }
+# [workspace.badges]
+# maintenance = { status = "actively-developed" }
 
 [workspace.lints.rust]
 unsafe_code = { level = "deny", priority = 0 }
