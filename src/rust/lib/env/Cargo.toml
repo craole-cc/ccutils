@@ -1,6 +1,6 @@
 [package]
 name = "prjenv"
-version = "0.1.0"
+version = "0.1.1"
 description = "Cargo workspace/package environment detection and configuration management"
 keywords = ["cargo", "workspace", "environment", "config", "scaffolding"]
 readme = "README.md"
