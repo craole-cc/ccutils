@@ -5,14 +5,8 @@
 mod core;
 mod scaffold;
 
-pub use {
-  core::*,
-  scaffold::*,
-};
+pub use {core::*, scaffold::*};
 
 pub mod prelude {
-  pub use super::{
-    Package,
-    Scaffold as PackageScaffold,
-  };
+  pub use super::{Package, Scaffold as PackageScaffold};
 }

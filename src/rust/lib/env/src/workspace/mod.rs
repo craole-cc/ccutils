@@ -4,19 +4,11 @@ mod core;
 mod manage;
 mod utils;
 
-pub use {
-  core::*,
-  manage::*,
-  utils::*,
-};
+pub use {core::*, manage::*, utils::*};
 
 /// Public prelude for workspace module.
 pub mod prelude {
   pub use super::{
-    Workspace,
-    WorkspaceManager,
-    find_cargo_root,
-    is_workspace_toml,
-    read_cargo_metadata,
+    find_cargo_root, is_workspace_toml, read_cargo_metadata, Workspace, WorkspaceManager,
   };
 }

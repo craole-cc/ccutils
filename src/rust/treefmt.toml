@@ -16,4 +16,3 @@ includes = ["*.md", "*.json"]
 [formatter.yaml]
 command = "yamlfmt"
 includes = ["*.yaml", "*.yml"]
-

@@ -3,10 +3,7 @@
 //! Provides static cache for workspace metadata to avoid repeated file I/O.
 
 use {
-  super::{
-    Metadata,
-    load_workspace_metadata,
-  },
+  super::{load_workspace_metadata, Metadata},
   crate::prelude::*,
 };
 
