@@ -211,27 +211,6 @@ pub fn is_workspace_toml(path: &Path) -> bool {
     }),
   }
 }
-// pub fn is_workspace_toml(path: &Path) -> bool {
-//   //> Ensure the Cargo.toml exists and has content
-//   if let Ok(file_metadata) = metadata(path)
-//     && file_metadata.len() < 50
-//   {
-//     return false; //? Too small to be a workspace Cargo.toml
-//   }
-
-//   //> Read and check for workspace markers
-//   if let Ok(contents) = read_to_string(path) {
-//     //? Quick check: must have [workspace] section
-//     if !contents.contains("[workspace]") {
-//       return false;
-//     }
-
-//     //? Workspace should have members or resolver
-//     contents.contains("members") || contents.contains("resolver")
-//   } else {
-//     false
-//   }
-// }
 
 /// Read and parse a Cargo.toml file, returning the appropriate package metadata.
 ///

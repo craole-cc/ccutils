@@ -1,4 +1,18 @@
+# Rust CI Pipeline - Multi-stage validation for stable + MSRV
+#
+# Workflow Strategy:
+# - Dynamic MSRV extraction from Cargo.toml (no hardcoding)
+# - Cross-platform testing (Ubuntu, Windows)
+# - Comprehensive checks: fmt, clippy, tests, docs, examples, coverage
+# - Per-job working-directory (multi-language repo compatible)
+#
+# Triggered on:
+# - Push to main/develop (if Rust code changes)
+# - Pull requests to main/develop (if Rust code changes)
+# - Manual dispatch
+
 name: Rust CI
+
 on:
   push:
     branches: [main, develop]
@@ -16,126 +30,177 @@ env:
   CARGO_TERM_COLOR: always
   RUSTFLAGS: "-Dwarnings"
 
-defaults:
-  run:
-    working-directory: src/rust
-
 jobs:
+  # Extract MSRV dynamically from Cargo.toml
+  # Outputs: msrv version for use in test matrix
   extract-msrv:
+    name: 📌 Extract MSRV
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/rust
     outputs:
       msrv: ${{ steps.msrv.outputs.value }}
     steps:
       - uses: actions/checkout@v4
       - id: msrv
+        name: Parse rust-version from Cargo.toml
         run: |
           MSRV=$(awk -F'"' '/rust-version/ {print $2; exit 0}' Cargo.toml || echo "1.87.0")
           echo "value=$MSRV" >> $GITHUB_OUTPUT
           echo "MSRV extracted: $MSRV"
 
+  # Code formatting check (stable rustfmt)
   fmt:
     name: 🔤 Rustfmt
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/rust
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt
-      - run: cargo fmt --all -- --check
+      - name: Check formatting
+        run: cargo fmt --all -- --check
 
+  # Linting with Clippy (stable, all targets + features)
   clippy:
     name: 🔍 Clippy
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/rust
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy
-      - uses: Swatinem/rust-cache@v2 # ✅ Valid cache action
-      - run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "src/rust -> target"
+      - name: Run Clippy
+        run: cargo clippy --workspace --all-targets --all-features -- -D warnings
 
+  # Test suite: stable + MSRV across platforms
   test:
-    name: 🧪 Tests
+    name: 🧪 Tests (${{ matrix.os }}, ${{ matrix.toolchain }})
     runs-on: ${{ matrix.os }}
     needs: extract-msrv
+    defaults:
+      run:
+        working-directory: src/rust
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
         toolchain: [stable, msrv]
-        include:
-          - toolchain: msrv
-            rust: ${{ needs.extract-msrv.outputs.msrv }}
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@master
+      - name: Install Rust ${{ matrix.toolchain }}
+        uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: ${{ matrix.rust == 'stable' && 'stable' || needs.extract-msrv.outputs.msrv }}
+          toolchain: ${{ matrix.toolchain == 'stable' && 'stable' || needs.extract-msrv.outputs.msrv }}
       - uses: Swatinem/rust-cache@v2
-      - name: Tests
+        with:
+          workspaces: "src/rust -> target"
+          key: ${{ matrix.os }}-${{ matrix.toolchain }}
+      - name: Run unit + integration tests
         run: cargo test --workspace --all-features --verbose
-      - name: Doc tests
+      - name: Run doc tests
         if: matrix.os == 'ubuntu-latest'
         run: cargo test --workspace --doc --all-features
 
+  # Documentation generation check
   docs:
     name: 📚 Docs
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/rust
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
-      - name: Check
+        with:
+          workspaces: "src/rust -> target"
+      - name: Check documentation builds
         run: cargo doc --workspace --all-features --no-deps
         env:
           RUSTDOCFLAGS: -D warnings
 
+  # Build and run examples (basic + full features)
   examples:
     name: 💡 Examples
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/rust
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
-      - name: Build & Run Examples
+        with:
+          workspaces: "src/rust -> target"
+      - name: Build & run examples
         run: |
-          # Basic (no features)
+          # Basic (minimal features)
           cargo build --example basic --package prjenv
           cargo run --example basic --package prjenv
 
-          # Advanced (full - integration test)
+          # Macros feature
+          cargo build --example macros --package prjenv --features macros
+          cargo run --example macros --package prjenv --features macros
+
+          # Tracing feature
+          cargo build --example tracing --package prjenv --features tracing
+          cargo run --example tracing --package prjenv --features tracing
+
+          # Full (all features integration)
           cargo build --example advanced --package prjenv --features full
           cargo run --example advanced --package prjenv --features full
 
+  # Code coverage with llvm-cov
   coverage:
     name: 📊 Coverage
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/rust
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: llvm-tools-preview
       - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "src/rust -> target"
       - uses: taiki-e/install-action@cargo-llvm-cov
-      - name: Generate
+      - name: Generate coverage report
         run: cargo llvm-cov --workspace --all-features --lcov --output-path lcov.info
-      - name: Upload
+      - name: Upload to Codecov
         uses: codecov/codecov-action@v4
         with:
-          files: ./lcov.info
+          files: src/rust/lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
 
+  # Final status check (all jobs must pass)
   success:
-    name: ✅ Complete
+    name: ✅ CI Complete
     runs-on: ubuntu-latest
     needs: [fmt, clippy, test, docs, examples, coverage]
     if: always()
     steps:
-      - name: Status
+      - name: Check all jobs succeeded
         run: |
+          # Parse job results from needs context
           RESULTS=($(echo '${{ toJSON(needs) }}' | jq -r 'to_entries[] | select(.value.result != "success") | .key'))
+
           if [ ${#RESULTS[@]} -gt 0 ]; then
             echo "❌ Failed jobs: ${RESULTS[*]}"
             exit 1
           fi
-          echo "✅ All jobs passed!"
+
+          echo "✅ All CI checks passed!"
