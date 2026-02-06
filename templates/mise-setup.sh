@@ -1,6 +1,5 @@
 #!/bin/sh
 # shellcheck enable=all
-# Setup mise configuration from template
 
 set -eu
 

@@ -1,5 +1,6 @@
 #!/bin/sh
 # shellcheck enable=all
+# Base shell hook
 
 set -eu
 
