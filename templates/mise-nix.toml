@@ -1,0 +1,17 @@
+# Nix project mise configuration
+[shell_alias]
+base = "cd ../.."
+
+[tasks.fmt]
+description = "Format Nix files"
+run = "alejandra ."
+alias = "f"
+
+[tasks.check]
+description = "Check Nix files"
+run = "statix check ."
+alias = "c"
+
+[tasks.fix]
+description = "Fix Nix issues"
+run = "statix fix ."

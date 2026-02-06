@@ -1,0 +1,34 @@
+#!/bin/sh
+# shellcheck enable=all
+
+set -eu
+
+# Display project info
+onefetch 2>/dev/null || true
+
+# Setup mise
+if [ ! -f .mise.toml ] && [ -n "${MISE_TEMPLATE:-}" ]; then
+	printf "📝 Generating .mise.toml...\n"
+	cp "${MISE_TEMPLATE}" .mise.toml
+	printf "✓ Created .mise.toml\n"
+	mise trust 2>/dev/null || true
+fi
+
+# Activate mise
+eval "$(mise activate bash)" 2>/dev/null || true
+
+# Display navigation info
+printf "\n"
+printf "📁 Language-specific environments:\n"
+printf "   Rust:   cd src/rust && nix develop\n"
+printf "   Python: cd src/python && nix develop\n"
+printf "   Nix:    cd src/nix && nix develop\n"
+printf "\n"
+printf "Or use: mise run rust-dev\n"
+
+# Auto-start editor if available
+if [ -n "${VISUAL:-}" ] && command -v "${VISUAL}" >/dev/null 2>&1; then
+	"${VISUAL}"
+elif [ -n "${EDITOR:-}" ] && command -v "${EDITOR}" >/dev/null 2>&1; then
+	"${EDITOR}"
+fi
