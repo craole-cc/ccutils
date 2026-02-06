@@ -1,12 +1,13 @@
 {pkgs ? import <nixpkgs> {config.allowUnfree = true;}}:
 pkgs.mkShell {
   buildInputs = with pkgs; [
-    # pre-commit
+    pre-commit
     eza
     bat
     fd
     btop
     ripgrep
+    mise
     fzf
     lsd
     tokei

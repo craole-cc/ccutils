@@ -46,3 +46,6 @@ run = "gitui"
 description = "Create new crate in workspace"
 run = "mkdir -p crates && cd crates && cargo new"
 
+[shell_alias]
+gs = "git fetch origin && git status"
+up = "git fetch -p && git status"

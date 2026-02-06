@@ -4,18 +4,19 @@
     ".envrc",
     ".git",
     ".vscode",
-    "default.nix",
+    // "default.nix",
     "flake.lock",
-    "flake.nix",
-    "shell.nix",
-    "src/rust/.mise.toml",
-    "src/rust/.rust-analyzer.toml",
-    "src/rust/.rustfmt.toml",
+    // "flake.nix",
+    // "shell.nix",
+    // "src/rust/.mise.toml",
+    // "src/rust/.rust-analyzer.toml",
+    // "src/rust/.rustfmt.toml",
     "src/rust/Cargo.lock",
     "src/rust/archive",
     "src/rust/flake.lock",
-    "src/rust/flake.nix",
+    // "src/rust/flake.nix",
     "src/rust/target",
-    "src/rust/treefmt.toml"
+    // "src/rust/treefmt.toml",
+    "src/rust/.direnv"
   ]
 }
