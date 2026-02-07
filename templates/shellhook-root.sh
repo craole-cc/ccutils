@@ -15,8 +15,15 @@ if [ ! -f .mise.toml ] && [ -n "${MISE_TEMPLATE:-}" ]; then
 	mise trust 2>/dev/null || true
 fi
 
-# Activate mise
-eval "$(mise activate bash)" 2>/dev/null || true
+# Activate mise - handle the unbound variable issue
+if command -v mise >/dev/null 2>&1; then
+	# Temporarily disable -u, activate, then re-enable
+	set +u
+	eval "$(mise activate bash 2>/dev/null)" || true
+	set -u
+fi
+
+# ... rest of the script
 
 # Display navigation info
 printf "\n"
