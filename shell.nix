@@ -28,8 +28,11 @@ pkgs.mkShell {
     keep-sorted
   ];
 
-  shellHook = ''
-    export MISE_TEMPLATE="${./templates/mise-root.toml}"
-    . ${./templates/shellhook-root.sh}
+  shellHook = let
+    shellhook-root = "${./templates/shellhook-root.sh}";
+  in ''
+    # export MISE_TEMPLATE="${./templates/mise-root.toml}"
+    chmod +x ${shellhook-root}
+    ./${shellhook-root}
   '';
 }
