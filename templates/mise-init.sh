@@ -4,7 +4,7 @@
 set -eu
 
 TEMPLATE_FILE="${1:-}"
-OUTPUT_FILE="${2:-.mise.toml}"
+OUTPUT_FILE="${2:-".mise.toml"}"
 
 if [ -z "${TEMPLATE_FILE}" ]; then
 	printf "Usage: setup-mise.sh <template-file> [output-file]\n" >&2
