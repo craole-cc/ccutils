@@ -2,7 +2,7 @@
 # shellcheck enable=all
 # Base shell hook
 
-set -eu
+# set -eu
 
 # Display project info
 onefetch 2>/dev/null || true
@@ -23,9 +23,7 @@ if command -v mise >/dev/null 2>&1; then
 	set -u
 fi
 
-# ... rest of the script
-
-# Display navigation info
+#? Display navigation info
 printf "\n"
 printf "📁 Language-specific environments:\n"
 printf "   Rust:   cd src/rust && nix develop\n"
@@ -34,7 +32,7 @@ printf "   Nix:    cd src/nix && nix develop\n"
 printf "\n"
 printf "Or use: mise run rust-dev\n"
 
-# Auto-start editor if available
+#> Auto-start editor if available
 if [ -n "${VISUAL:-}" ] && command -v "${VISUAL}" >/dev/null 2>&1; then
 	"${VISUAL}"
 elif [ -n "${EDITOR:-}" ] && command -v "${EDITOR}" >/dev/null 2>&1; then
