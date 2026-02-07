@@ -31,7 +31,9 @@ pkgs.mkShell {
   shellHook = ''
     PRJ_ROOT="$(pwd -P)"
     TEMPLATES="$PRJ_ROOT/templates"
-    "$PRJ_/templates/shellhook-root.sh}";
+    export PRJ_ROOT TEMPLATES
+
+    "$TEMPLATES/shellhook-root.sh";
     # export MISE_TEMPLATE="${./templates/mise-root.toml}"
 
     chmod +x $TEMPLATES/shellhook-root.sh
