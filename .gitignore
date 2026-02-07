@@ -13,12 +13,11 @@ assets/**/*.db
 # -- Local archives or backups
 [aA]archive/
 [aA]rchives/
-[tT]emp/
-[tT]mp/
-[rR]eview/
 [dD]ownload/
 [dD]ownloads/
 [rR]eview/
+[tT]emp/
+[tT]mp/
 
 # -- Environment variables
 *.env
@@ -43,11 +42,3 @@ private
 # -- OS and editor files
 .DS_Store
 Thumbs.db
-
-
-templates/mise-root.toml
-templates/mise-root.toml
-templates/mise-root.toml
-templates/mise-root.toml
-templates/mise-root.toml
-templates/mise-root.toml
