@@ -32,9 +32,9 @@ printf "   Nix:    cd src/nix && nix develop\n"
 printf "\n"
 printf "Or use: mise run rust-dev\n"
 
-#> Auto-start editor if available
-if [ -n "${VISUAL:-}" ] && command -v "${VISUAL}" >/dev/null 2>&1; then
-	"${VISUAL}"
-elif [ -n "${EDITOR:-}" ] && command -v "${EDITOR}" >/dev/null 2>&1; then
-	"${EDITOR}"
-fi
+# #> Auto-start editor if available
+# if [ -n "${VISUAL:-}" ] && command -v "${VISUAL}" >/dev/null 2>&1; then
+# 	"${VISUAL}"
+# elif [ -n "${EDITOR:-}" ] && command -v "${EDITOR}" >/dev/null 2>&1; then
+# 	"${EDITOR}"
+# fi
