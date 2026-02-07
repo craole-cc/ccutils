@@ -30,6 +30,6 @@ pkgs.mkShell {
 
   shellHook = ''
     export MISE_TEMPLATE="${./templates/mise-root.toml}"
-    . ${./templates/shellhook-base.sh}
+    . ${./templates/shellhook-root.sh}
   '';
 }
