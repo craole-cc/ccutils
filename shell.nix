@@ -28,11 +28,13 @@ pkgs.mkShell {
     keep-sorted
   ];
 
-  shellHook = let
-    shellhook-root = "${./templates/shellhook-root.sh}";
-  in ''
+  shellHook = ''
+    PRJ_ROOT="$(pwd -P)"
+    TEMPLATES="$PRJ_ROOT/templates"
+    "$PRJ_/templates/shellhook-root.sh}";
     # export MISE_TEMPLATE="${./templates/mise-root.toml}"
-    chmod +x ${shellhook-root}
-    ./${shellhook-root}
+
+    chmod +x $TEMPLATES/shellhook-root.sh
+    ./$TEMPLATES/shellhook-root.sh
   '';
 }
