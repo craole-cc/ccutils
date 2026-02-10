@@ -1,0 +1,51 @@
+[tasks.dev]
+description = "Run in watch mode"
+run = "bacon"
+
+[tasks.test]
+description = "Run all workspace tests"
+run = "cargo nextest run --workspace"
+
+[tasks.test-crate]
+description = "Run tests for specific crate"
+run = "cargo nextest run -p"
+
+[tasks.coverage]
+description = "Generate coverage report"
+run = "cargo tarpaulin --workspace --out Html --output-dir coverage"
+
+[tasks.bench]
+description = "Run benchmarks"
+run = "cargo bench --workspace"
+
+[tasks.fmt]
+description = "Format all files"
+run = "treefmt"
+
+[tasks.check]
+description = "Format and clippy workspace"
+run = "treefmt && cargo clippy --workspace"
+
+[tasks.audit]
+description = "Security audit"
+run = "cargo audit"
+
+[tasks.outdated]
+description = "Check for outdated dependencies"
+run = "cargo outdated --workspace"
+
+[tasks.info]
+description = "Show project info"
+run = "onefetch"
+
+[tasks.git]
+description = "Open gitui"
+run = "gitui"
+
+[tasks.new-crate]
+description = "Create new crate in workspace"
+run = "mkdir -p crates && cd crates && cargo new"
+
+[shell_alias]
+gs = "git fetch origin && git status"
+up = "git fetch -p && git status"

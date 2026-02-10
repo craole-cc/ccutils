@@ -116,6 +116,9 @@ validate_arguments() {
 }
 
 initialize_environment() {
+	#> Make all shell scripts in templates executable
+	find "${TEMPLATES}" -name "*.sh" -type f -exec chmod +x {} \;
+
 	#> Detect and use best available method
 	#? Try nix first
 	use_nix "${LANG_NAME:-}"
